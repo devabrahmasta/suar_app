@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import 'ews_provider.dart';
 import '../domain/triage_result_model.dart';
@@ -12,7 +13,9 @@ class HomeScreen extends ConsumerWidget {
     final ewsState = ref.watch(ewsProvider);
 
     ref.listen<AsyncValue<TriageResult?>>(ewsProvider, (previous, next) {
-      if (next.hasValue && next.value != null && next.value!.statusTindakan == 'EVAKUASI') {
+      if (next.hasValue &&
+          next.value != null &&
+          next.value!.statusTindakan == 'EVAKUASI') {
         _showEwsAlertModal(context, next.value!);
       }
     });
@@ -28,9 +31,15 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_active, color: AppColors.primary),
-            style: IconButton.styleFrom(backgroundColor: AppColors.primaryLight.withValues(alpha: 0.3)),
-            onPressed: () => ref.read(ewsProvider.notifier).checkLatestThreat(), // Tes EWS
+            icon: const Icon(
+              Icons.notifications_active,
+              color: AppColors.primary,
+            ),
+            style: IconButton.styleFrom(
+              backgroundColor: AppColors.primaryLight.withValues(alpha: 0.3),
+            ),
+            onPressed: () =>
+                ref.read(ewsProvider.notifier).checkLatestThreat(), // Tes EWS
           ),
           const SizedBox(width: 16),
         ],
@@ -55,8 +64,17 @@ class HomeScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Mesh Network Aktif', style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('5 orang terhubung di sekitar Anda', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                        Text(
+                          'Mesh Network Aktif',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '5 orang terhubung di sekitar Anda',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -102,24 +120,49 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            _buildMenuCard(context, icon: Icons.chat, title: 'Mesh Chat', subtitle: 'Public Channel & Direct Message'),
+            _buildMenuCard(
+              context,
+              icon: Icons.chat,
+              title: 'Mesh Chat',
+              subtitle: 'Public Channel & Direct Message',
+            ),
             const SizedBox(height: 16),
-            _buildMenuCard(context, icon: Icons.map, title: 'Peta Evakuasi', subtitle: 'Jalur evakuasi offline', isMap: true),
+            _buildMenuCard(
+              context,
+              icon: Icons.map,
+              title: 'Peta Evakuasi',
+              subtitle: 'Jalur evakuasi offline',
+              isMap: true,
+              onTap: () => context.push('/map'),
+            ),
             const SizedBox(height: 24),
 
-            Text('SUMBER DAYA CEPAT', style: Theme.of(context).textTheme.labelSmall),
+            Text(
+              'SUMBER DAYA CEPAT',
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(child: _buildResourceButton(Icons.medical_services, 'P3K Dasar')),
+                Expanded(
+                  child: _buildResourceButton(
+                    Icons.medical_services,
+                    'P3K Dasar',
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: _buildResourceButton(Icons.contact_phone, 'Nomor Darurat')),
+                Expanded(
+                  child: _buildResourceButton(
+                    Icons.contact_phone,
+                    'Nomor Darurat',
+                  ),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
-      
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
         items: const [
@@ -132,10 +175,20 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusCard({required Color color, required Color iconColor, required IconData icon, required String title, required String subtitle}) {
+  Widget _buildStatusCard({
+    required Color color,
+    required Color iconColor,
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(16), border: Border.all(color: iconColor.withValues(alpha: 0.3))),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: iconColor.withValues(alpha: 0.3)),
+      ),
       child: Row(
         children: [
           Icon(icon, color: iconColor, size: 32),
@@ -144,7 +197,14 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: iconColor, fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: iconColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
                 Text(subtitle, style: const TextStyle(fontSize: 13)),
               ],
             ),
@@ -155,9 +215,20 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMenuCard(BuildContext context, {required IconData icon, required String title, required String subtitle, bool isMap = false}) {
+  Widget _buildMenuCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    bool isMap = false,
+    VoidCallback? onTap,
+  }) {
     return Container(
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
       child: Column(
         children: [
           Padding(
@@ -166,7 +237,10 @@ class HomeScreen extends ConsumerWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Icon(icon, color: AppColors.white),
                 ),
                 const SizedBox(width: 16),
@@ -174,8 +248,20 @@ class HomeScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      Text(subtitle, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -183,15 +269,23 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
           ),
-          if (isMap) 
+          if (isMap)
             Container(
               height: 100,
               decoration: const BoxDecoration(
                 color: AppColors.border,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), bottomRight: Radius.circular(16)),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
               ),
-              child: const Center(child: Text('Placeholder Peta Topografi', style: TextStyle(color: AppColors.textHint))),
-            )
+              child: const Center(
+                child: Text(
+                  'Placeholder Peta Topografi',
+                  style: TextStyle(color: AppColors.textHint),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -200,12 +294,19 @@ class HomeScreen extends ConsumerWidget {
   Widget _buildResourceButton(IconData icon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
       child: Column(
         children: [
           Icon(icon, color: AppColors.primary),
           const SizedBox(height: 8),
-          Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     );
@@ -215,28 +316,39 @@ class HomeScreen extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      isDismissible: false, 
+      isDismissible: false,
       enableDrag: false,
-      useSafeArea: true, 
+      useSafeArea: true,
       backgroundColor: AppColors.background,
       builder: (context) {
         return SizedBox(
-          height: double.infinity, 
+          height: double.infinity,
           child: Column(
             children: [
               // Header Merah
               Container(
                 color: AppColors.dangerLight,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 20,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close, color: AppColors.danger), 
+                      icon: const Icon(Icons.close, color: AppColors.danger),
                       // ganti ke logika hentikan alarm besok
-                      onPressed: () => Navigator.pop(context)
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    const Text('SUAR EWS ALERT', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.5)),
+                    const Text(
+                      'SUAR EWS ALERT',
+                      style: TextStyle(
+                        color: AppColors.danger,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
                     const Icon(Icons.share, color: AppColors.danger),
                   ],
                 ),
@@ -246,18 +358,51 @@ class HomeScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      const CircleAvatar(radius: 40, backgroundColor: AppColors.danger, child: Icon(Icons.warning, size: 40, color: AppColors.white)),
+                      const CircleAvatar(
+                        radius: 40,
+                        backgroundColor: AppColors.danger,
+                        child: Icon(
+                          Icons.warning,
+                          size: 40,
+                          color: AppColors.white,
+                        ),
+                      ),
                       const SizedBox(height: 16),
-                      Text('POTENSI TSUNAMI', style: Theme.of(context).textTheme.displayLarge?.copyWith(color: AppColors.danger)),
-                      const Text('Peringatan Dini di Wilayah Anda', style: TextStyle(fontSize: 16, color: AppColors.textSecondary)),
+                      Text(
+                        'POTENSI TSUNAMI',
+                        style: Theme.of(context).textTheme.displayLarge
+                            ?.copyWith(color: AppColors.danger),
+                      ),
+                      const Text(
+                        'Peringatan Dini di Wilayah Anda',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 24),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildStatCard('MAGNITUDE', '7.8 SR', '+0.2', isRed: true),
-                          _buildStatCard('KEDALAMAN', '10 km', 'Stabil', isRed: false),
-                          _buildStatCard('JARAK', '2.5 km', 'Dekat', isRed: true),
+                          _buildStatCard(
+                            'MAGNITUDE',
+                            '7.8 SR',
+                            '+0.2',
+                            isRed: true,
+                          ),
+                          _buildStatCard(
+                            'KEDALAMAN',
+                            '10 km',
+                            'Stabil',
+                            isRed: false,
+                          ),
+                          _buildStatCard(
+                            'JARAK',
+                            '2.5 km',
+                            'Dekat',
+                            isRed: true,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -265,18 +410,38 @@ class HomeScreen extends ConsumerWidget {
                       Container(
                         height: 150,
                         width: double.infinity,
-                        decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(16)),
+                        decoration: BoxDecoration(
+                          color: AppColors.border,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                         alignment: Alignment.bottomLeft,
                         child: Container(
                           margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(20)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.circle, color: AppColors.danger, size: 10),
+                              Icon(
+                                Icons.circle,
+                                color: AppColors.danger,
+                                size: 10,
+                              ),
                               SizedBox(width: 8),
-                              Text('LOKASI ANDA: ZONA MERAH', style: TextStyle(color: AppColors.danger, fontSize: 10, fontWeight: FontWeight.bold)),
+                              Text(
+                                'LOKASI ANDA: ZONA MERAH',
+                                style: TextStyle(
+                                  color: AppColors.danger,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -286,7 +451,10 @@ class HomeScreen extends ConsumerWidget {
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(color: AppColors.danger, borderRadius: BorderRadius.circular(16)),
+                        decoration: BoxDecoration(
+                          color: AppColors.danger,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -294,34 +462,55 @@ class HomeScreen extends ConsumerWidget {
                               children: [
                                 Icon(Icons.psychology, color: AppColors.white),
                                 SizedBox(width: 8),
-                                Text('AI RECOMMENDATION', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                                Text(
+                                  'AI RECOMMENDATION',
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 16),
                             Text(
                               result.instruksiDarurat,
-                              style: const TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w600, height: 1.4),
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                height: 1.4,
+                              ),
                             ),
                             const SizedBox(height: 24),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(backgroundColor: AppColors.white, foregroundColor: AppColors.danger),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.white,
+                                  foregroundColor: AppColors.danger,
+                                ),
                                 onPressed: () {
                                   Navigator.pop(context);
                                   // TODO: Arahkan ke rute evakuasi di flutter_map
                                 },
                                 icon: const Icon(Icons.location_on),
-                                label: const Text('SAFE ZONE INFO', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1)),
+                                label: const Text(
+                                  'SAFE ZONE INFO',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
                               ),
-                            )
+                            ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -329,7 +518,12 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, String sub, {required bool isRed}) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    String sub, {
+    required bool isRed,
+  }) {
     return Container(
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -340,16 +534,40 @@ class HomeScreen extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textHint)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textHint,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: isRed ? AppColors.danger : AppColors.textPrimary)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: isRed ? AppColors.danger : AppColors.textPrimary,
+            ),
+          ),
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(isRed ? Icons.trending_up : Icons.remove, size: 12, color: isRed ? AppColors.danger : AppColors.textSecondary),
+              Icon(
+                isRed ? Icons.trending_up : Icons.remove,
+                size: 12,
+                color: isRed ? AppColors.danger : AppColors.textSecondary,
+              ),
               const SizedBox(width: 4),
-              Text(sub, style: TextStyle(fontSize: 10, color: isRed ? AppColors.danger : AppColors.textSecondary)),
+              Text(
+                sub,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isRed ? AppColors.danger : AppColors.textSecondary,
+                ),
+              ),
             ],
           ),
         ],

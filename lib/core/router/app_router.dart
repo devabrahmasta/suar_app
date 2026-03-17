@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suar_app/features/map_evacuation/presentation/map_screen.dart';
 
 import '../../features/onboarding/onboarding_provider.dart';
 
@@ -42,6 +43,12 @@ final goRouterProvider = Provider<GoRouter>((ref){
         path: '/',
         name: 'home',
         builder: (context, state) => const HomeScreen(),
+      ),
+
+      GoRoute(
+        path: '/map',
+        name: 'map',
+        builder: (context, state) => const MapScreen(),
       ),
 
       // Offline mesh chat route
