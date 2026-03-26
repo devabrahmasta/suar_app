@@ -96,14 +96,17 @@ class EwsTestingScreen extends ConsumerWidget {
             icon: Icons.download_for_offline,
             color: AppColors.info,
             onTap: () async {
+              final messenger = ScaffoldMessenger.of(context);
               
-              ScaffoldMessenger.of(context).showSnackBar(
+              final container = ProviderScope.containerOf(context);
+
+              messenger.showSnackBar(
                 const SnackBar(
                   content: Row(
                     children: [
                       SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2)),
                       SizedBox(width: 12),
-                      Expanded(child: Text('Simulasi: Memasuki Zona Merah. Mengunduh peta radius 3KM...')),
+                      Expanded(child: Text('Simulasi: Memasuki Zona Merah. Mengunduh peta & rute...')),
                     ],
                   ),
                   backgroundColor: AppColors.info,
@@ -111,36 +114,41 @@ class EwsTestingScreen extends ConsumerWidget {
                 ),
               );
 
-              final messenger = ScaffoldMessenger.of(context);
-
               context.pop();
 
               try {
-                final locService = ref.read(locationServiceProvider);
+                final locService = container.read(locationServiceProvider);
                 final position = await locService.getCurrentPosition();
                 final centerPoint = LatLng(position.latitude, position.longitude);
 
                 final cacheService = MapCacheService();
+
                 await cacheService.downloadMapRadius(centerPoint, radiusInMeters: 3000);
 
+                final smartEvacuation = container.read(smartEvacuationProvider);
+                final route = await smartEvacuation.findOptimalRoute(centerPoint);
+                await cacheService.saveOfflineRoute(route);
+
                 messenger.showSnackBar(
-               const SnackBar(
-                 content: Row(
-                   children: [
-                     Icon(Icons.check_circle, color: AppColors.white),
-                     SizedBox(width: 12),
-                     Text('Peta Offline 3KM Siap Digunakan!'),
-                   ],
+                 const SnackBar(
+                   content: Row(
+                     children: [
+                       Icon(Icons.check_circle, color: AppColors.white),
+                       SizedBox(width: 12),
+                       Text('Peta & Rute Offline Siap Digunakan!'),
+                     ],
+                   ),
+                   backgroundColor: AppColors.success,
+                   duration: Duration(seconds: 5),
                  ),
-                 backgroundColor: AppColors.success,
-                 duration: Duration(seconds: 5),
-               ),
-             );
-             ref.invalidate(mapCacheStatusProvider);
+               );
+               
+               container.invalidate(mapCacheStatusProvider);
+               
               } catch (e) {
                 messenger.showSnackBar(
                   SnackBar(
-                    content: Text('Gagal menyimpan peta: $e'),
+                    content: Text('Gagal menyiapkan data offline: $e'),
                     duration: const Duration(seconds: 4),
                   )
                 );
