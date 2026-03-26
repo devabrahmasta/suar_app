@@ -58,44 +58,48 @@ final smartEvacuationProvider = Provider<SmartEvacuationService>((ref) {
   );
 });
 
-final evacuationRouteProvider = FutureProvider<List<LatLng>>((ref) async {
-  final cacheService = MapCacheService();
-  
-  final networkState = await ref.watch(networkStatusProvider.future);
-  final hasInternet = !networkState.contains(ConnectivityResult.none);
+class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
+  @override
+  Future<List<LatLng>?> build() async {
+    final networkState = await ref.watch(networkStatusProvider.future);
+    final hasInternet = !networkState.contains(ConnectivityResult.none);
 
-  if (!hasInternet) {
-    final cachedRoute = await cacheService.getOfflineRoute();
-    if (cachedRoute != null && cachedRoute.isNotEmpty) {
-      print('🚀 Menggunakan Rute Cache (Sensor Offline Aktif)');
-      return cachedRoute;
-    }
-    throw VerticalEvacuationException('Tidak ada rute offline tersimpan. Lakukan Evakuasi Vertikal!');
-  }
-
-  try {
-    final locService = ref.read(locationServiceProvider);
-    final position = await locService.getCurrentPosition();
-    final startLocation = LatLng(position.latitude, position.longitude);
-    
-    final smartEvacuation = ref.read(smartEvacuationProvider);
-    final freshRoute = await smartEvacuation.findOptimalRoute(startLocation);
-
-    await cacheService.saveOfflineRoute(freshRoute);
-    print('🌐 Rute online sukses didapat dan disimpan ke Cache!');
-    return freshRoute;
-    
-  } catch (e) {
-    print('⚠️ Rute online gagal ($e). Melakukan fallback ke Cache...');
-    
-    final cachedRoute = await cacheService.getOfflineRoute();
-    if (cachedRoute != null && cachedRoute.isNotEmpty) {
-      print('🛡️ Fallback Sukses: Melukis rute dari memori internal!');
-      return cachedRoute; 
+    if (!hasInternet) {
+      final cacheService = MapCacheService();
+      final cachedRoute = await cacheService.getOfflineRoute();
+      
+      if (cachedRoute != null && cachedRoute.isNotEmpty) {
+        print('🚀 Otomatis memuat rute dari Cache (Mode Offline Aktif)');
+        return cachedRoute;
+      }
+      throw VerticalEvacuationException('Koneksi terputus & tidak ada rute offline tersimpan. Lakukan Evakuasi Vertikal!');
     }
 
-    throw VerticalEvacuationException('Koneksi terputus dan tidak ada rute offline tersimpan. Lakukan Evakuasi Vertikal!');
+    return null; 
   }
+
+  Future<void> findRouteManual() async {
+    state = const AsyncLoading();
+    
+    state = await AsyncValue.guard(() async {
+      final locService = ref.read(locationServiceProvider);
+      final position = await locService.getCurrentPosition();
+      final startLocation = LatLng(position.latitude, position.longitude);
+      
+      final smartEvacuation = ref.read(smartEvacuationProvider);
+      final freshRoute = await smartEvacuation.findOptimalRoute(startLocation);
+
+      final cacheService = MapCacheService();
+      await cacheService.saveOfflineRoute(freshRoute);
+      
+      print('🌐 Rute manual sukses didapat dan disimpan ke Cache!');
+      return freshRoute;
+    });
+  }
+}
+
+final evacuationRouteProvider = AsyncNotifierProvider<RouteNotifier, List<LatLng>?>(() {
+  return RouteNotifier();
 });
 
 final networkStatusProvider = StreamProvider<List<ConnectivityResult>>((ref) {
