@@ -58,58 +58,55 @@ Pastikan Anda telah menginstal Flutter SDK dan Dart di perangkat Anda.
 ### Instalasi
 
 1. **Kloning Repositori**
-   ```bash
-   git clone [https://github.com/username-anda/suar_app.git](https://github.com/username-anda/suar_app.git)
-   cd suar_app
-   ```
+```bash
+git clone https://github.com/username-anda/suar_app.git
+cd suar_app
+```
 
 2. **Unduh Dependencies**
 
-    ```Bash
-    flutter pub get
-    ```
+```bash
+flutter pub get
+```
 
 3. **Pengaturan Environment Variables (.env)**
-    Buat sebuah file bernama .env di root directory (sejajar dengan pubspec.yaml) dan masukkan API Key Anda:
+Buat sebuah file bernama .env di root directory (sejajar dengan pubspec.yaml) dan masukkan API Key Anda:
 
-    ```Cuplikan kode
-    # .env
-    GEMINI_API_KEY=masukkan_api_key_google_gemini_anda_di_sini
-    ORS_API_KEY=masukkan_api_key_open_route_service_anda_di_sini
-    ```
+```env
+GEMINI_API_KEY=masukkan_api_key_google_gemini_anda_di_sini
+ORS_API_KEY=masukkan_api_key_open_route_service_anda_di_sini
+```
 
 4. **Jalankan Aplikasi**
-    ```Bash
-    flutter run
-    ```
+```bash
+flutter run
+```
 
 ## 📂 Struktur Direktori Utama
 
-    Proyek ini menggunakan arsitektur berbasis fitur (Feature-First Architecture):
+Proyek ini menggunakan arsitektur berbasis fitur (Feature-First Architecture):
 
-    ```Plaintext
-    lib/
-    ├── core/
-    │   ├── router/           # Konfigurasi GoRouter
-    │   └── theme/            # Desain sistem, warna, dan tipografi
-    ├── features/
-    │   ├── ews_ai/           # Logika integrasi BMKG, InaRISK, dan Gemini AI Triage
-    │   ├── map_evacuation/   # Sistem Peta, Algoritma Hybrid Snapping, dan Caching
-    │   ├── mesh_chat/        # [WIP] Modul komunikasi P2P
-    │   └── onboarding/       # Izin akses dan identitas perangkat
-    └── main.dart             # Entry point aplikasi
-    ```
+```text
+lib/
+├── core/
+│   ├── router/           # Konfigurasi GoRouter
+│   └── theme/            # Desain sistem, warna, dan tipografi
+├── features/
+│   ├── ews_ai/           # Logika integrasi BMKG, InaRISK, dan Gemini AI Triage
+│   ├── map_evacuation/   # Sistem Peta, Algoritma Hybrid Snapping, dan Caching
+│   ├── mesh_chat/        # [WIP] Modul komunikasi P2P
+│   └── onboarding/       # Izin akses dan identitas perangkat
+└── main.dart             # Entry point aplikasi
+```
 
 ## 🛠️ Panel Developer (Skenario Pengujian)
-    Untuk mempermudah presentasi atau pengujian tanpa harus menunggu bencana asli terjadi, SUAR dilengkapi dengan EWS Simulator.
-    Akses fitur ini melalui ikon 🐛 (Bug) di AppBar Home Screen untuk menjalankan:
+Untuk mempermudah presentasi atau pengujian tanpa harus menunggu bencana asli terjadi, SUAR dilengkapi dengan EWS Simulator.
+Akses fitur ini melalui ikon 🐛 (Bug) di AppBar Home Screen untuk menjalankan:
 
-    Simulasi Gempa Tsunami + Masuk Zona Merah.
+- Simulasi Gempa Tsunami + Masuk Zona Merah.
+- Simulasi Gempa Ringan Darat.
+- Simulasi pengunduhan Map Cache dan rute offline secara paksa.
 
-    Simulasi Gempa Ringan Darat.
-
-    Simulasi pengunduhan Map Cache dan rute offline secara paksa.
-
-    <div align="center">
-    <i>Dibuat dengan dedikasi untuk memperkuat resiliensi masyarakat Indonesia menghadapi bencana alam.</i>
-    </div>
+<div align="center">
+<i>Dibuat dengan dedikasi untuk memperkuat resiliensi masyarakat Indonesia menghadapi bencana alam.</i>
+</div>
