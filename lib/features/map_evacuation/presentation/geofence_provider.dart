@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -31,7 +32,6 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
   }
 
   Future<void> _handleLocationUpdate(LatLng location) async {
-    // TAMBAHAN: Cek internet dulu sebelum memata-matai lokasi
     final networkState = await ref.read(networkStatusProvider.future);
     final hasInternet = !networkState.contains(ConnectivityResult.none);
 
@@ -92,17 +92,28 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
 
     try {
       final cacheService = MapCacheService();
-      
-      await cacheService.downloadMapRadius(location, radiusInMeters: 3000);
-      
       final smartEvacuation = ref.read(smartEvacuationProvider);
-      final route = await smartEvacuation.findOptimalRoute(location);
       
-      await cacheService.saveOfflineRoute(route);
+      List<LatLng>? route;
+      try {
+        route = await smartEvacuation.findOptimalRoute(location);
+        await cacheService.saveOfflineRoute(route);
+      } catch (e) {
+        print('Geofence (Evakuasi Vertikal): $e');
+      }
+
+      if (route != null && route.isNotEmpty) {
+        final bounds = LatLngBounds.fromPoints([location, ...route]);
+        const distance = Distance();
+        final sw = distance.offset(bounds.southWest, 1000, 225);
+        final ne = distance.offset(bounds.northEast, 1000, 45);
+        await cacheService.downloadMapBoundingBox(LatLngBounds(sw, ne));
+      } else {
+        await cacheService.downloadMapRadius(location, radiusInMeters: 3000);
+      }
       
       ref.invalidate(mapCacheStatusProvider);
-      
-      print("Geofence: Peta & Rute sukses diamankan!");
+      print("Geofence: Peta Dynamic & Rute sukses diamankan!");
     } catch (e) {
       print("Geofence Cache Error: $e");
     }

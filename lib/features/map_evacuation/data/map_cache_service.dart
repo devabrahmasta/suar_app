@@ -48,6 +48,34 @@ class MapCacheService {
     }
   }
 
+  Future<void> downloadMapBoundingBox(LatLngBounds bounds) async {
+    try {
+      await _initStore();
+      final store = FMTCStore(_storeName);
+
+      final region = RectangleRegion(bounds);
+      final downloadableRegion = region.toDownloadable(
+        minZoom: 14,
+        maxZoom: 17,
+        options: TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.suar.app',
+        ),
+      );
+
+      final downloadStream = store.download.startForeground(
+        region: downloadableRegion,
+        parallelThreads: 4,
+        skipExistingTiles: true,
+        skipSeaTiles: true,
+      );
+
+      await downloadStream.downloadProgress.last;
+    } catch (e) {
+      throw Exception('Gagal mengunduh peta rute: $e');
+    }
+  }
+
   static const String _routeKey = 'offline_evacuation_route';
 
   Future<void> saveOfflineRoute(List<LatLng> route) async {
