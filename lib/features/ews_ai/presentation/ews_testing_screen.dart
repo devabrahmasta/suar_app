@@ -96,8 +96,11 @@ class EwsTestingScreen extends ConsumerWidget {
             icon: Icons.download_for_offline,
             color: AppColors.info,
             onTap: () async {
-              
-              ScaffoldMessenger.of(context).showSnackBar(
+
+              final messenger = ScaffoldMessenger.of(context);
+              final container = ProviderScope.containerOf(context);
+
+              messenger.showSnackBar(
                 const SnackBar(
                   content: Row(
                     children: [
@@ -111,18 +114,20 @@ class EwsTestingScreen extends ConsumerWidget {
                 ),
               );
 
-              final messenger = ScaffoldMessenger.of(context);
-
               context.pop();
 
               try {
-                final locService = ref.read(locationServiceProvider);
+                final locService = container.read(locationServiceProvider);
                 final position = await locService.getCurrentPosition();
                 final centerPoint = LatLng(position.latitude, position.longitude);
 
                 final cacheService = MapCacheService();
                 await cacheService.downloadMapRadius(centerPoint, radiusInMeters: 3000);
 
+                final smartEvacuation = container.read(smartEvacuationProvider);
+                final route = await smartEvacuation.findOptimalRoute(centerPoint);
+                await cacheService.saveOfflineRoute(route);
+                
                 messenger.showSnackBar(
                const SnackBar(
                  content: Row(
@@ -136,7 +141,7 @@ class EwsTestingScreen extends ConsumerWidget {
                  duration: Duration(seconds: 5),
                ),
              );
-             ref.invalidate(mapCacheStatusProvider);
+             container.invalidate(mapCacheStatusProvider);
               } catch (e) {
                 messenger.showSnackBar(
                   SnackBar(

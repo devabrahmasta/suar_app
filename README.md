@@ -57,7 +57,7 @@ Pastikan Anda telah menginstal Flutter SDK dan Dart di perangkat Anda.
 
 ### Instalasi
 
-1. **Kloning Repositori**
+1. **Kloning Repository**
 ```bash
 git clone https://github.com/username-anda/suar_app.git
 cd suar_app

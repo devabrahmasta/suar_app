@@ -71,16 +71,22 @@ class MapCacheService {
       final List<dynamic> decodedData = jsonDecode(encodedRoute);
 
       return decodedData.map((item) {
-        return LatLng(item['lat'] as double, item['lng'] as double);
+        return LatLng(
+          (item['lat'] as num).toDouble(), 
+          (item['lng'] as num).toDouble()
+        );
       }).toList();
     } catch (e) {
+      print('⚠️ Gagal membaca rute offline: $e');
       return null;
     }
   }
 
   Future<void> clearCache() async {
     final store = FMTCStore(_storeName);
+
     await store.manage.delete();
+    await store.manage.create();
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_routeKey);

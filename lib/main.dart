@@ -21,6 +21,10 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
 
   await FMTCObjectBoxBackend().initialise();
+
+  final store = FMTCStore('evacuation_map');
+  await store.manage.create();
+  
   runApp(
      ProviderScope(
       overrides: [
