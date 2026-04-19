@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -96,8 +97,11 @@ class EwsTestingScreen extends ConsumerWidget {
             icon: Icons.download_for_offline,
             color: AppColors.info,
             onTap: () async {
-              
-              ScaffoldMessenger.of(context).showSnackBar(
+
+              final messenger = ScaffoldMessenger.of(context);
+              final container = ProviderScope.containerOf(context);
+
+              messenger.showSnackBar(
                 const SnackBar(
                   content: Row(
                     children: [
@@ -111,18 +115,38 @@ class EwsTestingScreen extends ConsumerWidget {
                 ),
               );
 
-              final messenger = ScaffoldMessenger.of(context);
-
               context.pop();
 
               try {
-                final locService = ref.read(locationServiceProvider);
+                final locService = container.read(locationServiceProvider);
                 final position = await locService.getCurrentPosition();
                 final centerPoint = LatLng(position.latitude, position.longitude);
 
                 final cacheService = MapCacheService();
-                await cacheService.downloadMapRadius(centerPoint, radiusInMeters: 3000);
+                final smartEvacuation = container.read(smartEvacuationProvider);
 
+                List<LatLng>? route;
+                try {
+                  route = await smartEvacuation.findOptimalRoute(centerPoint);
+                  await cacheService.saveOfflineRoute(route);
+                } catch (e) {
+                  print('Mode Evakuasi Vertikal: $e');
+                }
+
+                if (route != null && route.isNotEmpty) {
+                  final allPoints = [centerPoint, ...route];
+                  final bounds = LatLngBounds.fromPoints(allPoints);
+                  
+                  const distance = Distance();
+                  final sw = distance.offset(bounds.southWest, 1000, 225);
+                  final ne = distance.offset(bounds.northEast, 1000, 45);
+                  final paddedBounds = LatLngBounds(sw, ne);
+
+                  await cacheService.downloadMapBoundingBox(paddedBounds);
+                } else {
+                  await cacheService.downloadMapRadius(centerPoint, radiusInMeters: 3000);
+                }
+                
                 messenger.showSnackBar(
                const SnackBar(
                  content: Row(
@@ -136,7 +160,7 @@ class EwsTestingScreen extends ConsumerWidget {
                  duration: Duration(seconds: 5),
                ),
              );
-             ref.invalidate(mapCacheStatusProvider);
+             container.invalidate(mapCacheStatusProvider);
               } catch (e) {
                 messenger.showSnackBar(
                   SnackBar(

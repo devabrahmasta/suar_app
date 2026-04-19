@@ -48,6 +48,34 @@ class MapCacheService {
     }
   }
 
+  Future<void> downloadMapBoundingBox(LatLngBounds bounds) async {
+    try {
+      await _initStore();
+      final store = FMTCStore(_storeName);
+
+      final region = RectangleRegion(bounds);
+      final downloadableRegion = region.toDownloadable(
+        minZoom: 14,
+        maxZoom: 17,
+        options: TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.suar.app',
+        ),
+      );
+
+      final downloadStream = store.download.startForeground(
+        region: downloadableRegion,
+        parallelThreads: 4,
+        skipExistingTiles: true,
+        skipSeaTiles: true,
+      );
+
+      await downloadStream.downloadProgress.last;
+    } catch (e) {
+      throw Exception('Gagal mengunduh peta rute: $e');
+    }
+  }
+
   static const String _routeKey = 'offline_evacuation_route';
 
   Future<void> saveOfflineRoute(List<LatLng> route) async {
@@ -71,16 +99,22 @@ class MapCacheService {
       final List<dynamic> decodedData = jsonDecode(encodedRoute);
 
       return decodedData.map((item) {
-        return LatLng(item['lat'] as double, item['lng'] as double);
+        return LatLng(
+          (item['lat'] as num).toDouble(), 
+          (item['lng'] as num).toDouble()
+        );
       }).toList();
     } catch (e) {
+      print('⚠️ Gagal membaca rute offline: $e');
       return null;
     }
   }
 
   Future<void> clearCache() async {
     final store = FMTCStore(_storeName);
+
     await store.manage.delete();
+    await store.manage.create();
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_routeKey);
