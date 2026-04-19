@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_screen.dart';
 import '../../features/map_evacuation/presentation/cache_management_screen.dart';
 
-import '../../features/onboarding/onboarding_provider.dart';
+import '../../features/onboarding/presentation/widget/onboarding_provider.dart';
 
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/ews_ai/presentation/home_screen.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
-import 'package:suar_app/features/onboarding/onboarding_provider.dart';
+import 'package:suar_app/features/onboarding/presentation/widget/onboarding_provider.dart';
 
 class OnboardingScreen extends ConsumerWidget{
   const OnboardingScreen({super.key});
