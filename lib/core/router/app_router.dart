@@ -8,6 +8,7 @@ import '../../features/map_evacuation/presentation/cache_management_screen.dart'
 import '../../features/user/presentation/user_notifier.dart';
 import '../../features/ews_ai/presentation/home_screen.dart';
 import '../../features/ews_ai/presentation/ews_testing_screen.dart';
+import '../../features/map_evacuation/presentation/risk_map_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -52,6 +53,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/map',
         name: 'map',
         builder: (context, state) => const MapScreen(),
+      ),
+
+      GoRoute(
+        path: '/risk-map',
+        name: 'risk_map',
+        builder: (context, state) => const RiskMapScreen(),
       ),
 
       GoRoute(
