@@ -240,6 +240,13 @@ class HomeScreen extends ConsumerWidget {
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
+        onTap: (index) {
+          if (index == 1) {
+            context.push('/chat');
+          } else if (index == 2) {
+            context.push('/risk-map');
+          }
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
