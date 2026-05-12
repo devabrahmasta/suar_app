@@ -1,3 +1,4 @@
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -94,6 +95,17 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
       final cacheService = MapCacheService();
       await cacheService.saveOfflineRoute(freshRoute);
 
+      if (freshRoute.isNotEmpty){
+        final bounds = LatLngBounds.fromPoints([startLocation, ...freshRoute]);
+        const distance = Distance();
+
+        final sw = distance.offset(bounds.southWest, 1000, 225);
+        final ne = distance.offset(bounds.northEast, 1000, 45);
+        await cacheService.downloadMapBoundingBox(LatLngBounds(sw, ne));
+
+        ref.invalidate(mapCacheStatusProvider);
+      }
+      
       print('🌐 Rute manual sukses didapat dan disimpan ke Cache!');
       return freshRoute;
     });
