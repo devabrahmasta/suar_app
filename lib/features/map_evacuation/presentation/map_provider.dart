@@ -9,6 +9,7 @@ import '../../ews_ai/presentation/ews_provider.dart';
 import '../data/routing_service.dart';
 import '../data/elevation_service.dart';
 import '../data/smart_evacuation_service.dart';
+import '../data/river_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
@@ -56,7 +57,12 @@ final smartEvacuationProvider = Provider<SmartEvacuationService>((ref) {
     inarisk: ref.watch(inariskServiceProvider),
     elevationService: ref.watch(elevationServiceProvider),
     routingService: ref.watch(routingServiceProvider),
+    riverService: ref.watch(riverServiceProvider),
   );
+});
+
+final riverServiceProvider = Provider<RiverService>((ref){
+  return RiverService(ref.watch(dioProvider));
 });
 
 class RouteNotifier extends AsyncNotifier<List<LatLng>?> {

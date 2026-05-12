@@ -1,7 +1,9 @@
 import 'package:latlong2/latlong.dart';
+import 'package:suar_app/features/map_evacuation/data/river_service.dart';
 import '../../ews_ai/data/inarisk_service.dart';
 import 'elevation_service.dart';
 import 'routing_service.dart';
+import 'river_service.dart';
 
 class VerticalEvacuationException implements Exception {
   final String message;
@@ -14,11 +16,13 @@ class SmartEvacuationService {
   final InaRiskService inarisk;
   final ElevationService elevationService;
   final RoutingService routingService;
+  final RiverService riverService;
 
   SmartEvacuationService({
     required this.inarisk,
     required this.elevationService,
     required this.routingService,
+    required this.riverService,
   });
 
   Future<List<LatLng>> findOptimalRoute(LatLng currentLocation) async {
@@ -103,6 +107,32 @@ class SmartEvacuationService {
               currentLocation,
               snappedPoint,
             );
+
+            print('🔍 Memvalidasi keamanan jalur rute dari sungai di dataran rendah...');
+            bool isRouteSafe = true;
+            
+            int step = (route.length / 10).ceil(); 
+            if (step < 1) step = 1;
+
+            for (int i = 0; i < route.length; i += step) {
+              final routePoint = route[i];
+              final pointElevation = await elevationService.getElevation(routePoint);
+              
+              if (pointElevation <= 10.0) {
+                final isCrossingRiver = await riverService.isNearRiver(routePoint, radius: 50);
+                
+                if (isCrossingRiver) {
+                  print('⚠️ Rute arah $bearing° digugurkan: Di pertengahan jalan memotong/melewati sungai pada elevasi rendah ($pointElevation mdpl).');
+                  isRouteSafe = false;
+                  break;
+                }
+              }
+            }
+
+            if (!isRouteSafe) {
+              continue; 
+            }
+            
             print('🎉 RUTE EVAKUASI DITEMUKAN!');
             return route;
           } catch (e) {
