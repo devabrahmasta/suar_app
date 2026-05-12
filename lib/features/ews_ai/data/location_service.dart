@@ -17,10 +17,10 @@ class LocationService {
         throw Exception('Izin lokasi ditolak. Aplikasi butuh GPS untuk EWS.');
       }
     }
-    
+
     if (permission == LocationPermission.deniedForever) {
       throw Exception('Izin lokasi ditolak permanen. Buka pengaturan HP.');
-    } 
+    }
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,

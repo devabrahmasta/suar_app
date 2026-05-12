@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
 import 'core/theme/app_theme.dart';
-import 'core/router/app_router.dart'; 
+import 'core/router/app_router.dart';
 
-final sharedPreferencesProvider = Provider<SharedPreferences>((ref){
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError();
 });
 
@@ -24,12 +24,10 @@ void main() async {
 
   final store = FMTCStore('evacuation_map');
   await store.manage.create();
-  
+
   runApp(
-     ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
-      ],
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
       child: MainApp(),
     ),
   );
@@ -57,6 +55,7 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

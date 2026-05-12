@@ -31,7 +31,7 @@ class CacheManagementScreen extends ConsumerWidget {
               style: TextStyle(color: AppColors.textSecondary, height: 1.4),
             ),
             const SizedBox(height: 24),
-            
+
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -50,20 +50,35 @@ class CacheManagementScreen extends ConsumerWidget {
                   if (tileCount == 0) {
                     return const Column(
                       children: [
-                        Icon(Icons.cloud_off, size: 48, color: AppColors.textHint),
+                        Icon(
+                          Icons.cloud_off,
+                          size: 48,
+                          color: AppColors.textHint,
+                        ),
                         SizedBox(height: 12),
-                        Text('Belum ada peta yang diunduh', style: TextStyle(color: AppColors.textSecondary)),
+                        Text(
+                          'Belum ada peta yang diunduh',
+                          style: TextStyle(color: AppColors.textSecondary),
+                        ),
                       ],
                     );
                   }
 
                   return Column(
                     children: [
-                      const Icon(Icons.sd_storage, size: 48, color: AppColors.primary),
+                      const Icon(
+                        Icons.sd_storage,
+                        size: 48,
+                        color: AppColors.primary,
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         '${sizeMb.toStringAsFixed(2)} MB',
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.primary),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -75,9 +90,9 @@ class CacheManagementScreen extends ConsumerWidget {
                 },
               ),
             ),
-            
+
             const Spacer(),
-            
+
             statsAsync.maybeWhen(
               data: (stats) => stats['count'] > 0
                   ? SizedBox(
@@ -94,7 +109,9 @@ class CacheManagementScreen extends ConsumerWidget {
                             context: context,
                             builder: (ctx) => AlertDialog(
                               title: const Text('Hapus Peta?'),
-                              content: const Text('Anda tidak akan bisa melihat peta evakuasi saat offline jika peta dihapus.'),
+                              content: const Text(
+                                'Anda tidak akan bisa melihat peta evakuasi saat offline jika peta dihapus.',
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx, false),
@@ -102,7 +119,10 @@ class CacheManagementScreen extends ConsumerWidget {
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx, true),
-                                  child: const Text('Hapus', style: TextStyle(color: AppColors.danger)),
+                                  child: const Text(
+                                    'Hapus',
+                                    style: TextStyle(color: AppColors.danger),
+                                  ),
                                 ),
                               ],
                             ),
@@ -117,7 +137,9 @@ class CacheManagementScreen extends ConsumerWidget {
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Peta offline berhasil dihapus dari memori.'),
+                                content: Text(
+                                  'Peta offline berhasil dihapus dari memori.',
+                                ),
                                 backgroundColor: AppColors.success,
                               ),
                             );

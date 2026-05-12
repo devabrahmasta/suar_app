@@ -10,7 +10,7 @@ class ElevationService {
   Future<double> getElevation(LatLng point) async {
     try {
       const String url = 'https://api.openrouteservice.org/elevation/point';
-      
+
       final response = await _dio.post(
         url,
         options: Options(
@@ -24,20 +24,20 @@ class ElevationService {
           "format_out": "geojson",
           "geometry": {
             "type": "Point",
-            "coordinates": [point.longitude, point.latitude] 
-          }
+            "coordinates": [point.longitude, point.latitude],
+          },
         },
       );
 
       if (response.statusCode == 200) {
         final List coordinates = response.data['geometry']['coordinates'];
-        
+
         return (coordinates[2] as num).toDouble();
       } else {
         throw Exception('Gagal mengambil elevasi');
       }
     } catch (e) {
-      return 0.0; 
+      return 0.0;
     }
   }
 }

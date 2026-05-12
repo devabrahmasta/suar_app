@@ -23,16 +23,14 @@ final inariskServiceProvider = Provider<InaRiskService>((ref) {
 });
 
 final geminiTriageServiceProvider = Provider<GeminiTriageService>((ref) {
-  final apiKey = dotenv.env['GEMINI_API_KEY'] ?? ''; 
+  final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
   return GeminiTriageService(apiKey: apiKey);
 });
 
-
 class EwsNotifier extends AsyncNotifier<TriageResult?> {
-  
   @override
   Future<TriageResult?> build() async {
-    return null; 
+    return null;
   }
 
   Future<void> checkLatestThreat() async {

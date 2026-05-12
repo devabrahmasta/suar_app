@@ -37,19 +37,21 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
 
     if (!hasInternet) {
       _dwellTimer?.cancel();
-      return; 
+      return;
     }
 
     _lastKnownLocation = location;
     final inariskService = ref.read(inariskServiceProvider);
-    
-    final isRedZone = await inariskService.checkTsunamiHazard(location.latitude, location.longitude);
+
+    final isRedZone = await inariskService.checkTsunamiHazard(
+      location.latitude,
+      location.longitude,
+    );
     final currentState = state.value ?? GeofenceState.safe;
 
     if (isRedZone && currentState == GeofenceState.safe) {
       state = const AsyncData(GeofenceState.transit);
       _startDwellTimer(location);
-      
     } else if (!isRedZone && currentState != GeofenceState.safe) {
       _dwellTimer?.cancel();
       state = const AsyncData(GeofenceState.safe);
@@ -59,7 +61,7 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
 
   void _startDwellTimer(LatLng location) {
     _dwellTimer?.cancel();
-    
+
     _dwellTimer = Timer(const Duration(seconds: 15), () async {
       state = const AsyncData(GeofenceState.dwelling);
       print("Geofence: Waktu singgah tercapai. Mulai sinkronisasi peta...");
@@ -71,8 +73,11 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
     if (_lastKnownLocation == null) return;
 
     final inariskService = ref.read(inariskServiceProvider);
-    final isRedZone = await inariskService.checkTsunamiHazard(_lastKnownLocation!.latitude, _lastKnownLocation!.longitude);
-    
+    final isRedZone = await inariskService.checkTsunamiHazard(
+      _lastKnownLocation!.latitude,
+      _lastKnownLocation!.longitude,
+    );
+
     if (isRedZone && state.value != GeofenceState.dwelling) {
       print("Geofence: EMERGENCY OVERRIDE! Memaksa unduhan peta sekarang!");
       _dwellTimer?.cancel();
@@ -84,16 +89,18 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
   Future<void> _downloadAndCacheMap(LatLng location) async {
     final networkState = await ref.read(networkStatusProvider.future);
     final hasInternet = !networkState.contains(ConnectivityResult.none);
-    
+
     if (!hasInternet) {
-      print("Geofence: Batal sinkronisasi peta karena internet tiba-tiba terputus.");
+      print(
+        "Geofence: Batal sinkronisasi peta karena internet tiba-tiba terputus.",
+      );
       return;
     }
 
     try {
       final cacheService = MapCacheService();
       final smartEvacuation = ref.read(smartEvacuationProvider);
-      
+
       List<LatLng>? route;
       try {
         route = await smartEvacuation.findOptimalRoute(location);
@@ -111,7 +118,7 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
       } else {
         await cacheService.downloadMapRadius(location, radiusInMeters: 3000);
       }
-      
+
       ref.invalidate(mapCacheStatusProvider);
       print("Geofence: Peta Dynamic & Rute sukses diamankan!");
     } catch (e) {
@@ -120,6 +127,8 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
   }
 }
 
-final geofenceProvider = AsyncNotifierProvider<GeofenceNotifier, GeofenceState>(() {
-  return GeofenceNotifier();
-});
+final geofenceProvider = AsyncNotifierProvider<GeofenceNotifier, GeofenceState>(
+  () {
+    return GeofenceNotifier();
+  },
+);

@@ -22,13 +22,13 @@ class SmartEvacuationService {
   });
 
   Future<List<LatLng>> findOptimalRoute(LatLng currentLocation) async {
-    final List<double> searchRadii = [3000.0]; 
+    final List<double> searchRadii = [3000.0];
     final List<double> bearings = [0, 45, 90, 135, 180, 225, 270, 315];
 
     const distanceCalculator = Distance();
 
     print('\n=== MULAI ANALISIS RUTE EVAKUASI (HYBRID SNAP) ===');
-    
+
     for (double radius in searchRadii) {
       List<Map<String, dynamic>> validCandidates = [];
 
@@ -56,9 +56,13 @@ class SmartEvacuationService {
           }
 
           print('✅ Arah $bearing° lolos! (Elevasi: $elevation m)');
-          return {'point': candidatePoint, 'elevation': elevation, 'bearing': bearing};
+          return {
+            'point': candidatePoint,
+            'elevation': elevation,
+            'bearing': bearing,
+          };
         } catch (e) {
-          return null; 
+          return null;
         }
       });
 
@@ -71,7 +75,8 @@ class SmartEvacuationService {
 
       if (validCandidates.isNotEmpty) {
         validCandidates.sort(
-          (a, b) => (b['elevation'] as double).compareTo(a['elevation'] as double),
+          (a, b) =>
+              (b['elevation'] as double).compareTo(a['elevation'] as double),
         );
 
         for (var candidate in validCandidates) {
@@ -79,26 +84,41 @@ class SmartEvacuationService {
           final originalPoint = candidate['point'] as LatLng;
           print('\n⏳ Mengeksekusi kandidat terbaik arah $bearing°...');
 
-          final snappedPoint = await routingService.getSnappedPoint(originalPoint);
+          final snappedPoint = await routingService.getSnappedPoint(
+            originalPoint,
+          );
           if (snappedPoint == null) {
-            print('⚠️ Arah $bearing° diabaikan: Tidak ada akses jalan pejalan kaki terdekat (Terisolasi).');
+            print(
+              '⚠️ Arah $bearing° diabaikan: Tidak ada akses jalan pejalan kaki terdekat (Terisolasi).',
+            );
             continue;
           }
 
-          final isSnappedRedZone = await inarisk.checkTsunamiHazard(snappedPoint.latitude, snappedPoint.longitude);
+          final isSnappedRedZone = await inarisk.checkTsunamiHazard(
+            snappedPoint.latitude,
+            snappedPoint.longitude,
+          );
           if (isSnappedRedZone) {
-            print('⚠️ Arah $bearing° diabaikan: Titik jalan mundur ke Zona Merah Tsunami!');
-            continue; 
+            print(
+              '⚠️ Arah $bearing° diabaikan: Titik jalan mundur ke Zona Merah Tsunami!',
+            );
+            continue;
           }
 
-          final snappedElevation = await elevationService.getElevation(snappedPoint);
+          final snappedElevation = await elevationService.getElevation(
+            snappedPoint,
+          );
           if (snappedElevation <= 5.0) {
-            print('⚠️ Arah $bearing° diabaikan: Jalan raya berada di elevasi rendah ($snappedElevation m).');
+            print(
+              '⚠️ Arah $bearing° diabaikan: Jalan raya berada di elevasi rendah ($snappedElevation m).',
+            );
             continue;
           }
 
           try {
-            print('🛣️ Validasi sukses! Membangun rute ke jalan aspal arah $bearing°...');
+            print(
+              '🛣️ Validasi sukses! Membangun rute ke jalan aspal arah $bearing°...',
+            );
             final route = await routingService.getEvacuationRoute(
               currentLocation,
               snappedPoint,
@@ -106,14 +126,18 @@ class SmartEvacuationService {
             print('🎉 RUTE EVAKUASI DITEMUKAN!');
             return route;
           } catch (e) {
-            print('⚠️ Rute darat gagal dibuat (kemungkinan terhalang sungai): $e');
-            continue; 
+            print(
+              '⚠️ Rute darat gagal dibuat (kemungkinan terhalang sungai): $e',
+            );
+            continue;
           }
         }
       }
     }
 
-    print('🚨 KESIMPULAN: Semua titik jalan kaki gagal. Harus evakuasi vertikal.');
+    print(
+      '🚨 KESIMPULAN: Semua titik jalan kaki gagal. Harus evakuasi vertikal.',
+    );
     throw VerticalEvacuationException(
       'Tidak ditemukan rute darat yang aman. Lakukan Evakuasi Vertikal ke gedung tinggi terdekat!',
     );

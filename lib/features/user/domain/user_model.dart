@@ -9,7 +9,6 @@ class UserModel {
     required this.username,
   });
 
-  // Konversi ke Map untuk disimpan di SharedPreferences
   Map<String, dynamic> toMap() {
     return {
       'fullName': fullName,
@@ -18,7 +17,6 @@ class UserModel {
     };
   }
 
-  // Ambil dari Map (SharedPreferences)
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       fullName: map['fullName'] ?? '',

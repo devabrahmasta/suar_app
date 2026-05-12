@@ -100,8 +100,8 @@ class MapCacheService {
 
       return decodedData.map((item) {
         return LatLng(
-          (item['lat'] as num).toDouble(), 
-          (item['lng'] as num).toDouble()
+          (item['lat'] as num).toDouble(),
+          (item['lng'] as num).toDouble(),
         );
       }).toList();
     } catch (e) {

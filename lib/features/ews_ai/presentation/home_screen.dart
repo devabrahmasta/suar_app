@@ -69,7 +69,10 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           IconButton(
-            icon: const Icon(Icons.sd_storage_outlined, color: AppColors.textHint),
+            icon: const Icon(
+              Icons.sd_storage_outlined,
+              color: AppColors.textHint,
+            ),
             tooltip: 'Penyimpanan Peta',
             onPressed: () => context.push('/cache-management'),
           ),
@@ -471,12 +474,20 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  void _showEwsAlertModal(BuildContext context, TriageResult result, bool isMapAvailable) {
+  void _showEwsAlertModal(
+    BuildContext context,
+    TriageResult result,
+    bool isMapAvailable,
+  ) {
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
     final themeColor = isEvakuasi ? AppColors.danger : AppColors.warning;
-    final themeLightColor = isEvakuasi ? AppColors.dangerLight : AppColors.warningLight;
+    final themeLightColor = isEvakuasi
+        ? AppColors.dangerLight
+        : AppColors.warningLight;
     final alertTitle = isEvakuasi ? 'POTENSI TSUNAMI' : 'GEMPA BUMI';
-    final zoneText = isEvakuasi ? 'LOKASI ANDA: ZONA MERAH' : 'LOKASI ANDA: AMAN DARI TSUNAMI';
+    final zoneText = isEvakuasi
+        ? 'LOKASI ANDA: ZONA MERAH'
+        : 'LOKASI ANDA: AMAN DARI TSUNAMI';
 
     showModalBottomSheet(
       context: context,
@@ -492,7 +503,10 @@ class HomeScreen extends ConsumerWidget {
             children: [
               Container(
                 color: themeLightColor,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 20,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -521,25 +535,52 @@ class HomeScreen extends ConsumerWidget {
                       CircleAvatar(
                         radius: 40,
                         backgroundColor: themeColor,
-                        child: const Icon(Icons.warning, size: 40, color: AppColors.white),
+                        child: const Icon(
+                          Icons.warning,
+                          size: 40,
+                          color: AppColors.white,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         alertTitle,
-                        style: Theme.of(context).textTheme.displayLarge?.copyWith(color: themeColor),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.displayLarge?.copyWith(color: themeColor),
                       ),
                       const Text(
                         'Peringatan Dini di Wilayah Anda',
-                        style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                       const SizedBox(height: 24),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildStatCard('MAGNITUDE', '7.8 SR', '+0.2', isRed: isEvakuasi, themeColor: themeColor),
-                          _buildStatCard('KEDALAMAN', '10 km', 'Stabil', isRed: false, themeColor: themeColor),
-                          _buildStatCard('JARAK', '2.5 km', 'Dekat', isRed: isEvakuasi, themeColor: themeColor),
+                          _buildStatCard(
+                            'MAGNITUDE',
+                            '7.8 SR',
+                            '+0.2',
+                            isRed: isEvakuasi,
+                            themeColor: themeColor,
+                          ),
+                          _buildStatCard(
+                            'KEDALAMAN',
+                            '10 km',
+                            'Stabil',
+                            isRed: false,
+                            themeColor: themeColor,
+                          ),
+                          _buildStatCard(
+                            'JARAK',
+                            '2.5 km',
+                            'Dekat',
+                            isRed: isEvakuasi,
+                            themeColor: themeColor,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 24),
@@ -554,7 +595,10 @@ class HomeScreen extends ConsumerWidget {
                         alignment: Alignment.bottomLeft,
                         child: Container(
                           margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.white,
                             borderRadius: BorderRadius.circular(20),
@@ -603,45 +647,75 @@ class HomeScreen extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            
-                            
-                            const Text('Tindakan Segera:', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+
+                            const Text(
+                              'Tindakan Segera:',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             _buildInstructionList(result.tindakanSegera),
-                            
+
                             const SizedBox(height: 12),
-                            
-                            const Text('Persiapan:', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+
+                            const Text(
+                              'Persiapan:',
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             _buildInstructionList(result.persiapan),
-                            
+
                             const SizedBox(height: 24),
-                            
+
                             if (isEvakuasi)
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: isMapAvailable ? AppColors.white : AppColors.surface,
-                                    foregroundColor: isMapAvailable ? AppColors.danger : AppColors.textHint,
+                                    backgroundColor: isMapAvailable
+                                        ? AppColors.white
+                                        : AppColors.surface,
+                                    foregroundColor: isMapAvailable
+                                        ? AppColors.danger
+                                        : AppColors.textHint,
                                   ),
                                   onPressed: () {
                                     if (isMapAvailable) {
                                       Navigator.pop(context);
                                       context.push('/map');
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         const SnackBar(
-                                          content: Text('Peta tidak tersedia! Harap ikuti instruksi dari AI.'),
+                                          content: Text(
+                                            'Peta tidak tersedia! Harap ikuti instruksi dari AI.',
+                                          ),
                                           backgroundColor: AppColors.warning,
                                         ),
                                       );
                                     }
                                   },
-                                  icon: Icon(isMapAvailable ? Icons.location_on : Icons.location_off),
+                                  icon: Icon(
+                                    isMapAvailable
+                                        ? Icons.location_on
+                                        : Icons.location_off,
+                                  ),
                                   label: Text(
-                                    isMapAvailable ? 'BUKA PETA EVAKUASI' : "PETA TIDAK TERSEDIA",
-                                    style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1),
+                                    isMapAvailable
+                                        ? 'BUKA PETA EVAKUASI'
+                                        : "PETA TIDAK TERSEDIA",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -659,7 +733,13 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, String sub, {required bool isRed, required Color themeColor}) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    String sub, {
+    required bool isRed,
+    required Color themeColor,
+  }) {
     final activeColor = isRed ? themeColor : AppColors.textPrimary;
     return Container(
       width: 100,
@@ -671,16 +751,40 @@ class HomeScreen extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Text(title, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textHint)),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textHint,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: activeColor)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: activeColor,
+            ),
+          ),
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(isRed ? Icons.trending_up : Icons.remove, size: 12, color: isRed ? themeColor : AppColors.textSecondary),
+              Icon(
+                isRed ? Icons.trending_up : Icons.remove,
+                size: 12,
+                color: isRed ? themeColor : AppColors.textSecondary,
+              ),
               const SizedBox(width: 4),
-              Text(sub, style: TextStyle(fontSize: 10, color: isRed ? themeColor : AppColors.textSecondary)),
+              Text(
+                sub,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isRed ? themeColor : AppColors.textSecondary,
+                ),
+              ),
             ],
           ),
         ],
@@ -697,11 +801,22 @@ class HomeScreen extends ConsumerWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('• ', style: TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text(
+                '• ',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               Expanded(
                 child: Text(
                   item,
-                  style: const TextStyle(color: AppColors.white, fontSize: 14, height: 1.4),
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontSize: 14,
+                    height: 1.4,
+                  ),
                 ),
               ),
             ],

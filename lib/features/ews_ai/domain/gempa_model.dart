@@ -25,7 +25,7 @@ class GempaModel {
 
   factory GempaModel.fromJson(Map<String, dynamic> json) {
     final gempa = json['Infogempa']['gempa'];
-    
+
     return GempaModel(
       tanggal: gempa['Tanggal'] ?? '',
       jam: gempa['Jam'] ?? '',
@@ -36,8 +36,8 @@ class GempaModel {
       wilayah: gempa['Wilayah'] ?? '',
       potensi: gempa['Potensi'] ?? '',
       dirasakan: gempa['Dirasakan'] ?? 'Tidak ada data',
-      shakemapUrl: gempa['Shakemap'] != null 
-          ? 'https://static.bmkg.go.id/${gempa['Shakemap']}' 
+      shakemapUrl: gempa['Shakemap'] != null
+          ? 'https://static.bmkg.go.id/${gempa['Shakemap']}'
           : '',
     );
   }
