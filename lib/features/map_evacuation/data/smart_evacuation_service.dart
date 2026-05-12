@@ -26,7 +26,7 @@ class SmartEvacuationService {
   });
 
   Future<List<LatLng>> findOptimalRoute(LatLng currentLocation) async {
-    final List<double> searchRadii = [3000.0];
+    final List<double> searchRadii = [3000.0, 2000.0, 2000.0];
     final List<double> bearings = [0, 45, 90, 135, 180, 225, 270, 315];
 
     const distanceCalculator = Distance();
