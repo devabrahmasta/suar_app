@@ -41,11 +41,78 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _showDangerSnackBar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.danger,
+      SnackBar(content: Text(message), backgroundColor: AppColors.danger),
+    );
+  }
+
+  void _showWarningSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: AppColors.warning),
+    );
+  }
+
+  // Returns true  → user chose the positive action (retry / open settings)
+  // Returns false → user chose skip
+  Future<bool> _showRationaleDialog({
+    required String title,
+    required String body,
+    required bool isPermanent,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+        contentPadding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+        actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+        title: Row(
+          children: [
+            Icon(
+              isPermanent
+                  ? Icons.settings_outlined
+                  : Icons.info_outline_rounded,
+              color: AppColors.primary,
+              size: 22,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          body,
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.textSecondary,
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text(
+              'Lewati',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(isPermanent ? 'Buka Pengaturan' : 'Coba Lagi'),
+          ),
+        ],
       ),
     );
+    return result ?? false;
   }
 
   // ── Slide 2: Location Permission ───────────────────────────────────────────
@@ -58,12 +125,53 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         permission = await Geolocator.requestPermission();
       }
 
-      final bool granted =
-          permission == LocationPermission.whileInUse ||
-          permission == LocationPermission.always;
+      // Still denied after first request → show rationale dialog
+      if (permission == LocationPermission.denied) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final retry = await _showRationaleDialog(
+          title: 'Izin Lokasi Diperlukan',
+          body:
+              'SUAR membutuhkan GPS untuk menampilkan rute evakuasi ke titik '
+              'aman terdekat. Tanpa izin ini, navigasi darurat tidak bisa berfungsi.',
+          isPermanent: false,
+        );
+        if (!mounted) return;
+        if (retry) {
+          // Recurse to try again
+          return _handleLocationSlide();
+        } else {
+          _showDangerSnackBar('Izin lokasi wajib diberikan untuk evakuasi.');
+          return;
+        }
+      }
 
-      if (!granted) {
-        _showDangerSnackBar('Izin lokasi wajib diberikan untuk evakuasi.');
+      // Permanently denied → direct user to app settings
+      if (permission == LocationPermission.deniedForever) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final openSettings = await _showRationaleDialog(
+          title: 'Izin Lokasi Diperlukan',
+          body:
+              'SUAR membutuhkan GPS untuk menampilkan rute evakuasi ke titik aman. '
+              'Anda telah menolak izin ini sebelumnya. Silakan buka '
+              'Pengaturan > Aplikasi > SUAR > Izin untuk mengaktifkannya secara manual.',
+          isPermanent: true,
+        );
+        if (!mounted) return;
+        if (openSettings) {
+          await openAppSettings();
+          // Re-check after returning from settings
+          final recheck = await Geolocator.checkPermission();
+          if (recheck == LocationPermission.whileInUse ||
+              recheck == LocationPermission.always) {
+            _nextPage();
+          } else {
+            _showDangerSnackBar('Izin lokasi wajib diberikan untuk evakuasi.');
+          }
+        } else {
+          _showDangerSnackBar('Izin lokasi wajib diberikan untuk evakuasi.');
+        }
         return;
       }
 
@@ -79,10 +187,52 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     try {
       final status = await Permission.ignoreBatteryOptimizations.request();
 
-      if (status.isDenied || status.isPermanentlyDenied) {
-        _showDangerSnackBar(
-          'Izin optimasi baterai diperlukan agar SUAR tetap aktif.',
+      if (status.isDenied) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final retry = await _showRationaleDialog(
+          title: 'Optimasi Baterai',
+          body:
+              'SUAR perlu berjalan di latar belakang agar tetap aktif saat '
+              'terjadi bencana. Tanpa ini, notifikasi darurat mungkin tertunda.',
+          isPermanent: false,
         );
+        if (!mounted) return;
+        if (retry) {
+          return _handleBatterySlide();
+        } else {
+          // Battery is skippable — warn but allow to proceed
+          _showWarningSnackBar('Fitur background mungkin tidak optimal.');
+          _nextPage();
+        }
+        return;
+      }
+
+      if (status.isPermanentlyDenied) {
+        if (!mounted) return;
+        setState(() => _isLoading = false);
+        final openSettings = await _showRationaleDialog(
+          title: 'Optimasi Baterai',
+          body:
+              'Anda telah menolak izin ini sebelumnya. Silakan buka '
+              'Pengaturan > Aplikasi > SUAR > Baterai untuk mengaktifkannya secara manual.',
+          isPermanent: true,
+        );
+        if (!mounted) return;
+        if (openSettings) {
+          await openAppSettings();
+          final recheck = await Permission.ignoreBatteryOptimizations.status;
+          if (recheck.isGranted) {
+            _nextPage();
+          } else {
+            _showWarningSnackBar('Fitur background mungkin tidak optimal.');
+            _nextPage();
+          }
+        } else {
+          // Still skippable
+          _showWarningSnackBar('Fitur background mungkin tidak optimal.');
+          _nextPage();
+        }
         return;
       }
 
@@ -96,26 +246,86 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _handleMeshSlide() async {
     setState(() => _isLoading = true);
     try {
-      final statuses = await [
+      final permissions = [
         Permission.bluetooth,
         Permission.bluetoothAdvertise,
         Permission.bluetoothConnect,
         Permission.bluetoothScan,
         Permission.nearbyWifiDevices,
-      ].request();
+      ];
 
-      final allGranted = statuses.values.every(
-        (s) => s.isGranted || s.isLimited,
-      );
+      final statuses = await permissions.request();
 
-      if (!allGranted) {
-        _showDangerSnackBar(
-          'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
-        );
+      final isModernGranted = statuses[Permission.bluetoothScan]!.isGranted &&
+          statuses[Permission.bluetoothConnect]!.isGranted &&
+          statuses[Permission.nearbyWifiDevices]!.isGranted;
+
+      final isLegacyGranted = statuses[Permission.bluetooth]!.isGranted;
+
+      if (isModernGranted || isLegacyGranted) {
+        _nextPage();
         return;
       }
 
-      _nextPage();
+      if (!mounted) return;
+      setState(() => _isLoading = false);
+
+      bool anyPermanent = statuses[Permission.bluetoothScan]!.isPermanentlyDenied ||
+          statuses[Permission.bluetoothConnect]!.isPermanentlyDenied ||
+          statuses[Permission.nearbyWifiDevices]!.isPermanentlyDenied;
+          
+      if (!anyPermanent && !isModernGranted) {
+        anyPermanent = statuses[Permission.bluetooth]!.isPermanentlyDenied;
+      }
+
+      if (anyPermanent) {
+        final openSettings = await _showRationaleDialog(
+          title: 'Izin Perangkat Sekitar Diperlukan',
+          body:
+              'SUAR membutuhkan Bluetooth dan Wi-Fi terdekat untuk komunikasi '
+              'mesh peer-to-peer saat jaringan putus. Anda telah menolak izin ini '
+              'sebelumnya. Silakan buka Pengaturan > Aplikasi > SUAR > Izin untuk '
+              'mengaktifkannya secara manual.',
+          isPermanent: true,
+        );
+        if (!mounted) return;
+        if (openSettings) {
+          await openAppSettings();
+          final modernOk = await Permission.bluetoothScan.isGranted &&
+              await Permission.bluetoothConnect.isGranted &&
+              await Permission.nearbyWifiDevices.isGranted;
+          final legacyOk = await Permission.bluetooth.isGranted;
+
+          if (modernOk || legacyOk) {
+            _nextPage();
+          } else {
+            _showDangerSnackBar(
+              'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
+            );
+          }
+        } else {
+          _showDangerSnackBar(
+            'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
+          );
+        }
+      } else {
+        final retry = await _showRationaleDialog(
+          title: 'Izin Perangkat Sekitar Diperlukan',
+          body:
+              'SUAR membutuhkan Bluetooth dan Wi-Fi terdekat untuk komunikasi '
+              'mesh peer-to-peer agar Anda tetap terhubung dengan relawan saat '
+              'internet tidak tersedia.',
+          isPermanent: false,
+        );
+        if (!mounted) return;
+        if (retry) {
+          return _handleMeshSlide();
+        } else {
+          _showDangerSnackBar(
+            'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
+          );
+        }
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -127,7 +337,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(userProvider.notifier).createUser(
+      await ref
+          .read(userProvider.notifier)
+          .createUser(
             _namaController.text.trim(),
             _hpController.text.trim(),
             '',
@@ -146,10 +358,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           children: [
             // ── Progress indicator ──────────────────────────────────────────
             TweenAnimationBuilder<double>(
-              tween: Tween(
-                begin: 0,
-                end: (_currentIndex + 1) / _totalSlides,
-              ),
+              tween: Tween(begin: 0, end: (_currentIndex + 1) / _totalSlides),
               duration: const Duration(milliseconds: 350),
               builder: (context, value, child) => LinearProgressIndicator(
                 value: value,
@@ -282,7 +491,10 @@ class _IdentityFormSlide extends StatelessWidget {
           children: [
             Text('Identitas Radar', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 6),
-            Text('Siapa kamu di jaringan SUAR?', style: theme.textTheme.bodyMedium),
+            Text(
+              'Siapa kamu di jaringan SUAR?',
+              style: theme.textTheme.bodyMedium,
+            ),
             const SizedBox(height: 20),
 
             // Warning box
@@ -329,8 +541,9 @@ class _IdentityFormSlide extends StatelessWidget {
               controller: namaController,
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.next,
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Nama lengkap tidak boleh kosong.' : null,
+              validator: (v) => (v == null || v.trim().isEmpty)
+                  ? 'Nama lengkap tidak boleh kosong.'
+                  : null,
               decoration: const InputDecoration(
                 hintText: 'cth. Budi Santoso',
                 prefixIcon: Icon(Icons.person_outline_rounded),
@@ -353,8 +566,9 @@ class _IdentityFormSlide extends StatelessWidget {
               keyboardType: TextInputType.phone,
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => onSubmit(),
-              validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Nomor HP tidak boleh kosong.' : null,
+              validator: (v) => (v == null || v.trim().isEmpty)
+                  ? 'Nomor HP tidak boleh kosong.'
+                  : null,
               decoration: const InputDecoration(
                 hintText: 'cth. 08123456789',
                 prefixIcon: Icon(Icons.phone_outlined),
