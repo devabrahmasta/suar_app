@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:suar_app/features/map_evacuation/data/map_cache_service.dart';
 
-import '../../ews_ai/presentation/ews_provider.dart'; 
+import '../../ews_ai/presentation/ews_provider.dart';
 import '../data/routing_service.dart';
 import '../data/elevation_service.dart';
 import '../data/smart_evacuation_service.dart';
@@ -36,7 +36,7 @@ final userLocationStreamProvider = StreamProvider<LatLng>((ref) async* {
   yield* Geolocator.getPositionStream(
     locationSettings: const LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 5, 
+      distanceFilter: 5,
     ),
   ).map((position) => LatLng(position.latitude, position.longitude));
 });
@@ -68,25 +68,27 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
     if (!hasInternet) {
       final cacheService = MapCacheService();
       final cachedRoute = await cacheService.getOfflineRoute();
-      
+
       if (cachedRoute != null && cachedRoute.isNotEmpty) {
         print('🚀 Otomatis memuat rute dari Cache (Mode Offline Aktif)');
         return cachedRoute;
       }
-      throw VerticalEvacuationException('Koneksi terputus & tidak ada rute offline tersimpan. Lakukan Evakuasi Vertikal!');
+      throw VerticalEvacuationException(
+        'Koneksi terputus & tidak ada rute offline tersimpan. Lakukan Evakuasi Vertikal!',
+      );
     }
 
-    return null; 
+    return null;
   }
 
   Future<void> findRouteManual() async {
     state = const AsyncLoading();
-    
+
     state = await AsyncValue.guard(() async {
       final locService = ref.read(locationServiceProvider);
       final position = await locService.getCurrentPosition();
       final startLocation = LatLng(position.latitude, position.longitude);
-      
+
       final smartEvacuation = ref.read(smartEvacuationProvider);
       final freshRoute = await smartEvacuation.findOptimalRoute(startLocation);
 
@@ -110,9 +112,10 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
   }
 }
 
-final evacuationRouteProvider = AsyncNotifierProvider<RouteNotifier, List<LatLng>?>(() {
-  return RouteNotifier();
-});
+final evacuationRouteProvider =
+    AsyncNotifierProvider<RouteNotifier, List<LatLng>?>(() {
+      return RouteNotifier();
+    });
 
 final networkStatusProvider = StreamProvider<List<ConnectivityResult>>((ref) {
   return Connectivity().onConnectivityChanged;
@@ -132,17 +135,11 @@ final mapCacheStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   try {
     final store = FMTCStore('evacuation_map');
     final length = await store.stats.length;
-    
-    final estimatedSizeMb = (length * 18.0) / 1024.0; 
-    
-    return {
-      'count': length,
-      'sizeMb': estimatedSizeMb,
-    };
+
+    final estimatedSizeMb = (length * 18.0) / 1024.0;
+
+    return {'count': length, 'sizeMb': estimatedSizeMb};
   } catch (e) {
-    return {
-      'count': 0,
-      'sizeMb': 0.0,
-    };
+    return {'count': 0, 'sizeMb': 0.0};
   }
 });

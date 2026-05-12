@@ -30,8 +30,9 @@ dependencies:
   path_provider: ^2.1.5
   xml: ^6.6.1
   flutter_dotenv: ^6.0.0
-  shared_preferences: ^2.5.4
+  shared_preferences: ^2.5.5
   connectivity_plus: ^7.0.0
+  permission_handler: ^12.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -45,5 +46,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/images/
     - .env
   

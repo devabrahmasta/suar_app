@@ -35,7 +35,8 @@ class EwsTestingScreen extends ConsumerWidget {
 
           _ScenarioCard(
             title: 'Skenario 1: Tsunami Kritis',
-            description: 'Gempa 8.5 SR, Berpotensi Tsunami, User di Zona Merah. (Ekspektasi: Muncul Pop-up Merah EVAKUASI)',
+            description:
+                'Gempa 8.5 SR, Berpotensi Tsunami, User di Zona Merah. (Ekspektasi: Muncul Pop-up Merah EVAKUASI)',
             icon: Icons.waves,
             color: AppColors.danger,
             onTap: () {
@@ -52,10 +53,12 @@ class EwsTestingScreen extends ConsumerWidget {
                 shakemapUrl: '',
               );
 
-              ref.read(ewsProvider.notifier).triggerMockThreat(
-                dummyGempa: dummyGempa,
-                dummyIsDiZonaMerah: true,
-              );
+              ref
+                  .read(ewsProvider.notifier)
+                  .triggerMockThreat(
+                    dummyGempa: dummyGempa,
+                    dummyIsDiZonaMerah: true,
+                  );
 
               context.pop();
             },
@@ -64,7 +67,8 @@ class EwsTestingScreen extends ConsumerWidget {
 
           _ScenarioCard(
             title: 'Skenario 2: Gempa Ringan Darat',
-            description: 'Gempa 5.2 SR, Tidak Berpotensi Tsunami. (Ekspektasi: Muncul Banner Oranye BERLINDUNG di Home)',
+            description:
+                'Gempa 5.2 SR, Tidak Berpotensi Tsunami. (Ekspektasi: Muncul Banner Oranye BERLINDUNG di Home)',
             icon: Icons.dashboard_customize,
             color: AppColors.warning,
             onTap: () {
@@ -81,23 +85,25 @@ class EwsTestingScreen extends ConsumerWidget {
                 shakemapUrl: '',
               );
 
-              ref.read(ewsProvider.notifier).triggerMockThreat(
-                dummyGempa: dummyGempa,
-                dummyIsDiZonaMerah: false,
-              );
+              ref
+                  .read(ewsProvider.notifier)
+                  .triggerMockThreat(
+                    dummyGempa: dummyGempa,
+                    dummyIsDiZonaMerah: false,
+                  );
 
               context.pop();
             },
           ),
-          const SizedBox(height: 16,),
+          const SizedBox(height: 16),
 
           _ScenarioCard(
             title: 'Skenario 3: Masuk Zona Merah',
-            description: 'GPS mendeteksi Anda masuk ke zona rawan tsunami saat cuaca aman. (Ekspektasi: Peta offline mulai diunduh otomatis di background)',
+            description:
+                'GPS mendeteksi Anda masuk ke zona rawan tsunami saat cuaca aman. (Ekspektasi: Peta offline mulai diunduh otomatis di background)',
             icon: Icons.download_for_offline,
             color: AppColors.info,
             onTap: () async {
-
               final messenger = ScaffoldMessenger.of(context);
               final container = ProviderScope.containerOf(context);
 
@@ -105,9 +111,20 @@ class EwsTestingScreen extends ConsumerWidget {
                 const SnackBar(
                   content: Row(
                     children: [
-                      SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2)),
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: AppColors.white,
+                          strokeWidth: 2,
+                        ),
+                      ),
                       SizedBox(width: 12),
-                      Expanded(child: Text('Simulasi: Memasuki Zona Merah. Mengunduh peta radius 3KM...')),
+                      Expanded(
+                        child: Text(
+                          'Simulasi: Memasuki Zona Merah. Mengunduh peta radius 3KM...',
+                        ),
+                      ),
                     ],
                   ),
                   backgroundColor: AppColors.info,
@@ -120,7 +137,10 @@ class EwsTestingScreen extends ConsumerWidget {
               try {
                 final locService = container.read(locationServiceProvider);
                 final position = await locService.getCurrentPosition();
-                final centerPoint = LatLng(position.latitude, position.longitude);
+                final centerPoint = LatLng(
+                  position.latitude,
+                  position.longitude,
+                );
 
                 final cacheService = MapCacheService();
                 final smartEvacuation = container.read(smartEvacuationProvider);
@@ -136,7 +156,7 @@ class EwsTestingScreen extends ConsumerWidget {
                 if (route != null && route.isNotEmpty) {
                   final allPoints = [centerPoint, ...route];
                   final bounds = LatLngBounds.fromPoints(allPoints);
-                  
+
                   const distance = Distance();
                   final sw = distance.offset(bounds.southWest, 1000, 225);
                   final ne = distance.offset(bounds.northEast, 1000, 45);
@@ -144,29 +164,32 @@ class EwsTestingScreen extends ConsumerWidget {
 
                   await cacheService.downloadMapBoundingBox(paddedBounds);
                 } else {
-                  await cacheService.downloadMapRadius(centerPoint, radiusInMeters: 3000);
+                  await cacheService.downloadMapRadius(
+                    centerPoint,
+                    radiusInMeters: 3000,
+                  );
                 }
-                
+
                 messenger.showSnackBar(
-               const SnackBar(
-                 content: Row(
-                   children: [
-                     Icon(Icons.check_circle, color: AppColors.white),
-                     SizedBox(width: 12),
-                     Text('Peta Offline 3KM Siap Digunakan!'),
-                   ],
-                 ),
-                 backgroundColor: AppColors.success,
-                 duration: Duration(seconds: 5),
-               ),
-             );
-             container.invalidate(mapCacheStatusProvider);
+                  const SnackBar(
+                    content: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: AppColors.white),
+                        SizedBox(width: 12),
+                        Text('Peta Offline 3KM Siap Digunakan!'),
+                      ],
+                    ),
+                    backgroundColor: AppColors.success,
+                    duration: Duration(seconds: 5),
+                  ),
+                );
+                container.invalidate(mapCacheStatusProvider);
               } catch (e) {
                 messenger.showSnackBar(
                   SnackBar(
                     content: Text('Gagal menyimpan peta: $e'),
                     duration: const Duration(seconds: 4),
-                  )
+                  ),
                 );
               }
             },
@@ -224,10 +247,7 @@ class _ScenarioCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 13),
-                  ),
+                  Text(description, style: const TextStyle(fontSize: 13)),
                 ],
               ),
             ),

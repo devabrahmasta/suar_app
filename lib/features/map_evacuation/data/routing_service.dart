@@ -7,11 +7,15 @@ class RoutingService {
 
   RoutingService(this._dio, {required this.apiKey});
 
-  Future<List<LatLng>> getEvacuationRoute(LatLng start, LatLng destination) async {
+  Future<List<LatLng>> getEvacuationRoute(
+    LatLng start,
+    LatLng destination,
+  ) async {
     try {
       const String profile = 'foot-walking';
-      const String url = 'https://api.openrouteservice.org/v2/directions/$profile';
-      
+      const String url =
+          'https://api.openrouteservice.org/v2/directions/$profile';
+
       final response = await _dio.get(
         url,
         queryParameters: {
@@ -27,8 +31,9 @@ class RoutingService {
       );
 
       if (response.statusCode == 200) {
-        final List coordinates = response.data['features'][0]['geometry']['coordinates'];
-        
+        final List coordinates =
+            response.data['features'][0]['geometry']['coordinates'];
+
         return coordinates.map((coord) {
           final double lon = (coord[0] as num).toDouble();
           final double lat = (coord[1] as num).toDouble();
@@ -56,8 +61,10 @@ class RoutingService {
           },
         ),
         data: {
-          "locations": [[point.longitude, point.latitude]],
-          "radius": radius
+          "locations": [
+            [point.longitude, point.latitude],
+          ],
+          "radius": radius,
         },
       );
 

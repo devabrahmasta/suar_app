@@ -9,13 +9,15 @@ class BmkgService {
   Future<GempaModel> fetchLatestEarthquake() async {
     try {
       const url = 'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json';
-      
+
       final response = await _dio.get(url);
 
       if (response.statusCode == 200) {
         return GempaModel.fromJson(response.data);
       } else {
-        throw Exception('Gagal menghubungi server BMKG: ${response.statusCode}');
+        throw Exception(
+          'Gagal menghubungi server BMKG: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Masalah jaringan atau server BMKG down: ${e.message}');

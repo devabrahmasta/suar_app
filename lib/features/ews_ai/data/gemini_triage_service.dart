@@ -11,9 +11,7 @@ class GeminiTriageService {
     _model = GenerativeModel(
       model: 'gemini-1.5-flash',
       apiKey: apiKey,
-      generationConfig: GenerationConfig(
-        responseMimeType: 'application/json',
-      ),
+      generationConfig: GenerationConfig(responseMimeType: 'application/json'),
     );
   }
 
@@ -22,7 +20,8 @@ class GeminiTriageService {
     required bool isDiZonaMerah,
   }) async {
     try {
-      final String prompt = '''
+      final String prompt =
+          '''
 Anda adalah AI Sistem Peringatan Dini (EWS) pada aplikasi evakuasi darurat di Indonesia.
 Berikan instruksi keselamatan yang sangat spesifik dan mudah dipahami berdasarkan data berikut:
 
@@ -52,20 +51,29 @@ Keluarkan hasil analisis DALAM FORMAT JSON SEPERTI INI:
       final response = await _model.generateContent([Content.text(prompt)]);
       final String responseText = response.text ?? '{}';
       final Map<String, dynamic> jsonMap = jsonDecode(responseText);
-      
-      return TriageResult.fromJson(jsonMap);
 
+      return TriageResult.fromJson(jsonMap);
     } catch (e) {
-      final bool daruratKritis = gempa.potensi.toLowerCase().contains('tsunami') && isDiZonaMerah;
-      
+      final bool daruratKritis =
+          gempa.potensi.toLowerCase().contains('tsunami') && isDiZonaMerah;
+
       return TriageResult(
         statusTindakan: daruratKritis ? 'EVAKUASI' : 'BERLINDUNG',
-        tindakanSegera: daruratKritis 
-            ? ['Segera berlari ke dataran tinggi.', 'Jauhi area pantai dan sungai.']
-            : ['Berlindung di bawah meja yang kuat.', 'Jauhi kaca dan benda yang mudah jatuh.'],
+        tindakanSegera: daruratKritis
+            ? [
+                'Segera berlari ke dataran tinggi.',
+                'Jauhi area pantai dan sungai.',
+              ]
+            : [
+                'Berlindung di bawah meja yang kuat.',
+                'Jauhi kaca dan benda yang mudah jatuh.',
+              ],
         persiapan: daruratKritis
             ? ['Bawa Tas Siaga Bencana.', 'Pakai alas kaki yang tertutup.']
-            : ['Matikan kompor dan cabut gas.', 'Siapkan senter jika listrik padam.'],
+            : [
+                'Matikan kompor dan cabut gas.',
+                'Siapkan senter jika listrik padam.',
+              ],
         aktifkanPeta: daruratKritis,
       );
     }

@@ -23,8 +23,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final locationAsync = ref.watch(userLocationStreamProvider);
     final routeAsync = ref.watch(evacuationRouteProvider);
 
-    ref.listen<AsyncValue<LatLng>>(userLocationStreamProvider, (prev, next){
-      if (_isMapReady && next.hasValue && next.value!= null) {
+    ref.listen<AsyncValue<LatLng>>(userLocationStreamProvider, (prev, next) {
+      if (_isMapReady && next.hasValue && next.value != null) {
         _mapController.move(next.value!, _mapController.camera.zoom);
       }
     });
@@ -70,7 +70,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                   ),
 
-                  if (routeAsync.hasValue && routeAsync.value != null && routeAsync.value!.isNotEmpty)
+                  if (routeAsync.hasValue &&
+                      routeAsync.value != null &&
+                      routeAsync.value!.isNotEmpty)
                     PolylineLayer(
                       polylines: [
                         Polyline(
@@ -125,20 +127,38 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: AppColors.primaryLight.withValues(alpha: 0.3),
+                                color: AppColors.primaryLight.withValues(
+                                  alpha: 0.3,
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(Icons.waves, color: AppColors.primary),
+                              child: const Icon(
+                                Icons.waves,
+                                color: AppColors.primary,
+                              ),
                             ),
-                            title: const Text('Simulasi Evakuasi', style: TextStyle(fontWeight: FontWeight.bold)),
-                            subtitle: const Text('Bencana Tsunami', style: TextStyle(fontSize: 12)),
+                            title: const Text(
+                              'Simulasi Evakuasi',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: const Text(
+                              'Bencana Tsunami',
+                              style: TextStyle(fontSize: 12),
+                            ),
                             trailing: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                textStyle: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               onPressed: () {
-                                ref.read(evacuationRouteProvider.notifier).findRouteManual();
+                                ref
+                                    .read(evacuationRouteProvider.notifier)
+                                    .findRouteManual();
                               },
                               child: const Text('CARI RUTE'),
                             ),
@@ -158,7 +178,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       ),
                       title: Text(
                         'Menganalisis Topografi...',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       subtitle: Text(
                         'Mencari rute ke dataran tinggi terdekat',
@@ -177,18 +200,30 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                             children: [
                               const Row(
                                 children: [
-                                  Icon(Icons.warning_amber_rounded, color: AppColors.white, size: 28),
+                                  Icon(
+                                    Icons.warning_amber_rounded,
+                                    color: AppColors.white,
+                                    size: 28,
+                                  ),
                                   SizedBox(width: 8),
                                   Text(
                                     'EVAKUASI VERTIKAL!',
-                                    style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 err.message,
-                                style: const TextStyle(color: AppColors.white, fontSize: 14, height: 1.4),
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 14,
+                                  height: 1.4,
+                                ),
                               ),
                             ],
                           ),
@@ -198,9 +233,16 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     return Card(
                       color: AppColors.warningLight,
                       child: ListTile(
-                        leading: const Icon(Icons.wifi_off, color: AppColors.warning),
+                        leading: const Icon(
+                          Icons.wifi_off,
+                          color: AppColors.warning,
+                        ),
                         title: const Text('Gagal membuat rute darat'),
-                        subtitle: Text(err.toString(), maxLines: 2, overflow: TextOverflow.ellipsis),
+                        subtitle: Text(
+                          err.toString(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     );
                   },
