@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/features/onboarding/presentation/widget/onboarding_slide.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:suar_app/features/user/presentation/user_notifier.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -18,9 +19,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final _formKey = GlobalKey<FormState>();
   final _namaController = TextEditingController();
 
-  static const int _totalSlides = 5;
+  static const int _totalSlides = 4;
   int _currentIndex = 0;
   bool _isLoading = false;
+  String _homeType = 'Rumah Tapak';
+  double? _homeLat;
+  double? _homeLng;
+  bool _isFetchingLocation = false;
 
   @override
   void dispose() {
@@ -241,6 +246,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   // ── Slide 4: Bluetooth & Nearby Wifi ──────────────────────────────────────
+  /*
   Future<void> _handleMeshSlide() async {
     setState(() => _isLoading = true);
     try {
@@ -254,7 +260,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
       final statuses = await permissions.request();
 
-      final isModernGranted = statuses[Permission.bluetoothScan]!.isGranted &&
+      final isModernGranted =
+          statuses[Permission.bluetoothScan]!.isGranted &&
           statuses[Permission.bluetoothConnect]!.isGranted &&
           statuses[Permission.nearbyWifiDevices]!.isGranted;
 
@@ -268,10 +275,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       if (!mounted) return;
       setState(() => _isLoading = false);
 
-      bool anyPermanent = statuses[Permission.bluetoothScan]!.isPermanentlyDenied ||
+      bool anyPermanent =
+          statuses[Permission.bluetoothScan]!.isPermanentlyDenied ||
           statuses[Permission.bluetoothConnect]!.isPermanentlyDenied ||
           statuses[Permission.nearbyWifiDevices]!.isPermanentlyDenied;
-          
+
       if (!anyPermanent && !isModernGranted) {
         anyPermanent = statuses[Permission.bluetooth]!.isPermanentlyDenied;
       }
@@ -289,7 +297,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         if (!mounted) return;
         if (openSettings) {
           await openAppSettings();
-          final modernOk = await Permission.bluetoothScan.isGranted &&
+          final modernOk =
+              await Permission.bluetoothScan.isGranted &&
               await Permission.bluetoothConnect.isGranted &&
               await Permission.nearbyWifiDevices.isGranted;
           final legacyOk = await Permission.bluetooth.isGranted;
@@ -328,19 +337,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
+  */
 
   // ── Slide 5: Submit Identity ───────────────────────────────────────────────
   Future<void> _handleSubmit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    // Validasi tambahan: Pastikan lokasi rumah sudah dikunci
+    if (_homeLat == null || _homeLng == null) {
+      _showWarningSnackBar('Mohon set koordinat tempat tinggal Anda.');
+      return;
+    }
 
     setState(() => _isLoading = true);
     try {
       await ref
           .read(userProvider.notifier)
           .createUser(
-            _namaController.text.trim(),
+            name: _namaController.text.trim(),
+            homeType: _homeType,
+            homeLat: _homeLat,
+            homeLng: _homeLng,
           );
-      // go_router redirect handles routing after state updates.
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -352,15 +370,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Progress indicator ──────────────────────────────────────────
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: (_currentIndex + 1) / _totalSlides),
-              duration: const Duration(milliseconds: 350),
-              builder: (context, value, child) => LinearProgressIndicator(
-                value: value,
-                minHeight: 4,
-                backgroundColor: AppColors.border,
-                color: AppColors.primary,
+            // ── Back Button ────────────────────────────────────────────────
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  top: 8.0,
+                  bottom: 8.0,
+                ),
+                child: AnimatedOpacity(
+                  opacity: _currentIndex > 0 ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: AppColors.textPrimary,
+                    ),
+                    onPressed: () {
+                      if (_currentIndex > 0) {
+                        _pageController.previousPage(
+                          duration: const Duration(milliseconds: 350),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                  ),
+                ),
               ),
             ),
 
@@ -405,6 +441,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
 
                   // Slide 4 — Jaringan Offline & Bluetooth Mesh
+                  /*
                   OnboardingSlide(
                     image: 'assets/images/slide_4.png',
                     title: 'Jaringan Offline & Bluetooth Mesh',
@@ -414,13 +451,35 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     isLoading: _isLoading && _currentIndex == 3,
                     onButtonPressed: _handleMeshSlide,
                   ),
+                  */
 
                   // Slide 5 — Identitas Radar (Form)
                   _IdentityFormSlide(
                     formKey: _formKey,
                     namaController: _namaController,
-                    isLoading: _isLoading && _currentIndex == 4,
+                    isLoading: _isLoading && _currentIndex == 3,
                     onSubmit: _handleSubmit,
+                    homeType: _homeType,
+                    onHomeTypeChanged: (val) =>
+                        setState(() => _homeType = val!),
+                    isFetchingLocation: _isFetchingLocation,
+                    isHomeLocationSet: _homeLat != null,
+                    onSetHomeLocation: () async {
+                      setState(() => _isFetchingLocation = true);
+                      try {
+                        final pos = await Geolocator.getCurrentPosition();
+                        setState(() {
+                          _homeLat = pos.latitude;
+                          _homeLng = pos.longitude;
+                        });
+                      } catch (e) {
+                        _showDangerSnackBar(
+                          'Gagal mendapatkan lokasi. Pastikan GPS aktif.',
+                        );
+                      } finally {
+                        setState(() => _isFetchingLocation = false);
+                      }
+                    },
                   ),
                 ],
               ),
@@ -464,12 +523,25 @@ class _IdentityFormSlide extends StatelessWidget {
     required this.namaController,
     required this.isLoading,
     required this.onSubmit,
+    // Tambahan Callback untuk state parent
+    required this.homeType,
+    required this.onHomeTypeChanged,
+    required this.isFetchingLocation,
+    required this.onSetHomeLocation,
+    required this.isHomeLocationSet,
   });
 
   final GlobalKey<FormState> formKey;
   final TextEditingController namaController;
   final bool isLoading;
   final VoidCallback onSubmit;
+
+  final String? homeType;
+  final ValueChanged<String?> onHomeTypeChanged;
+
+  final bool isFetchingLocation;
+  final VoidCallback onSetHomeLocation;
+  final bool isHomeLocationSet;
 
   @override
   Widget build(BuildContext context) {
@@ -488,24 +560,24 @@ class _IdentityFormSlide extends StatelessWidget {
               'Siapa kamu di jaringan SUAR?',
               style: theme.textTheme.bodyMedium,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
             // Warning box
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.dangerLight,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Icon(
-                    Icons.warning_amber_rounded,
+                    Iconsax.warning_2_copy,
                     color: AppColors.danger,
-                    size: 18,
+                    size: 20,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Gunakan data asli. Anda hanya dikenali dari identitas ini saat jaringan offline.',
@@ -519,14 +591,15 @@ class _IdentityFormSlide extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 28),
+            const SizedBox(height: 32),
 
             // NAMA LENGKAP
             Text(
               'NAMA LENGKAP',
               style: theme.textTheme.labelSmall?.copyWith(
                 color: AppColors.textSecondary,
-                letterSpacing: 1.0,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
@@ -538,19 +611,117 @@ class _IdentityFormSlide extends StatelessWidget {
               validator: (v) => (v == null || v.trim().isEmpty)
                   ? 'Nama lengkap tidak boleh kosong.'
                   : null,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'cth. Budi Santoso',
-                prefixIcon: Icon(Icons.person_outline_rounded),
+                prefixIcon: const Icon(Iconsax.user_copy),
+                filled: true,
+                fillColor: AppColors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: AppColors.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: AppColors.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: AppColors.primary),
+                ),
               ),
             ),
 
             const SizedBox(height: 32),
+            Text(
+              'JENIS TEMPAT TINGGAL',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: AppColors.textSecondary,
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<String>(
+              value: homeType,
+              isExpanded: true,
+              decoration: InputDecoration(
+                // labelText: 'Tipe Tempat Tinggal',
+                prefixIcon: const Icon(Iconsax.house_2_copy),
+                filled: true,
+                fillColor: AppColors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: AppColors.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: AppColors.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: AppColors.primary),
+                ),
+              ),
+              items: ['Rumah Tapak', 'Apartemen/Rusun', 'Gedung/Kantor'].map((
+                type,
+              ) {
+                return DropdownMenuItem(value: type, child: Text(type));
+              }).toList(),
+              onChanged: onHomeTypeChanged,
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: OutlinedButton.icon(
+                onPressed: isFetchingLocation ? null : onSetHomeLocation,
+                icon: isFetchingLocation
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Icon(
+                        isHomeLocationSet
+                            ? Iconsax.tick_circle_copy
+                            : Iconsax.gps_copy,
+                      ),
+                label: Text(
+                  isHomeLocationSet
+                      ? 'Lokasi Rumah Disimpan'
+                      : 'Kunci Lokasi Rumah Ini',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: isHomeLocationSet
+                      ? AppColors.success
+                      : AppColors.primary,
+                  side: BorderSide(
+                    color: isHomeLocationSet
+                        ? AppColors.success
+                        : AppColors.primary,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 48),
 
             // Submit button
             SizedBox(
               width: double.infinity,
               height: 54,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
                 onPressed: isLoading ? null : onSubmit,
                 child: isLoading
                     ? const SizedBox(
@@ -563,7 +734,10 @@ class _IdentityFormSlide extends StatelessWidget {
                       )
                     : const Text(
                         'Masuk Aplikasi',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
               ),
             ),

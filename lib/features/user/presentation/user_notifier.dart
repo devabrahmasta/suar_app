@@ -17,9 +17,20 @@ class UserNotifier extends Notifier<UserModel?> {
     return null;
   }
 
-  Future<void> createUser(String name) async {
+  Future<void> createUser({
+    required String name,
+    required String homeType,
+    required double? homeLat,
+    required double? homeLng,
+  }) async {
     final String generatedDeviceId = const Uuid().v4();
-    final user = UserModel(fullName: name, deviceId: generatedDeviceId);
+    final user = UserModel(
+      fullName: name,
+      deviceId: generatedDeviceId,
+      homeType: homeType,
+      homeLatitude: homeLat,
+      homeLongitude: homeLng,
+    );
 
     await UserLocalService.saveUser(user);
     state = user;
