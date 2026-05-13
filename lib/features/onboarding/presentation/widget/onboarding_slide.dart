@@ -26,26 +26,40 @@ class OnboardingSlide extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(image, fit: BoxFit.contain, height: 220),
-          const SizedBox(height: 36),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.headlineMedium,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(image, fit: BoxFit.contain, height: 300),
+                const SizedBox(height: 36),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  desc,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            desc,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium,
-          ),
-          const Spacer(),
+
+          const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
             height: 54,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
               onPressed: isLoading ? null : onButtonPressed,
               child: isLoading
                   ? const SizedBox(
@@ -59,7 +73,6 @@ class OnboardingSlide extends StatelessWidget {
                   : Text(buttonText, style: const TextStyle(fontSize: 16)),
             ),
           ),
-          const SizedBox(height: 8),
         ],
       ),
     );
