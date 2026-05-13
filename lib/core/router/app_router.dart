@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_screen.dart';
 import 'package:suar_app/features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/map_evacuation/presentation/cache_management_screen.dart';
+import '../../features/resources/presentation/emergency_numbers_screen.dart';
+import '../../features/resources/presentation/first_aid_screen.dart';
 
 import '../../features/user/presentation/user_notifier.dart';
 import '../../features/user/presentation/profile_screen.dart';
@@ -65,6 +67,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CacheManagementScreen(),
       ),
 
+      GoRoute(
+        path: '/emergency-numbers',
+        name: 'emergency_numbers',
+        builder: (context, state) => const EmergencyNumbersScreen(),
+      ),
+
+      GoRoute(
+        path: '/first-aid',
+        name: 'first_aid',
+        builder: (context, state) => const FirstAidScreen(),
+      ),
+
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ShellScreen(navigationShell: navigationShell);
@@ -99,10 +113,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                     builder: (context, state) {
                       final peerId = state.pathParameters['peerId']!;
                       final peerName = state.extra as String? ?? 'Unknown';
-                      return DmChatScreen(
-                        peerId: peerId,
-                        peerName: peerName,
-                      );
+                      return DmChatScreen(peerId: peerId, peerName: peerName);
                     },
                   ),
                 ],
