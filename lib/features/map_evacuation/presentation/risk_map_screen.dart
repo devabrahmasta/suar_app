@@ -32,6 +32,19 @@ final showLandslideProvider = NotifierProvider<LandslideLayerNotifier, bool>(
   },
 );
 
+class EarthquakeLayerNotifier extends Notifier<bool> {
+  @override
+  bool build() => true;
+
+  void setLayer(bool value) {
+    state = value;
+  }
+}
+
+final showEarthquakeProvider = NotifierProvider<EarthquakeLayerNotifier, bool>(() {
+  return EarthquakeLayerNotifier();
+});
+
 class RiskMapScreen extends ConsumerWidget {
   const RiskMapScreen({super.key});
 
@@ -41,6 +54,7 @@ class RiskMapScreen extends ConsumerWidget {
 
     final showTsunami = ref.watch(showTsunamiProvider);
     final showLandslide = ref.watch(showLandslideProvider);
+    final showEarthquake = ref.watch(showEarthquakeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,13 +91,19 @@ class RiskMapScreen extends ConsumerWidget {
                   if (showTsunami)
                     TileLayer(
                       urlTemplate:
-                          'https://gis.bnpb.go.id/server/rest/services/inarisk/tsunami_bahaya/MapServer/tile/{z}/{y}/{x}',
+                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_tsunami/ImageServer/tile/{z}/{y}/{x}',
                     ),
 
                   if (showLandslide)
                     TileLayer(
                       urlTemplate:
-                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_tanah_longsor_30/MapServer/tile/{z}/{y}/{x}',
+                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_tanah_longsor/ImageServer/tile/{z}/{y}/{x}',
+                    ),
+
+                  if (showEarthquake)
+                    TileLayer(
+                      urlTemplate:
+                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_gempabumi/ImageServer/tile/{z}/{y}/{x}',
                     ),
 
                   MarkerLayer(
@@ -153,6 +173,15 @@ class RiskMapScreen extends ConsumerWidget {
                           activeColor: AppColors.warning,
                           onChanged: (val) => ref
                               .read(showLandslideProvider.notifier)
+                              .setLayer(val),
+                        ),
+
+                        _LayerToggle(
+                          label: "Gempa Bumi",
+                          value: showEarthquake,
+                          activeColor: AppColors.danger,
+                          onChanged: (val) => ref
+                              .read(showEarthquakeProvider.notifier)
                               .setLayer(val),
                         ),
                       ],
