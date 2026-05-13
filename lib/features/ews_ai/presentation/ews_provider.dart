@@ -29,9 +29,21 @@ final geminiTriageServiceProvider = Provider<GeminiTriageService>((ref) {
   return GeminiTriageService(apiKey: apiKey);
 });
 
-class EwsNotifier extends AsyncNotifier<TriageResult?> {
+class EwsAlertData {
+  final TriageResult triageResult;
+  final GempaModel gempa;
+  final double distanceKm;
+
+  EwsAlertData({
+    required this.triageResult,
+    required this.gempa,
+    required this.distanceKm,
+  });
+}
+
+class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
   @override
-  Future<TriageResult?> build() async {
+  Future<EwsAlertData?> build() async {
     return null;
   }
 
@@ -56,13 +68,29 @@ class EwsNotifier extends AsyncNotifier<TriageResult?> {
 
       bool isAtHome = false;
       if (user.homeLatitude != null && user.homeLongitude != null) {
-        final distance = Geolocator.distanceBetween(
+        final distanceToHome = Geolocator.distanceBetween(
           position.latitude,
           position.longitude,
           user.homeLatitude!,
           user.homeLongitude!,
         );
-        isAtHome = distance <= 100;
+        isAtHome = distanceToHome <= 100;
+      }
+
+      double distanceKm = 0.0;
+      try {
+        final coords = gempa.coordinates.split(',');
+        if (coords.length == 2) {
+          final latGempa = double.tryParse(coords[0].trim()) ?? 0.0;
+          final lngGempa = double.tryParse(coords[1].trim()) ?? 0.0;
+          final distMeters = Geolocator.distanceBetween(
+            position.latitude, position.longitude, 
+            latGempa, lngGempa
+          );
+          distanceKm = distMeters / 1000;
+        }
+      } catch (e) {
+        print("Gagal menghitung jarak gempa: $e");
       }
 
       final geminiService = ref.read(geminiTriageServiceProvider);
@@ -75,7 +103,11 @@ class EwsNotifier extends AsyncNotifier<TriageResult?> {
         currentTime: DateTime.now(),
       );
 
-      return finalResult;
+      return EwsAlertData(
+        triageResult: finalResult,
+        gempa: gempa,
+        distanceKm: distanceKm,
+      );
     });
   }
 
@@ -99,11 +131,15 @@ class EwsNotifier extends AsyncNotifier<TriageResult?> {
         currentTime: DateTime.now(),
       );
 
-      return finalResult;
+      return EwsAlertData(
+        triageResult: finalResult,
+        gempa: dummyGempa,
+        distanceKm: 12.5, 
+      );
     });
   }
 }
 
-final ewsProvider = AsyncNotifierProvider<EwsNotifier, TriageResult?>(() {
+final ewsProvider = AsyncNotifierProvider<EwsNotifier, EwsAlertData?>(() {
   return EwsNotifier();
 });

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:suar_app/features/map_evacuation/presentation/geofence_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import 'ews_provider.dart';
-import '../domain/triage_result_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 import '../../map_evacuation/presentation/map_provider.dart';
 
@@ -46,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
       isMapAvailable = false;
     }
 
-    ref.listen<AsyncValue<TriageResult?>>(ewsProvider, (previous, next) {
+    ref.listen<AsyncValue<EwsAlertData?>>(ewsProvider, (previous, next) {
       if (next.hasValue && next.value != null) {
         _showEwsAlertModal(context, next.value!, isMapAvailable);
       }
@@ -80,42 +79,9 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Container(
-            //   padding: const EdgeInsets.all(16),
-            //   decoration: BoxDecoration(
-            //     color: AppColors.primaryLight.withValues(alpha: 0.2),
-            //     borderRadius: BorderRadius.circular(16),
-            //     border: Border.all(color: AppColors.primaryLight),
-            //   ),
-            //   child: const Row(
-            //     children: [
-            //       Icon(Icons.circle, color: AppColors.success, size: 12),
-            //       SizedBox(width: 12),
-            //       Expanded(
-            //         child: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             Text(
-            //               'Mesh Network Aktif',
-            //               style: TextStyle(fontWeight: FontWeight.bold),
-            //             ),
-            //             Text(
-            //               '5 orang terhubung di sekitar Anda',
-            //               style: TextStyle(
-            //                 fontSize: 12,
-            //                 color: AppColors.textSecondary,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //       Icon(Icons.sensors, color: AppColors.textSecondary),
-            //     ],
-            //   ),
-            // ),
-            // const SizedBox(height: 16),
             ewsState.when(
-              data: (result) {
+              data: (alertData) {
+                final result = alertData?.triageResult;
                 if (result == null) {
                   return _buildStatusCard(
                     color: AppColors.successLight,
@@ -166,7 +132,7 @@ class HomeScreen extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            onPressed: () => _showEwsAlertModal(context, result, isMapAvailable),
+                            onPressed: () => _showEwsAlertModal(context, alertData!, isMapAvailable),
                             child: const Text(
                               'LIHAT INSTRUKSI AI & RUTE',
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -195,13 +161,6 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            // _buildMenuCard(
-            //   context,
-            //   icon: Icons.chat,
-            //   title: 'Mesh Chat',
-            //   subtitle: 'Public Channel & Direct Message',
-            // ),
-            const SizedBox(height: 16),
             Container(
               decoration: BoxDecoration(
                 color: AppColors.white,
@@ -415,9 +374,11 @@ class HomeScreen extends ConsumerWidget {
 
   void _showEwsAlertModal(
     BuildContext context,
-    TriageResult result,
+    EwsAlertData alertData,
     bool isMapAvailable,
   ) {
+    final result = alertData.triageResult;
+    final gempa = alertData.gempa;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
     final themeColor = isEvakuasi ? AppColors.danger : AppColors.warning;
     final themeLightColor = isEvakuasi
@@ -501,22 +462,22 @@ class HomeScreen extends ConsumerWidget {
                         children: [
                           _buildStatCard(
                             'MAGNITUDE',
-                            '7.8 SR',
-                            '+0.2',
+                            '${gempa.magnitude} SR',
+                            'Update',
                             isRed: isEvakuasi,
                             themeColor: themeColor,
                           ),
                           _buildStatCard(
                             'KEDALAMAN',
-                            '10 km',
-                            'Stabil',
+                            gempa.kedalaman,
+                            'Data BMKG',
                             isRed: false,
                             themeColor: themeColor,
                           ),
                           _buildStatCard(
-                            'JARAK',
-                            '2.5 km',
-                            'Dekat',
+                            'JARAK PUSAT',
+                            '${alertData.distanceKm.toStringAsFixed(1)} km',
+                            'Dari Anda',
                             isRed: isEvakuasi,
                             themeColor: themeColor,
                           ),
