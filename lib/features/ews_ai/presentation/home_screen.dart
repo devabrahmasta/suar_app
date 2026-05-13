@@ -56,7 +56,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.emergency_share, color: AppColors.primary),
+            Image.asset('assets/images/suar_logo.png', height: 32),
             const SizedBox(width: 8),
             Text('SUAR', style: Theme.of(context).textTheme.headlineMedium),
           ],
@@ -95,41 +95,40 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.primaryLight),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.circle, color: AppColors.success, size: 12),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mesh Network Aktif',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '5 orang terhubung di sekitar Anda',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.sensors, color: AppColors.textSecondary),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
+            // Container(
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     color: AppColors.primaryLight.withValues(alpha: 0.2),
+            //     borderRadius: BorderRadius.circular(16),
+            //     border: Border.all(color: AppColors.primaryLight),
+            //   ),
+            //   child: const Row(
+            //     children: [
+            //       Icon(Icons.circle, color: AppColors.success, size: 12),
+            //       SizedBox(width: 12),
+            //       Expanded(
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             Text(
+            //               'Mesh Network Aktif',
+            //               style: TextStyle(fontWeight: FontWeight.bold),
+            //             ),
+            //             Text(
+            //               '5 orang terhubung di sekitar Anda',
+            //               style: TextStyle(
+            //                 fontSize: 12,
+            //                 color: AppColors.textSecondary,
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //       Icon(Icons.sensors, color: AppColors.textSecondary),
+            //     ],
+            //   ),
+            // ),
+            // const SizedBox(height: 16),
             ewsState.when(
               data: (result) {
                 if (result == null) {
@@ -185,12 +184,12 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            _buildMenuCard(
-              context,
-              icon: Icons.chat,
-              title: 'Mesh Chat',
-              subtitle: 'Public Channel & Direct Message',
-            ),
+            // _buildMenuCard(
+            //   context,
+            //   icon: Icons.chat,
+            //   title: 'Mesh Chat',
+            //   subtitle: 'Public Channel & Direct Message',
+            // ),
             const SizedBox(height: 16),
             _buildMenuCard(
               context,
@@ -223,16 +222,24 @@ class HomeScreen extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildResourceButton(
-                    Icons.medical_services,
-                    'P3K Dasar',
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => context.push('/first-aid'),
+                    child: _buildResourceButton(
+                      Icons.medical_services,
+                      'P3K Dasar',
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildResourceButton(
-                    Icons.contact_phone,
-                    'Nomor Darurat',
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => context.push('/emergency-numbers'),
+                    child: _buildResourceButton(
+                      Icons.contact_phone,
+                      'Nomor Darurat',
+                    ),
                   ),
                 ),
               ],
@@ -240,7 +247,6 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-
     );
   }
 
