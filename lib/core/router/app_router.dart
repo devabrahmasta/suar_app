@@ -6,6 +6,8 @@ import 'package:suar_app/features/onboarding/presentation/onboarding_screen.dart
 import '../../features/map_evacuation/presentation/cache_management_screen.dart';
 
 import '../../features/user/presentation/user_notifier.dart';
+import '../../features/user/presentation/profile_screen.dart';
+import 'shell_screen.dart';
 import '../../features/ews_ai/presentation/home_screen.dart';
 import '../../features/ews_ai/presentation/ews_testing_screen.dart';
 import '../../features/map_evacuation/presentation/risk_map_screen.dart';
@@ -42,23 +44,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
 
-      // Map & EWS Route
-      GoRoute(
-        path: '/',
-        name: 'home',
-        builder: (context, state) => const HomeScreen(),
-      ),
-
       GoRoute(
         path: '/map',
         name: 'map',
         builder: (context, state) => const MapScreen(),
-      ),
-
-      GoRoute(
-        path: '/risk-map',
-        name: 'risk_map',
-        builder: (context, state) => const RiskMapScreen(),
       ),
 
       GoRoute(
@@ -73,33 +62,63 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CacheManagementScreen(),
       ),
 
-      // Offline mesh chat route
-      GoRoute(
-        path: '/chat',
-        name: 'chat',
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(title: const Text('Public Channel (Mesh)')),
-          body: Center(
-            child: ElevatedButton(
-              // Contoh passing parameter ID ke halaman Direct Message
-              onPressed: () => context.push('/chat/dm/user_123'),
-              child: const Text('Chat Private dengan Budi'),
-            ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return ShellScreen(navigationShell: navigationShell);
+        },
+        branches: [
+          // Branch 0: Home
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                name: 'home',
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
           ),
-        ),
-        routes: [
-          // Sub-route untuk Direct Message
-          GoRoute(
-            path: 'dm/:peerId',
-            name: 'direct_message',
-            builder: (context, state) {
-              // Menangkap parameter dari URL
-              final peerId = state.pathParameters['peerId']!;
-              return Scaffold(
-                appBar: AppBar(title: const Text('Private Chat')),
-                body: Center(child: Text('Chatting dengan: $peerId')),
-              );
-            },
+          // Branch 1: Chat
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/chat',
+                name: 'chat',
+                builder: (context, state) => const ChatScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'dm/:peerId',
+                    name: 'direct_message',
+                    builder: (context, state) {
+                      final peerId = state.pathParameters['peerId']!;
+                      return Scaffold(
+                        appBar: AppBar(title: const Text('Private Chat')),
+                        body: Center(child: Text('Chatting dengan: $peerId')),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // Branch 2: Risk Map
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/risk-map',
+                name: 'risk_map',
+                builder: (context, state) => const RiskMapScreen(),
+              ),
+            ],
+          ),
+          // Branch 3: Profile
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                name: 'profile',
+                builder: (context, state) => const ProfileScreen(),
+              ),
+            ],
           ),
         ],
       ),
