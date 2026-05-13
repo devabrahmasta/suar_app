@@ -7,6 +7,8 @@ import '../data/inarisk_service.dart';
 import '../data/gemini_triage_service.dart';
 import '../domain/triage_result_model.dart';
 import '../domain/gempa_model.dart';
+import 'package:geolocator/geolocator.dart'; 
+import '../../user/presentation/user_notifier.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
@@ -49,10 +51,28 @@ class EwsNotifier extends AsyncNotifier<TriageResult?> {
         position.longitude,
       );
 
+      final user = ref.read(userProvider);
+      if (user == null) throw Exception('Sistem gagal memuat profil pengguna.');
+
+      bool isAtHome = false;
+      if (user.homeLatitude != null && user.homeLongitude != null) {
+        final distance = Geolocator.distanceBetween(
+          position.latitude,
+          position.longitude,
+          user.homeLatitude!,
+          user.homeLongitude!,
+        );
+        isAtHome = distance <= 100;
+      }
+
       final geminiService = ref.read(geminiTriageServiceProvider);
       final finalResult = await geminiService.analyzeThreat(
         gempa: gempa,
         isDiZonaMerah: isDiZonaMerah,
+        user: user,
+        isAtHome: isAtHome,
+        speedInMetersPerSecond: position.speed,
+        currentTime: DateTime.now(),
       );
 
       return finalResult;
@@ -66,10 +86,17 @@ class EwsNotifier extends AsyncNotifier<TriageResult?> {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
+      final user = ref.read(userProvider);
+      if (user == null) throw Exception('Sistem gagal memuat profil pengguna.');
+
       final geminiService = ref.read(geminiTriageServiceProvider);
       final finalResult = await geminiService.analyzeThreat(
         gempa: dummyGempa,
         isDiZonaMerah: dummyIsDiZonaMerah,
+        user: user,
+        isAtHome: true,
+        speedInMetersPerSecond: 0.0,
+        currentTime: DateTime.now(),
       );
 
       return finalResult;
