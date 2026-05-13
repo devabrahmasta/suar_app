@@ -56,7 +56,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.emergency_share, color: AppColors.primary),
+            Image.asset('assets/images/suar_logo.png', height: 32),
             const SizedBox(width: 8),
             Text('SUAR', style: Theme.of(context).textTheme.headlineMedium),
           ],
