@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import '../domain/gempa_model.dart';
 import '../domain/triage_result_model.dart';
-import '../../user/domain/user_model.dart'
+import '../../user/domain/user_model.dart';
 
 class GeminiTriageService {
   final String apiKey;
@@ -43,8 +43,6 @@ FAKTA 2 (DATA INARISK & LOKASI):
 
 FAKTA 3 (KONTEKS SITUASIONAL & PROFIL):
 - Nama: ${user.fullName}
-- Disabilitas Fisik: ${user.hasDisability ? 'YA' : 'TIDAK'}
-- Membawa Balita/Lansia: ${user.hasDependents ? 'YA' : 'TIDAK'}
 - Waktu Lokal: $timeFormat (Malam/Gelap: ${isNight ? 'YA' : 'TIDAK'})
 - Sedang Berkendara: ${isMovingFast ? 'YA' : 'TIDAK'}
 - Posisi: ${isAtHome ? 'Di Rumah (Tipe: ${user.homeType})' : 'Di Luar Rumah / Jalan / Fasilitas Umum'}
