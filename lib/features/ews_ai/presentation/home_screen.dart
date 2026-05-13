@@ -46,8 +46,8 @@ class HomeScreen extends ConsumerWidget {
       isMapAvailable = false;
     }
 
-    ref.listen<AsyncValue<TriageResult?>>(ewsProvider, (previous, next) {
-      if (next.hasValue && next.value != null) {
+  ref.listen<AsyncValue<EwsAlertData?>>(ewsProvider, (previous, next) {      
+  if (next.hasValue && next.value != null) {
         _showEwsAlertModal(context, next.value!, isMapAvailable);
       }
     });
@@ -115,7 +115,8 @@ class HomeScreen extends ConsumerWidget {
             // ),
             // const SizedBox(height: 16),
             ewsState.when(
-              data: (result) {
+              data: (alertData) {
+                final result = alertData?.triageResult;
                 if (result == null) {
                   return _buildStatusCard(
                     color: AppColors.successLight,
@@ -124,56 +125,30 @@ class HomeScreen extends ConsumerWidget {
                     title: 'Tidak ada peringatan aktif',
                     subtitle: 'Kondisi saat ini aman dan terkendali.',
                   );
-                } else {
-                  final isEvakuasi = result.statusTindakan == 'EVAKUASI';
-                  final bgColor = isEvakuasi ? AppColors.danger : AppColors.warning;
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: bgColor,
-                      borderRadius: BorderRadius.circular(20),
+                } else if (result.statusTindakan == 'BERLINDUNG') {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () =>
+                        _showEwsAlertModal(context, alertData!, isMapAvailable),
+                    child: _buildStatusCard(
+                      color: AppColors.warningLight,
+                      iconColor: AppColors.warning,
+                      icon: Icons.shield,
+                      title: 'WASPADA GEMPA',
+                      subtitle: 'Tekan untuk melihat instruksi keselamatan.',
                     ),
-                    child: Column(
-                      children: [
-                        const Icon(Icons.warning_amber_rounded, color: AppColors.white, size: 64),
-                        const SizedBox(height: 16),
-                        Text(
-                          isEvakuasi ? 'POTENSI TSUNAMI' : 'POTENSI GEMPA',
-                          style: const TextStyle(
-                            color: AppColors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Peringatan dini aktif. Segera ambil tindakan!',
-                          style: TextStyle(color: AppColors.white, fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.white,
-                              foregroundColor: bgColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: () => _showEwsAlertModal(context, result, isMapAvailable),
-                            child: const Text(
-                              'LIHAT INSTRUKSI AI & RUTE',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ],
+                  );
+                } else {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () =>
+                        _showEwsAlertModal(context, alertData!, isMapAvailable),
+                    child: _buildStatusCard(
+                      color: AppColors.dangerLight,
+                      iconColor: AppColors.danger,
+                      icon: Icons.warning,
+                      title: 'PERINGATAN AKTIF',
+                      subtitle: 'Tekan untuk melihat instruksi evakuasi.',
                     ),
                   );
                 }
@@ -416,8 +391,11 @@ class HomeScreen extends ConsumerWidget {
   void _showEwsAlertModal(
     BuildContext context,
     TriageResult result,
+    EwsAlertData alertData,
     bool isMapAvailable,
   ) {
+    final result = alertData.triageResult;
+    final gempa = alertData.gempa; 
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
     final themeColor = isEvakuasi ? AppColors.danger : AppColors.warning;
     final themeLightColor = isEvakuasi
@@ -501,22 +479,22 @@ class HomeScreen extends ConsumerWidget {
                         children: [
                           _buildStatCard(
                             'MAGNITUDE',
-                            '7.8 SR',
-                            '+0.2',
+                            '${gempa.magnitude} SR',
+                            'Update',
                             isRed: isEvakuasi,
                             themeColor: themeColor,
                           ),
                           _buildStatCard(
                             'KEDALAMAN',
-                            '10 km',
-                            'Stabil',
+                            gempa.kedalaman,
+                            'Data BMKG',
                             isRed: false,
                             themeColor: themeColor,
                           ),
                           _buildStatCard(
-                            'JARAK',
-                            '2.5 km',
-                            'Dekat',
+                            'JARAK PUSAT',
+                            '${alertData.distanceKm.toStringAsFixed(1)} km',
+                            'Dari Anda',
                             isRed: isEvakuasi,
                             themeColor: themeColor,
                           ),
