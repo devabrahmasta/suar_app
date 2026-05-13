@@ -21,6 +21,11 @@ class MeshService {
   final Map<String, String> connectedEndpoints = {};
   final Map<String, String> _pendingEndpoints = {};
 
+  final Map<String, String> endpointToDeviceId = {}; // endpointId -> deviceId lawan
+  final Map<String, String> endpointToName = {};      // endpointId -> fullName lawan (untuk UI)
+
+  String? getDeviceIdByEndpoint(String endpointId) => endpointToDeviceId[endpointId];
+
   VoidCallback? onPeersUpdated;
 
   MeshService({required this.chatRepository});
@@ -42,26 +47,44 @@ class MeshService {
     }
   }
 
+  void _onConnectionResult(String id, Status status, UserModel user) {
+    if (status == Status.CONNECTED) {
+      if (_pendingEndpoints.containsKey(id)) {
+        connectedEndpoints[id] = 'Unknown';
+        _pendingEndpoints.remove(id);
+      }
+      print('✅ [Mesh] Terhubung dengan: $id (deviceId: ${endpointToDeviceId[id]})');
+      
+      final handshakePayload = {
+        'type': 'handshake',
+        'deviceId': user.deviceId,
+        'fullName': user.fullName,
+      };
+      Nearby().sendBytesPayload(
+        id, 
+        Uint8List.fromList(utf8.encode(jsonEncode(handshakePayload)))
+      );
+      
+      _updatePeers();
+    } else {
+      _pendingEndpoints.remove(id);
+      connectedEndpoints.remove(id);
+      _updatePeers();
+    }
+  }
+
   Future<bool> startAdvertising(UserModel user) async {
+    print('🔵 [Mesh] Mulai advertising sebagai deviceId: ${user.deviceId}');
     try {
       final bool a = await Nearby().startAdvertising(
-        user.fullName,
+        user.deviceId,
         strategy,
         onConnectionInitiated: _onConnectionInitiated,
         onConnectionResult: (id, status) {
-          if (status == Status.CONNECTED) {
-            if (_pendingEndpoints.containsKey(id)) {
-              connectedEndpoints[id] = _pendingEndpoints[id]!;
-              _pendingEndpoints.remove(id);
-            }
-            _updatePeers();
-          } else {
-            _pendingEndpoints.remove(id);
-            connectedEndpoints.remove(id);
-            _updatePeers();
-          }
+          _onConnectionResult(id, status, user);
         },
         onDisconnected: (id) {
+          print('🔴 [Mesh] Terputus dari: $id');
           _pendingEndpoints.remove(id);
           connectedEndpoints.remove(id);
           _updatePeers();
@@ -75,29 +98,21 @@ class MeshService {
   }
 
   Future<bool> startDiscovery(UserModel user) async {
+    print('🔵 [Mesh] Mulai discovery...');
     try {
       final bool a = await Nearby().startDiscovery(
-        user.fullName,
+        user.deviceId,
         strategy,
         onEndpointFound: (id, name, serviceId) {
           Nearby().requestConnection(
-            user.fullName,
+            user.deviceId,
             id,
             onConnectionInitiated: _onConnectionInitiated,
             onConnectionResult: (id, status) {
-              if (status == Status.CONNECTED) {
-                if (_pendingEndpoints.containsKey(id)) {
-                  connectedEndpoints[id] = _pendingEndpoints[id]!;
-                  _pendingEndpoints.remove(id);
-                }
-                _updatePeers();
-              } else {
-                _pendingEndpoints.remove(id);
-                connectedEndpoints.remove(id);
-                _updatePeers();
-              }
+              _onConnectionResult(id, status, user);
             },
             onDisconnected: (id) {
+              print('🔴 [Mesh] Terputus dari: $id');
               _pendingEndpoints.remove(id);
               connectedEndpoints.remove(id);
               _updatePeers();
@@ -116,8 +131,10 @@ class MeshService {
   }
 
   void _onConnectionInitiated(String endpointId, ConnectionInfo info) {
+    print('🤝 [Mesh] Koneksi masuk dari endpointId: $endpointId, name: ${info.endpointName}');
     // We accept all incoming connections for the mesh
     _pendingEndpoints[endpointId] = info.endpointName;
+    endpointToDeviceId[endpointId] = info.endpointName;
     
     Nearby().acceptConnection(
       endpointId,
@@ -134,11 +151,24 @@ class MeshService {
     try {
       final jsonStr = utf8.decode(bytes);
       final map = jsonDecode(jsonStr);
+
+      if (map['type'] == 'handshake') {
+        final fullName = map['fullName'] as String;
+        endpointToName[senderEndpointId] = fullName;
+        connectedEndpoints[senderEndpointId] = fullName;
+        _updatePeers();
+        return;
+      }
+
       final message = MessageModel.fromMap(map);
+      print('📨 [Mesh] Payload masuk dari $senderEndpointId, type: ${message.type}, id: ${message.id}');
 
       // 1. DEDUPLICATION CHECK
       final exists = await chatRepository.hasMessage(message.id);
-      if (exists) return; // Abaikan jika sudah ada
+      if (exists) {
+        print('⚠️ [Mesh] Duplikat diabaikan: ${message.id}');
+        return; // Abaikan jika sudah ada
+      }
 
       // 2. Simpan ke database
       await chatRepository.saveMessage(message);
@@ -155,6 +185,7 @@ class MeshService {
   }
 
   Future<void> sendMessage(MessageModel message) async {
+    print('📤 [Mesh] Kirim pesan ke ${connectedEndpoints.length} peer(s), id: ${message.id}');
     final exists = await chatRepository.hasMessage(message.id);
     if (!exists) {
       await chatRepository.saveMessage(message);
@@ -168,6 +199,7 @@ class MeshService {
     for (final endpointId in connectedEndpoints.keys) {
       if (endpointId != excludeEndpointId) {
         try {
+          print('🔁 [Mesh] Forward ke endpointId: $endpointId');
           await Nearby().sendBytesPayload(endpointId, Uint8List.fromList(bytes));
         } catch (e) {
           // Gagal kirim ke satu peer, lanjutkan ke peer lain

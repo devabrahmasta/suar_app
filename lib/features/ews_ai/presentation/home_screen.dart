@@ -8,6 +8,7 @@ import 'ews_provider.dart';
 import '../domain/triage_result_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 import '../../map_evacuation/presentation/map_provider.dart';
+import '../../mesh_chat/presentation/mesh_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ewsState = ref.watch(ewsProvider);
     ref.watch(geofenceProvider);
+    ref.watch(meshLifecycleProvider);
 
     final isCacheReady = ref.watch(mapCacheStatusProvider).value ?? false;
     final networkState =

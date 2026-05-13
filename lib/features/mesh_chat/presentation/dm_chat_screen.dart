@@ -41,6 +41,7 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
     if (user == null) return; // User harus terautentikasi
 
     final meshService = ref.read(meshServiceProvider);
+    final targetDeviceId = meshService.getDeviceIdByEndpoint(widget.peerId) ?? widget.peerId;
     
     final message = MessageModel(
       id: const Uuid().v4(),
@@ -49,7 +50,7 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
       content: text,
       timestamp: DateTime.now(),
       type: MessageType.dm,
-      peerId: widget.peerId,
+      peerId: targetDeviceId,
       hopCount: 0,
     );
 
@@ -69,8 +70,15 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dmAsyncValue = ref.watch(dmMessagesProvider(widget.peerId));
     final currentUser = ref.watch(userProvider);
+    if (currentUser == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    final meshService = ref.read(meshServiceProvider);
+    final targetDeviceId = meshService.getDeviceIdByEndpoint(widget.peerId) ?? widget.peerId;
+    final dmParams = (myDeviceId: currentUser.deviceId, peerId: targetDeviceId);
+    final dmAsyncValue = ref.watch(dmMessagesProvider(dmParams));
 
     return Scaffold(
       appBar: AppBar(

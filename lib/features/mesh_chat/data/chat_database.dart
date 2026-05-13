@@ -18,29 +18,26 @@ class ChatDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
     await db.execute('''
-CREATE TABLE messages (
-  id TEXT PRIMARY KEY,
-  senderId TEXT NOT NULL,
-  senderName TEXT NOT NULL,
-  content TEXT NOT NULL,
-  timestamp INTEGER NOT NULL,
-  type TEXT NOT NULL,
-  peerId TEXT,
-  hopCount INTEGER NOT NULL
-)
-''');
+    CREATE TABLE messages (
+      id TEXT PRIMARY KEY,
+      senderId TEXT NOT NULL,
+      senderName TEXT NOT NULL,
+      content TEXT NOT NULL,
+      timestamp INTEGER NOT NULL,
+      type TEXT NOT NULL,
+      peerId TEXT,
+      hopCount INTEGER NOT NULL
+    )
+    ''');
   }
 
   Future<void> insertMessage(MessageModel message) async {
+    print('💾 [DB] Simpan pesan id: ${message.id}, type: ${message.type}');
     final db = await instance.database;
     await db.insert(
       'messages',
@@ -61,23 +58,26 @@ CREATE TABLE messages (
     return maps.map((map) => MessageModel.fromMap(map)).toList();
   }
 
-  Future<List<MessageModel>> getDmMessages(String peerId) async {
+  Future<List<MessageModel>> getDmMessages(String myDeviceId, String peerId) async {
     final db = await instance.database;
     // get messages where (type is dm) AND (peerId is peerId OR senderId is peerId)
     // to capture both incoming and outgoing DM with that peer
     final maps = await db.query(
       'messages',
-      where: 'type = ? AND (senderId = ? OR peerId = ?)',
-      whereArgs: [MessageType.dm.name, peerId, peerId],
+      where: 'type = ? AND ((senderId = ? AND peerId = ?) OR (senderId = ? AND peerId = ?))',
+      whereArgs: [MessageType.dm.name, myDeviceId, peerId, peerId, myDeviceId],
       orderBy: 'timestamp ASC',
     );
+    print('🔍 [DB] Query DM: myDeviceId=$myDeviceId, peerId=$peerId, hasil: ${maps.length} pesan');
 
     return maps.map((map) => MessageModel.fromMap(map)).toList();
   }
 
   Future<int> deleteOldMessages() async {
     final db = await instance.database;
-    final cutoff = DateTime.now().subtract(const Duration(hours: 24)).millisecondsSinceEpoch;
+    final cutoff = DateTime.now()
+        .subtract(const Duration(hours: 24))
+        .millisecondsSinceEpoch;
     return await db.delete(
       'messages',
       where: 'timestamp < ?',

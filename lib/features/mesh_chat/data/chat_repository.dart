@@ -14,8 +14,8 @@ class ChatRepository {
     return await _database.getPublicMessages();
   }
 
-  Future<List<MessageModel>> getDmMessages(String peerId) async {
-    return await _database.getDmMessages(peerId);
+  Future<List<MessageModel>> getDmMessages(String myDeviceId, String peerId) async {
+    return await _database.getDmMessages(myDeviceId, peerId);
   }
 
   Future<int> clearOldMessages() async {
