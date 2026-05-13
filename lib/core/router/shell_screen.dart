@@ -73,19 +73,4 @@ class ShellScreen extends StatelessWidget {
   }
 }
 
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Public Channel (Mesh)')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => context.push('/chat/dm/user_123'),
-          child: const Text('Chat Private dengan Budi'),
-        ),
-      ),
-    );
-  }
-}

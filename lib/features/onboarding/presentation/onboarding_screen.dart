@@ -17,7 +17,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   final _formKey = GlobalKey<FormState>();
   final _namaController = TextEditingController();
-  final _hpController = TextEditingController();
 
   static const int _totalSlides = 5;
   int _currentIndex = 0;
@@ -27,7 +26,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void dispose() {
     _pageController.dispose();
     _namaController.dispose();
-    _hpController.dispose();
     super.dispose();
   }
 
@@ -341,8 +339,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           .read(userProvider.notifier)
           .createUser(
             _namaController.text.trim(),
-            _hpController.text.trim(),
-            '',
           );
       // go_router redirect handles routing after state updates.
     } finally {
@@ -423,7 +419,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   _IdentityFormSlide(
                     formKey: _formKey,
                     namaController: _namaController,
-                    hpController: _hpController,
                     isLoading: _isLoading && _currentIndex == 4,
                     onSubmit: _handleSubmit,
                   ),
@@ -467,14 +462,12 @@ class _IdentityFormSlide extends StatelessWidget {
   const _IdentityFormSlide({
     required this.formKey,
     required this.namaController,
-    required this.hpController,
     required this.isLoading,
     required this.onSubmit,
   });
 
   final GlobalKey<FormState> formKey;
   final TextEditingController namaController;
-  final TextEditingController hpController;
   final bool isLoading;
   final VoidCallback onSubmit;
 
@@ -540,38 +533,14 @@ class _IdentityFormSlide extends StatelessWidget {
             TextFormField(
               controller: namaController,
               textCapitalization: TextCapitalization.words,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => onSubmit(),
               validator: (v) => (v == null || v.trim().isEmpty)
                   ? 'Nama lengkap tidak boleh kosong.'
                   : null,
               decoration: const InputDecoration(
                 hintText: 'cth. Budi Santoso',
                 prefixIcon: Icon(Icons.person_outline_rounded),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // NOMOR HP
-            Text(
-              'NOMOR HP',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: AppColors.textSecondary,
-                letterSpacing: 1.0,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: hpController,
-              keyboardType: TextInputType.phone,
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => onSubmit(),
-              validator: (v) => (v == null || v.trim().isEmpty)
-                  ? 'Nomor HP tidak boleh kosong.'
-                  : null,
-              decoration: const InputDecoration(
-                hintText: 'cth. 08123456789',
-                prefixIcon: Icon(Icons.phone_outlined),
               ),
             ),
 
