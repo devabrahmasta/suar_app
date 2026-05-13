@@ -11,6 +11,9 @@ import 'shell_screen.dart';
 import '../../features/ews_ai/presentation/home_screen.dart';
 import '../../features/ews_ai/presentation/ews_testing_screen.dart';
 import '../../features/map_evacuation/presentation/risk_map_screen.dart';
+import '../../features/mesh_chat/presentation/chat_screen.dart';
+import '../../features/mesh_chat/presentation/chat_list_screen.dart';
+import '../../features/mesh_chat/presentation/dm_chat_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -83,16 +86,22 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/chat',
                 name: 'chat',
-                builder: (context, state) => const ChatScreen(),
+                builder: (context, state) => const ChatListScreen(),
                 routes: [
+                  GoRoute(
+                    path: 'public',
+                    name: 'public_chat',
+                    builder: (context, state) => const ChatScreen(),
+                  ),
                   GoRoute(
                     path: 'dm/:peerId',
                     name: 'direct_message',
                     builder: (context, state) {
                       final peerId = state.pathParameters['peerId']!;
-                      return Scaffold(
-                        appBar: AppBar(title: const Text('Private Chat')),
-                        body: Center(child: Text('Chatting dengan: $peerId')),
+                      final peerName = state.extra as String? ?? 'Unknown';
+                      return DmChatScreen(
+                        peerId: peerId,
+                        peerName: peerName,
                       );
                     },
                   ),

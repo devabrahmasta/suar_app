@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../../main.dart';
 import '../domain/user_model.dart';
 import '../data/user_local_service.dart';
@@ -16,8 +17,9 @@ class UserNotifier extends Notifier<UserModel?> {
     return null;
   }
 
-  Future<void> createUser(String name, String phone, String uname) async {
-    final user = UserModel(fullName: name, phoneNumber: phone, username: uname);
+  Future<void> createUser(String name) async {
+    final String generatedDeviceId = const Uuid().v4();
+    final user = UserModel(fullName: name, deviceId: generatedDeviceId);
 
     await UserLocalService.saveUser(user);
     state = user;

@@ -3,7 +3,6 @@ import 'package:suar_app/features/map_evacuation/data/river_service.dart';
 import '../../ews_ai/data/inarisk_service.dart';
 import 'elevation_service.dart';
 import 'routing_service.dart';
-import 'river_service.dart';
 
 class VerticalEvacuationException implements Exception {
   final String message;
