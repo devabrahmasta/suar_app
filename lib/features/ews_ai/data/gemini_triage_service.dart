@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import '../domain/gempa_model.dart';
 import '../domain/triage_result_model.dart';
+import '../../user/domain/user_model.dart'
 
 class GeminiTriageService {
   final String apiKey;
@@ -18,12 +19,18 @@ class GeminiTriageService {
   Future<TriageResult> analyzeThreat({
     required GempaModel gempa,
     required bool isDiZonaMerah,
+    required UserModel user,
+    required bool isAtHome,
+    required double speedInMetersPerSecond,
+    required DateTime currentTime,
   }) async {
     try {
-      final String prompt =
-          '''
-Anda adalah AI Sistem Peringatan Dini (EWS) pada aplikasi evakuasi darurat di Indonesia.
-Berikan instruksi keselamatan yang sangat spesifik dan mudah dipahami berdasarkan data berikut:
+      final String timeFormat = "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}";
+      final bool isNight = currentTime.hour >= 22 || currentTime.hour < 5;
+      final bool isMovingFast = speedInMetersPerSecond > 5.0;
+      final String prompt = '''
+Anda adalah AI Sistem Peringatan Dini (EWS) pada aplikasi evakuasi darurat SUAR di Indonesia.
+Berikan instruksi keselamatan yang sangat personal, situasional, dan menenangkan.
 
 FAKTA 1 (DATA BMKG):
 - Kekuatan: ${gempa.magnitude} SR
@@ -31,19 +38,32 @@ FAKTA 1 (DATA BMKG):
 - Lokasi Pusat: ${gempa.wilayah}
 - Status: ${gempa.potensi}
 
-FAKTA 2 (DATA INARISK & GPS):
+FAKTA 2 (DATA INARISK & LOKASI):
 - Apakah pengguna di zona merah tsunami? JAWABAN: ${isDiZonaMerah ? 'YA' : 'TIDAK'}
 
-ATURAN TRIASE:
-1. Jika berpotensi Tsunami DAN di zona merah (YA) -> "EVAKUASI" dan aktifkan peta.
-2. Jika berpotensi Tsunami TETAPI BUKAN di zona merah (TIDAK) -> "BERLINDUNG" (Jangan suruh evakuasi, suruh jauhi pantai).
-3. Jika TIDAK berpotensi tsunami -> "BERLINDUNG" (Ingatkan Drop, Cover, Hold).
+FAKTA 3 (KONTEKS SITUASIONAL & PROFIL):
+- Nama: ${user.fullName}
+- Disabilitas Fisik: ${user.hasDisability ? 'YA' : 'TIDAK'}
+- Membawa Balita/Lansia: ${user.hasDependents ? 'YA' : 'TIDAK'}
+- Waktu Lokal: $timeFormat (Malam/Gelap: ${isNight ? 'YA' : 'TIDAK'})
+- Sedang Berkendara: ${isMovingFast ? 'YA' : 'TIDAK'}
+- Posisi: ${isAtHome ? 'Di Rumah (Tipe: ${user.homeType})' : 'Di Luar Rumah / Jalan / Fasilitas Umum'}
+
+ATURAN TRIASE KHUSUS:
+1. Panggil nama pengguna (Contoh: "${user.fullName}, tetap tenang!").
+2. Jika berpotensi Tsunami DAN di zona merah -> "EVAKUASI". Jika tidak -> "BERLINDUNG".
+3. JIKA Sedang Berkendara (YA): Larang keras menyetir. Suruh menepi (jauhi jembatan/pohon), tinggalkan kendaraan jika tsunami, dan lari.
+4. JIKA Malam/Gelap (YA): Ingatkan potensi mati listrik, suruh raih senter/HP, waspada pecahan kaca, bangunkan keluarga. JANGAN nyalakan korek api (potensi gas).
+5. JIKA Posisi Di Rumah (YA) dan Tipe "Apartemen/Rusun": Dilarang keras menggunakan lift, gunakan tangga darurat.
+6. JIKA Posisi Di Luar Rumah (TIDAK) dan Punya Balita/Lansia (YA): Beritahu untuk JANGAN mencoba menerobos rute bahaya untuk pulang menjemput mereka. Prioritaskan keselamatan diri di lokasi saat ini.
+7. JIKA Disabilitas Fisik (YA): Sarankan untuk mencari titik aman ramah disabilitas atau minta bantuan warga terdekat menggunakan fitur obrolan Mesh SUAR.
+8. Gunakan bahasa Indonesia yang ringkas (maks 3-4 instruksi) agar mudah dibaca saat panik.
 
 Keluarkan hasil analisis DALAM FORMAT JSON SEPERTI INI:
 {
   "status_tindakan": "EVAKUASI / BERLINDUNG",
-  "tindakan_segera": ["tindakan 1", "tindakan 2", "tindakan 3"],
-  "persiapan": ["barang bawaan 1", "persiapan 2"],
+  "tindakan_segera": ["tindakan personal 1", "tindakan personal 2"],
+  "persiapan": ["persiapan situasional 1", "persiapan 2"],
   "aktifkan_peta": true / false
 }
 ''';
@@ -69,7 +89,7 @@ Keluarkan hasil analisis DALAM FORMAT JSON SEPERTI INI:
                 'Jauhi kaca dan benda yang mudah jatuh.',
               ],
         persiapan: daruratKritis
-            ? ['Bawa Tas Siaga Bencana.', 'Pakai alas kaki yang tertutup.']
+            ? ['Amankan keluarga dan bawa dokumen penting.', 'Pakai alas kaki yang tertutup.']
             : [
                 'Matikan kompor dan cabut gas.',
                 'Siapkan senter jika listrik padam.',

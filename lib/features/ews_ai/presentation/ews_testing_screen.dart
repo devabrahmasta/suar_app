@@ -59,6 +59,8 @@ class EwsTestingScreen extends ConsumerWidget {
                     dummyGempa: dummyGempa,
                     dummyIsDiZonaMerah: true,
                   );
+              
+              ref.read(evacuationRouteProvider.notifier).findRouteManual();
 
               context.pop();
             },
