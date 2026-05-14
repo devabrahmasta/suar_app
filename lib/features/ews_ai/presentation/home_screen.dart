@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:suar_app/features/ews_ai/domain/gempa_model.dart';
 import 'package:suar_app/features/map_evacuation/presentation/geofence_provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -48,16 +49,20 @@ class HomeScreen extends ConsumerWidget {
 
     ref.listen<AsyncValue<EwsAlertData?>>(ewsProvider, (previous, next) {
       if (next.hasValue && next.value != null) {
-        _showEwsAlertModal(context, next.value!, isMapAvailable);
+        final userLoc = ref.read(userLocationStreamProvider).value;
+        _showEwsAlertModal(context, next.value!, isMapAvailable, userLoc);
       }
     });
 
-    ref.listen<AsyncValue<String?>>(notificationPayloadProvider, (previous, next) {
+    ref.listen<AsyncValue<String?>>(notificationPayloadProvider, (
+      previous,
+      next,
+    ) {
       if (next.hasValue && next.value != null) {
         final payload = next.value!;
 
         context.go('/');
-        
+
         if (payload == 'MOCK_TSUNAMI') {
           final dummyGempa = GempaModel(
             tanggal: 'Hari Ini',
@@ -71,12 +76,13 @@ class HomeScreen extends ConsumerWidget {
             dirasakan: 'V-VI Pangandaran',
             shakemapUrl: '',
           );
-          ref.read(ewsProvider.notifier).triggerMockThreat(
-            dummyGempa: dummyGempa,
-            dummyIsDiZonaMerah: true,
-          );
-        } 
-        else if (payload == 'REAL_EWS') {
+          ref
+              .read(ewsProvider.notifier)
+              .triggerMockThreat(
+                dummyGempa: dummyGempa,
+                dummyIsDiZonaMerah: true,
+              );
+        } else if (payload == 'REAL_EWS') {
           ref.read(ewsProvider.notifier).checkLatestThreat();
         }
       }
@@ -123,7 +129,9 @@ class HomeScreen extends ConsumerWidget {
                   );
                 } else {
                   final isEvakuasi = result.statusTindakan == 'EVAKUASI';
-                  final bgColor = isEvakuasi ? AppColors.danger : AppColors.warning;
+                  final bgColor = isEvakuasi
+                      ? AppColors.danger
+                      : AppColors.warning;
                   return Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(24),
@@ -133,7 +141,11 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     child: Column(
                       children: [
-                        const Icon(Icons.warning_amber_rounded, color: AppColors.white, size: 64),
+                        const Icon(
+                          Icons.warning_amber_rounded,
+                          color: AppColors.white,
+                          size: 64,
+                        ),
                         const SizedBox(height: 16),
                         Text(
                           isEvakuasi ? 'POTENSI TSUNAMI' : 'POTENSI GEMPA',
@@ -148,7 +160,10 @@ class HomeScreen extends ConsumerWidget {
                         const SizedBox(height: 8),
                         const Text(
                           'Peringatan dini aktif. Segera ambil tindakan!',
-                          style: TextStyle(color: AppColors.white, fontSize: 14),
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 14,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
@@ -163,10 +178,25 @@ class HomeScreen extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            onPressed: () => _showEwsAlertModal(context, alertData!, isMapAvailable),
-                            child: const Text(
-                              'LIHAT INSTRUKSI AI & RUTE',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            onPressed: () {
+                              final userLoc = ref.read(userLocationStreamProvider).value;
+                              _showEwsAlertModal(
+                                context,
+                                alertData!,
+                                isMapAvailable,
+                                userLoc,
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.directions_run_rounded),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'LIHAT INSTRUKSI AI & RUTE',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -210,7 +240,10 @@ class HomeScreen extends ConsumerWidget {
                         Expanded(
                           child: Text(
                             mapTitle,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ],
@@ -223,17 +256,23 @@ class HomeScreen extends ConsumerWidget {
                     child: isMapAvailable
                         ? Consumer(
                             builder: (context, ref, child) {
-                              final locationAsync = ref.watch(userLocationStreamProvider);
+                              final locationAsync = ref.watch(
+                                userLocationStreamProvider,
+                              );
                               return locationAsync.when(
                                 data: (currentLocation) => FlutterMap(
                                   options: MapOptions(
                                     initialCenter: currentLocation,
                                     initialZoom: 15.0,
-                                    interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+                                    interactionOptions:
+                                        const InteractionOptions(
+                                          flags: InteractiveFlag.none,
+                                        ),
                                   ),
                                   children: [
                                     TileLayer(
-                                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                      urlTemplate:
+                                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                       userAgentPackageName: 'com.suar.app',
                                     ),
                                     MarkerLayer(
@@ -244,11 +283,16 @@ class HomeScreen extends ConsumerWidget {
                                           height: 30,
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: AppColors.primaryLight.withValues(alpha: 0.5),
+                                              color: AppColors.primaryLight
+                                                  .withValues(alpha: 0.5),
                                               shape: BoxShape.circle,
                                             ),
                                             child: const Center(
-                                              child: Icon(Icons.my_location, color: AppColors.primary, size: 16),
+                                              child: Icon(
+                                                Icons.my_location,
+                                                color: AppColors.primary,
+                                                size: 16,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -256,9 +300,19 @@ class HomeScreen extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                loading: () => const Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                ),
                                 error: (err, stack) => const Center(
-                                  child: Text('Gagal memuat cuplikan peta', style: TextStyle(color: AppColors.textHint, fontSize: 12)),
+                                  child: Text(
+                                    'Gagal memuat cuplikan peta',
+                                    style: TextStyle(
+                                      color: AppColors.textHint,
+                                      fontSize: 12,
+                                    ),
+                                  ),
                                 ),
                               );
                             },
@@ -267,9 +321,19 @@ class HomeScreen extends ConsumerWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.map_outlined, color: AppColors.textHint, size: 32),
+                                Icon(
+                                  Icons.map_outlined,
+                                  color: AppColors.textHint,
+                                  size: 32,
+                                ),
                                 SizedBox(height: 8),
-                                Text('Peta ditangguhkan (Mode Offline)', style: TextStyle(color: AppColors.textHint, fontSize: 12)),
+                                Text(
+                                  'Peta ditangguhkan (Mode Offline)',
+                                  style: TextStyle(
+                                    color: AppColors.textHint,
+                                    fontSize: 12,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -292,12 +356,28 @@ class HomeScreen extends ConsumerWidget {
                             : () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('Peta tidak dapat diakses tanpa internet! Unduh terlebih dahulu saat online.'),
+                                    content: Text(
+                                      'Peta tidak dapat diakses tanpa internet! Unduh terlebih dahulu saat online.',
+                                    ),
                                     backgroundColor: AppColors.danger,
                                   ),
                                 );
                               },
-                        child: const Text('Buka Peta Layar Penuh', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.fullscreen,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Buka Peta Layar Penuh',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -376,7 +456,6 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_right, color: iconColor),
         ],
       ),
     );
@@ -407,6 +486,7 @@ class HomeScreen extends ConsumerWidget {
     BuildContext context,
     EwsAlertData alertData,
     bool isMapAvailable,
+    LatLng? userLocation,
   ) {
     final result = alertData.triageResult;
     final gempa = alertData.gempa;
@@ -414,10 +494,13 @@ class HomeScreen extends ConsumerWidget {
     final themeColor = isEvakuasi ? AppColors.danger : AppColors.warning;
     final themeLightColor = isEvakuasi
         ? AppColors.dangerLight
-        : AppColors.warningLight;
+        : AppColors.background;
     final alertTitle = isEvakuasi ? 'POTENSI TSUNAMI' : 'GEMPA BUMI';
+    final alertSubtitle = isEvakuasi
+        ? 'STATUS: AWAS (HIGH ALERT)'
+        : 'STATUS: WASPADA';
     final zoneText = isEvakuasi
-        ? 'LOKASI ANDA: ZONA MERAH'
+        ? 'LOKASI ANDA: ZONA MERAH TSUNAMI'
         : 'LOKASI ANDA: AMAN DARI TSUNAMI';
 
     showModalBottomSheet(
@@ -433,10 +516,16 @@ class HomeScreen extends ConsumerWidget {
           child: Column(
             children: [
               Container(
-                color: themeLightColor,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 20,
+                ),
+                decoration: BoxDecoration(
+                  color: themeLightColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -454,202 +543,317 @@ class HomeScreen extends ConsumerWidget {
                         letterSpacing: 1.5,
                       ),
                     ),
-                    Icon(Icons.share, color: themeColor),
+                    Icon(Icons.warning, color: themeLightColor),
                   ],
                 ),
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: themeColor,
-                        child: const Icon(
-                          Icons.warning,
-                          size: 40,
-                          color: AppColors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        alertTitle,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.displayLarge?.copyWith(color: themeColor),
-                      ),
-                      const Text(
-                        'Peringatan Dini di Wilayah Anda',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildStatCard(
-                            'MAGNITUDE',
-                            '${gempa.magnitude} SR',
-                            'Update',
-                            isRed: isEvakuasi,
-                            themeColor: themeColor,
-                          ),
-                          _buildStatCard(
-                            'KEDALAMAN',
-                            gempa.kedalaman,
-                            'Data BMKG',
-                            isRed: false,
-                            themeColor: themeColor,
-                          ),
-                          _buildStatCard(
-                            'JARAK PUSAT',
-                            '${alertData.distanceKm.toStringAsFixed(1)} km',
-                            'Dari Anda',
-                            isRed: isEvakuasi,
-                            themeColor: themeColor,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-
-                      Container(
-                        height: 150,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.border,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        alignment: Alignment.bottomLeft,
-                        child: Container(
-                          margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.circle, color: themeColor, size: 10),
-                              const SizedBox(width: 8),
-                              Text(
-                                zoneText,
-                                style: TextStyle(
-                                  color: themeColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: themeColor,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      SizedBox(
+                        height: 260,
+                        child: Stack(
+                          alignment: Alignment.topCenter,
                           children: [
-                            const Row(
-                              children: [
-                                Icon(Icons.psychology, color: AppColors.white),
-                                SizedBox(width: 8),
-                                Text(
-                                  'AI RECOMMENDATION',
-                                  style: TextStyle(
-                                    color: AppColors.white,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-
-                            const Text(
-                              'Tindakan Segera:',
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                            Container(
+                              height: 220,
+                              width: double.infinity,
+                              decoration: const BoxDecoration(
+                                color: AppColors.border,
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            _buildInstructionList(result.tindakanSegera),
-
-                            const SizedBox(height: 12),
-
-                            const Text(
-                              'Persiapan:',
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            _buildInstructionList(result.persiapan),
-
-                            const SizedBox(height: 24),
-
-                            if (isEvakuasi)
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: isMapAvailable
-                                        ? AppColors.white
-                                        : AppColors.surface,
-                                    foregroundColor: isMapAvailable
-                                        ? AppColors.danger
-                                        : AppColors.textHint,
-                                  ),
-                                  onPressed: () {
-                                    if (isMapAvailable) {
-                                      Navigator.pop(context);
-                                      context.push('/map');
-                                    } else {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            'Peta tidak tersedia! Harap ikuti instruksi dari AI.',
+                              child: (userLocation != null && isMapAvailable)
+                                  ? ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                      child: FlutterMap(
+                                        options: MapOptions(
+                                          initialCenter: userLocation,
+                                          initialZoom: 15.0,
+                                          interactionOptions: const InteractionOptions(
+                                            flags: InteractiveFlag.none,
                                           ),
-                                          backgroundColor: AppColors.warning,
                                         ),
-                                      );
-                                    }
-                                  },
-                                  icon: Icon(
-                                    isMapAvailable
-                                        ? Icons.location_on
-                                        : Icons.location_off,
+                                        children: [
+                                          TileLayer(
+                                            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                            userAgentPackageName: 'com.suar.app',
+                                          ),
+                                          MarkerLayer(
+                                            markers: [
+                                              Marker(
+                                                point: userLocation,
+                                                width: 40,
+                                                height: 40,
+                                                child: const Icon(
+                                                  Icons.location_on,
+                                                  color: AppColors.primary,
+                                                  size: 32,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Image.asset(
+                                      'assets/images/topo_bg.png',
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) => const Center(
+                                        child: Icon(Icons.map_outlined, color: AppColors.textHint, size: 48),
+                                      ),
+                                    ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 24,
+                              right: 24,
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor: themeColor,
+                                      child: const Icon(
+                                        Icons.warning,
+                                        size: 24,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      alertTitle,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            color: themeColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      alertSubtitle,
+                                      style: TextStyle(
+                                        color: themeColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    color: themeColor,
+                                    size: 12,
                                   ),
-                                  label: Text(
-                                    isMapAvailable
-                                        ? 'BUKA PETA EVAKUASI'
-                                        : "PETA TIDAK TERSEDIA",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1,
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(
+                                      zoneText,
+                                      style: TextStyle(
+                                        color: themeColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildListStatRow(
+                                    icon: Icons.sensors,
+                                    label: 'MAGNITUDE',
+                                    value: '${gempa.magnitude} SR',
+                                    subValue: 'Update',
+                                    isRed: isEvakuasi,
+                                    themeColor: themeColor,
+                                  ),
+                                  const Divider(),
+                                  _buildListStatRow(
+                                    icon: Icons.waves,
+                                    label: 'KEDALAMAN',
+                                    value: gempa.kedalaman,
+                                    subValue: 'Data BMKG',
+                                    isRed: false,
+                                    themeColor: themeColor,
+                                  ),
+                                  const Divider(),
+                                  _buildListStatRow(
+                                    icon: Icons.near_me_outlined,
+                                    label: 'JARAK EPISENTRUM',
+                                    value:
+                                        '${alertData.distanceKm.toStringAsFixed(1)} km',
+                                    subValue: 'Dari Anda',
+                                    isRed: isEvakuasi,
+                                    themeColor: themeColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: themeColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.psychology,
+                                        color: AppColors.white,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'AI RECOMMENDATION',
+                                        style: TextStyle(
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  const Text(
+                                    'Tindakan Segera:',
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildInstructionList(result.tindakanSegera),
+
+                                  const SizedBox(height: 12),
+
+                                  const Text(
+                                    'Persiapan:',
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildInstructionList(result.persiapan),
+
+                                  const SizedBox(height: 24),
+
+                                  if (isEvakuasi)
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: 48,
+                                      child: ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: isMapAvailable
+                                              ? AppColors.white
+                                              : AppColors.surface,
+                                          foregroundColor: isMapAvailable
+                                              ? themeColor
+                                              : AppColors.textHint,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          if (isMapAvailable) {
+                                            Navigator.pop(context);
+                                            context.push('/map');
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Peta tidak tersedia! Harap ikuti instruksi dari AI.',
+                                                ),
+                                                backgroundColor:
+                                                    AppColors.warning,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        icon: Icon(
+                                          isMapAvailable
+                                              ? Icons.location_on
+                                              : Icons.location_off,
+                                        ),
+                                        label: Text(
+                                          isMapAvailable
+                                              ? 'BUKA PETA EVAKUASI'
+                                              : "PETA TIDAK TERSEDIA",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -664,59 +868,63 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    String sub, {
+  Widget _buildListStatRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required String subValue,
     required bool isRed,
     required Color themeColor,
   }) {
     final activeColor = isRed ? themeColor : AppColors.textPrimary;
-    return Container(
-      width: 100,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textHint,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isRed
+                  ? themeColor.withValues(alpha: 0.1)
+                  : AppColors.surface,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: isRed ? themeColor : AppColors.textSecondary,
+              size: 20,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                Text(
+                  subValue,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Text(
             value,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: activeColor,
             ),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isRed ? Icons.trending_up : Icons.remove,
-                size: 12,
-                color: isRed ? themeColor : AppColors.textSecondary,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                sub,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: isRed ? themeColor : AppColors.textSecondary,
-                ),
-              ),
-            ],
           ),
         ],
       ),

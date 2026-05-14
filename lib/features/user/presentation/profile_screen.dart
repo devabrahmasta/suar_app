@@ -84,7 +84,9 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Fitur edit belum tersedia')),
+                            const SnackBar(
+                              content: Text('Fitur edit belum tersedia'),
+                            ),
                           );
                         },
                         child: const Text('Edit Profil'),
@@ -119,7 +121,6 @@ class ProfileScreen extends ConsumerWidget {
                       context,
                       icon: Icons.sd_storage_outlined,
                       title: 'Penyimpanan Peta Offline',
-                      trailingText: '12 MB',
                       onTap: () => context.push('/cache-management'),
                     ),
                     const Divider(height: 1, color: AppColors.border),
@@ -135,53 +136,7 @@ class ProfileScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
-              // Group 2: App Config
-              Text(
-                'PENGATURAN APLIKASI',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.border),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    _buildMenuItem(
-                      context,
-                      icon: Icons.battery_charging_full,
-                      title: 'Optimasi Baterai & Latar Belakang',
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Fitur belum tersedia')),
-                        );
-                      },
-                    ),
-                    const Divider(height: 1, color: AppColors.border),
-                    _buildMenuItem(
-                      context,
-                      icon: Icons.accessible,
-                      title: 'Profil Kerentanan (Disabilitas/Lansia)',
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Fitur belum tersedia')),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Group 3: Support
+              // Group 2: Support
               Text(
                 'BANTUAN',
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -236,7 +191,6 @@ class ProfileScreen extends ConsumerWidget {
     BuildContext context, {
     required IconData icon,
     required String title,
-    String? trailingText,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -257,22 +211,12 @@ class ProfileScreen extends ConsumerWidget {
             Expanded(
               child: Text(
                 title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 15),
-              ),
-            ),
-            if (trailingText != null) ...[
-              Text(
-                trailingText,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
                 ),
               ),
-              const SizedBox(width: 8),
-            ],
+            ),
             const Icon(Icons.chevron_right, color: AppColors.textHint),
           ],
         ),

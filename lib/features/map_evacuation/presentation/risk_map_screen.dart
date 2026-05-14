@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'map_provider.dart';
@@ -189,6 +190,139 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
     );
   }
 
+  void _showLegendBottomSheet(BuildContext context, LatLng currentLocation) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateModal) {
+            return Consumer(
+              builder: (context, ref, child) {
+                final showTsunami = ref.watch(showTsunamiProvider);
+                final showLandslide = ref.watch(showLandslideProvider);
+                final showEarthquake = ref.watch(showEarthquakeProvider);
+
+                return Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 4,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: AppColors.border,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "Legenda Peta",
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                      ),
+                      const SizedBox(height: 16),
+                      _LayerToggle(
+                        label: "Zona Bahaya Tsunami",
+                        value: showTsunami,
+                        activeColor: AppColors.primary,
+                        isLoading: _isTsunamiLoading,
+                        onChanged: (val) async {
+                          ref.read(showTsunamiProvider.notifier).setLayer(val);
+                          if (val) {
+                            setStateModal(() => _isTsunamiLoading = true);
+                            this.setState(() => _isTsunamiLoading = true);
+                            final inarisk = ref.read(inariskServiceProvider);
+                            final result = await inarisk.checkTsunamiHazard(
+                              currentLocation.latitude,
+                              currentLocation.longitude,
+                            );
+                            if (mounted) {
+                              this.setState(() {
+                                _isInTsunamiZone = result;
+                                _isTsunamiLoading = false;
+                              });
+                              setStateModal(() => _isTsunamiLoading = false);
+                            }
+                          } else {
+                            if (mounted) {
+                              this.setState(() => _isInTsunamiZone = false);
+                            }
+                          }
+                        },
+                      ),
+                      _LayerToggle(
+                        label: "Zona Bahaya Longsor",
+                        value: showLandslide,
+                        activeColor: AppColors.primary,
+                        isLoading: _isLandslideLoading,
+                        onChanged: (val) async {
+                          ref
+                              .read(showLandslideProvider.notifier)
+                              .setLayer(val);
+                          if (val) {
+                            setStateModal(() => _isLandslideLoading = true);
+                            this.setState(() => _isLandslideLoading = true);
+                            final inarisk = ref.read(inariskServiceProvider);
+                            final result = await inarisk.checkLandslideHazard(
+                              currentLocation.latitude,
+                              currentLocation.longitude,
+                            );
+                            if (mounted) {
+                              this.setState(() {
+                                _isInLandslideZone = result;
+                                _isLandslideLoading = false;
+                              });
+                              setStateModal(() => _isLandslideLoading = false);
+                            }
+                          } else {
+                            if (mounted) {
+                              this.setState(() => _isInLandslideZone = false);
+                            }
+                          }
+                        },
+                      ),
+                      _LayerToggle(
+                        label: "Titik Gempa Live",
+                        value: showEarthquake,
+                        activeColor: AppColors.primary,
+                        onChanged: (val) => ref
+                            .read(showEarthquakeProvider.notifier)
+                            .setLayer(val),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "Data zona bahaya bersumber dari InaRISK BNPB. Ketersediaan data bergantung pada server BNPB.",
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: AppColors.textHint,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locationAsync = ref.watch(userLocationStreamProvider);
@@ -323,7 +457,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                           ),
                           child: const Center(
                             child: Icon(
-                              Icons.my_location,
+                              Iconsax.gps,
                               color: AppColors.info,
                               size: 28,
                             ),
@@ -342,12 +476,24 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
               // ),
               Positioned(
                 bottom: 24,
-                left: 16,
                 right: 16,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    FloatingActionButton(
+                      heroTag: 'legend_fab',
+                      backgroundColor: AppColors.surface,
+                      foregroundColor: AppColors.primary,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      onPressed: () =>
+                          _showLegendBottomSheet(context, currentLocation),
+                      child: const Icon(Icons.layers),
+                    ),
+                    const SizedBox(height: 12),
                     FloatingActionButton(
                       backgroundColor: AppColors.surface,
                       foregroundColor: AppColors.primary,
@@ -359,117 +505,6 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                         _mapController.move(currentLocation, 14.0);
                       },
                       child: const Icon(Icons.my_location),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AppColors.border),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            "Legenda Peta",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          _LayerToggle(
-                            label: "Zona Bahaya Tsunami",
-                            value: showTsunami,
-                            activeColor: AppColors.primary,
-                            isLoading: _isTsunamiLoading,
-                            onChanged: (val) async {
-                              ref
-                                  .read(showTsunamiProvider.notifier)
-                                  .setLayer(val);
-                              if (val) {
-                                setState(() => _isTsunamiLoading = true);
-                                final inarisk = ref.read(
-                                  inariskServiceProvider,
-                                );
-                                final result = await inarisk.checkTsunamiHazard(
-                                  currentLocation.latitude,
-                                  currentLocation.longitude,
-                                );
-                                if (mounted) {
-                                  setState(() {
-                                    _isInTsunamiZone = result;
-                                    _isTsunamiLoading = false;
-                                  });
-                                }
-                              } else {
-                                if (mounted) {
-                                  setState(() => _isInTsunamiZone = false);
-                                }
-                              }
-                            },
-                          ),
-                          _LayerToggle(
-                            label: "Zona Bahaya Longsor",
-                            value: showLandslide,
-                            activeColor: AppColors.primary,
-                            isLoading: _isLandslideLoading,
-                            onChanged: (val) async {
-                              ref
-                                  .read(showLandslideProvider.notifier)
-                                  .setLayer(val);
-                              if (val) {
-                                setState(() => _isLandslideLoading = true);
-                                final inarisk = ref.read(
-                                  inariskServiceProvider,
-                                );
-                                final result = await inarisk
-                                    .checkLandslideHazard(
-                                      currentLocation.latitude,
-                                      currentLocation.longitude,
-                                    );
-                                if (mounted) {
-                                  setState(() {
-                                    _isInLandslideZone = result;
-                                    _isLandslideLoading = false;
-                                  });
-                                }
-                              } else {
-                                if (mounted) {
-                                  setState(() => _isInLandslideZone = false);
-                                }
-                              }
-                            },
-                          ),
-                          _LayerToggle(
-                            label: "Titik Gempa Live",
-                            value: showEarthquake,
-                            activeColor: AppColors.primary,
-                            onChanged: (val) => ref
-                                .read(showEarthquakeProvider.notifier)
-                                .setLayer(val),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            "Data zona bahaya bersumber dari InaRISK BNPB. Ketersediaan data bergantung pada server BNPB.",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: AppColors.textHint,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
