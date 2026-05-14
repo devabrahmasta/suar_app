@@ -8,6 +8,8 @@ class NotificationService {
   static final StreamController<String?> selectNotificationStream =
       StreamController<String?>.broadcast();
 
+  static String? initialPayload;
+
   static Future<void> init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -20,6 +22,13 @@ class NotificationService {
           AndroidFlutterLocalNotificationsPlugin
         >()
         ?.requestNotificationsPermission();
+
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await _notificationsPlugin.getNotificationAppLaunchDetails();
+
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      initialPayload = notificationAppLaunchDetails?.notificationResponse?.payload;
+    }
 
     await _notificationsPlugin.initialize(
       settings: initializationSettings,
@@ -37,7 +46,7 @@ class NotificationService {
   }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-          'suar_darurat_v4',
+          'suar_darurat_v5',
           'Peringatan Darurat',
           channelDescription: 'Notifikasi untuk peringatan gempa & tsunami EWS',
           importance: Importance.max,

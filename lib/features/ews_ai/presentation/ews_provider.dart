@@ -59,23 +59,45 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       final bmkgService = ref.read(bmkgServiceProvider);
       final gempa = await bmkgService.fetchLatestEarthquake();
 
-      final locService = ref.read(locationServiceProvider);
-      final position = await locService.getCurrentPosition();
-
-      final inariskService = ref.read(inariskServiceProvider);
-      final isDiZonaMerah = await inariskService.checkTsunamiHazard(
-        position.latitude,
-        position.longitude,
-      );
-
       final user = ref.read(userProvider);
       if (user == null) throw Exception('Sistem gagal memuat profil pengguna.');
 
+      double currentLat = 0.0;
+      double currentLng = 0.0;
+      double currentSpeed = 0.0;
+      bool hasLocation = false;
+
+      try {
+        final locService = ref.read(locationServiceProvider);
+        final position = await locService.getCurrentPosition();
+        currentLat = position.latitude;
+        currentLng = position.longitude;
+        currentSpeed = position.speed;
+        hasLocation = true;
+      } catch (e) {
+        if (user.homeLatitude != null && user.homeLongitude != null) {
+          currentLat = user.homeLatitude!;
+          currentLng = user.homeLongitude!;
+          hasLocation = true;
+        }
+      }
+
+      bool isDiZonaMerah = false;
+      if (hasLocation) {
+        final inariskService = ref.read(inariskServiceProvider);
+        try {
+          isDiZonaMerah = await inariskService.checkTsunamiHazard(
+            currentLat,
+            currentLng,
+          );
+        } catch (_) {}
+      }
+
       bool isAtHome = false;
-      if (user.homeLatitude != null && user.homeLongitude != null) {
+      if (hasLocation && user.homeLatitude != null && user.homeLongitude != null) {
         final distanceToHome = Geolocator.distanceBetween(
-          position.latitude,
-          position.longitude,
+          currentLat,
+          currentLng,
           user.homeLatitude!,
           user.homeLongitude!,
         );
@@ -83,21 +105,39 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       }
 
       double distanceKm = 0.0;
-      try {
-        final coords = gempa.coordinates.split(',');
-        if (coords.length == 2) {
-          final latGempa = double.tryParse(coords[0].trim()) ?? 0.0;
-          final lngGempa = double.tryParse(coords[1].trim()) ?? 0.0;
-          final distMeters = Geolocator.distanceBetween(
-            position.latitude,
-            position.longitude,
-            latGempa,
-            lngGempa,
-          );
-          distanceKm = distMeters / 1000;
+      if (hasLocation) {
+        try {
+          final coords = gempa.coordinates.split(',');
+          if (coords.length == 2) {
+            final latGempa = double.tryParse(coords[0].trim()) ?? 0.0;
+            final lngGempa = double.tryParse(coords[1].trim()) ?? 0.0;
+            final distMeters = Geolocator.distanceBetween(
+              currentLat,
+              currentLng,
+              latGempa,
+              lngGempa,
+            );
+            distanceKm = distMeters / 1000;
+          }
+        } catch (e) {
+          print("Gagal menghitung jarak gempa: $e");
         }
-      } catch (e) {
-        print("Gagal menghitung jarak gempa: $e");
+      }
+
+      final mag = double.tryParse(gempa.magnitude) ?? 0.0;
+      final isTsunami = gempa.potensi.toLowerCase().contains('tsunami');
+      
+      bool isSignificant = false;
+      if (isTsunami || mag >= 7.0) {
+        isSignificant = true;
+      } else if (mag >= 6.0 && distanceKm <= 1000) {
+        isSignificant = true;
+      } else if (mag >= 5.0 && distanceKm <= 500) {
+        isSignificant = true;
+      }
+
+      if (!isSignificant) {
+        return null;
       }
 
       final geminiService = ref.read(geminiTriageServiceProvider);
@@ -106,7 +146,7 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         isDiZonaMerah: isDiZonaMerah,
         user: user,
         isAtHome: isAtHome,
-        speedInMetersPerSecond: position.speed,
+        speedInMetersPerSecond: currentSpeed,
         currentTime: DateTime.now(),
       );
 
