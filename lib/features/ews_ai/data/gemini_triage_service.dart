@@ -25,10 +25,12 @@ class GeminiTriageService {
     required DateTime currentTime,
   }) async {
     try {
-      final String timeFormat = "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}";
+      final String timeFormat =
+          "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}";
       final bool isNight = currentTime.hour >= 22 || currentTime.hour < 5;
       final bool isMovingFast = speedInMetersPerSecond > 5.0;
-      final String prompt = '''
+      final String prompt =
+          '''
 Anda adalah AI Sistem Peringatan Dini (SUAR) yang ahli dalam manajemen bencana dan SOP Keselamatan Pemerintah Indonesia (BMKG, BNPB, KemenPUPR).
 Tugas Anda adalah memberikan instruksi keselamatan yang SANGAT SINGKAT, TEGAS, dan BERDASARKAN KONTEKS pengguna saat ini.
 
@@ -100,7 +102,10 @@ Keluarkan hasil analisis murni DALAM FORMAT JSON SAJA seperti ini (TANPA blok ko
                 'Jauhi kaca dan benda yang mudah jatuh.',
               ],
         persiapan: daruratKritis
-            ? ['Amankan keluarga dan bawa dokumen penting.', 'Pakai alas kaki yang tertutup.']
+            ? [
+                'Amankan keluarga dan bawa dokumen penting.',
+                'Pakai alas kaki yang tertutup.',
+              ]
             : [
                 'Matikan kompor dan cabut gas.',
                 'Siapkan senter jika listrik padam.',

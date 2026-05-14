@@ -14,10 +14,7 @@ class ChatListScreen extends ConsumerWidget {
     final connectedPeers = ref.watch(connectedPeersProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Obrolan'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Obrolan'), centerTitle: true),
       body: Column(
         children: [
           Padding(
@@ -53,7 +50,7 @@ class ChatListScreen extends ConsumerWidget {
                   onTap: () => context.pushNamed('public_chat'),
                 ),
                 const Divider(height: 1),
-                
+
                 // Active Peers
                 if (connectedPeers.isEmpty)
                   Padding(
@@ -102,7 +99,10 @@ class ChatListScreen extends ConsumerWidget {
                       ),
                       subtitle: const Text(
                         'Online di jaringan mesh',
-                        style: TextStyle(color: AppColors.success, fontSize: 12),
+                        style: TextStyle(
+                          color: AppColors.success,
+                          fontSize: 12,
+                        ),
                       ),
                       onTap: () {
                         context.pushNamed(

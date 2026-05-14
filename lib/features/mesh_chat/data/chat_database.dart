@@ -18,11 +18,7 @@ class ChatDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -77,7 +73,9 @@ CREATE TABLE messages (
 
   Future<int> deleteOldMessages() async {
     final db = await instance.database;
-    final cutoff = DateTime.now().subtract(const Duration(hours: 24)).millisecondsSinceEpoch;
+    final cutoff = DateTime.now()
+        .subtract(const Duration(hours: 24))
+        .millisecondsSinceEpoch;
     return await db.delete(
       'messages',
       where: 'timestamp < ?',
