@@ -1,50 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'map_provider.dart';
+import '../../ews_ai/presentation/ews_provider.dart';
 
+// --- LAYER NOTIFIERS ---
 class TsunamiLayerNotifier extends Notifier<bool> {
   @override
-  bool build() => true;
-
-  void setLayer(bool value) {
-    state = value;
-  }
+  bool build() => false;
+  void setLayer(bool value) => state = value;
 }
 
-final showTsunamiProvider = NotifierProvider<TsunamiLayerNotifier, bool>(() {
-  return TsunamiLayerNotifier();
-});
+final showTsunamiProvider = NotifierProvider<TsunamiLayerNotifier, bool>(
+  () => TsunamiLayerNotifier(),
+);
 
 class LandslideLayerNotifier extends Notifier<bool> {
   @override
-  bool build() => true;
-
-  void setLayer(bool value) {
-    state = value;
-  }
+  bool build() => false;
+  void setLayer(bool value) => state = value;
 }
 
 final showLandslideProvider = NotifierProvider<LandslideLayerNotifier, bool>(
-  () {
-    return LandslideLayerNotifier();
-  },
+  () => LandslideLayerNotifier(),
 );
 
 class EarthquakeLayerNotifier extends Notifier<bool> {
   @override
   bool build() => true;
-
-  void setLayer(bool value) {
-    state = value;
-  }
+  void setLayer(bool value) => state = value;
 }
 
-final showEarthquakeProvider = NotifierProvider<EarthquakeLayerNotifier, bool>(() {
-  return EarthquakeLayerNotifier();
-});
+final showEarthquakeProvider = NotifierProvider<EarthquakeLayerNotifier, bool>(
+  () => EarthquakeLayerNotifier(),
+);
 
+// --- MAIN SCREEN ---
 class RiskMapScreen extends ConsumerStatefulWidget {
   const RiskMapScreen({super.key});
 
@@ -55,9 +48,151 @@ class RiskMapScreen extends ConsumerStatefulWidget {
 class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
   final MapController _mapController = MapController();
 
+  bool _isTsunamiLoading = false;
+  bool _isInTsunamiZone = false;
+
+  bool _isLandslideLoading = false;
+  bool _isInLandslideZone = false;
+
+  void _showEarthquakeDetails(
+    BuildContext context,
+    Map<String, dynamic> gempa,
+    Color color,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.35,
+          maxChildSize: 0.5,
+          minChildSize: 0.2,
+          builder: (context, scrollController) {
+            final wilayah = gempa['Wilayah'] ?? 'Unknown Location';
+            final magnitude = gempa['Magnitude'] ?? '-';
+            final tanggal = gempa['Tanggal'] ?? '-';
+            final jam = gempa['Jam'] ?? '-';
+            final kedalaman = gempa['Kedalaman'] ?? '-';
+            final potensi = gempa['Potensi'] ?? '-';
+            final isTsunami = potensi.toLowerCase().contains('tsunami');
+
+            return Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.border,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    wilayah,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        magnitude,
+                        style: TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.w900,
+                          color: color,
+                          height: 1.0,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Magnitudo',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  _buildDetailRow('Waktu', '$tanggal $jam'),
+                  const SizedBox(height: 12),
+                  _buildDetailRow('Kedalaman', kedalaman),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isTsunami
+                          ? AppColors.dangerLight
+                          : AppColors.successLight,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      potensi,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: isTsunami ? AppColors.danger : AppColors.success,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Data: BMKG',
+                    style: TextStyle(fontSize: 10, color: AppColors.textHint),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locationAsync = ref.watch(userLocationStreamProvider);
+    final recentQuakesAsync = ref.watch(recentEarthquakesProvider);
 
     final showTsunami = ref.watch(showTsunamiProvider);
     final showLandslide = ref.watch(showLandslideProvider);
@@ -95,7 +230,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                 mapController: _mapController,
                 options: MapOptions(
                   initialCenter: currentLocation,
-                  initialZoom: 13.0,
+                  initialZoom: 5.0, // Di-zoom out sedikit agar gempa terlihat
                 ),
                 children: [
                   TileLayer(
@@ -104,24 +239,77 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                     userAgentPackageName: 'com.suar.app',
                   ),
 
-                  if (showTsunami)
-                    TileLayer(
-                      urlTemplate:
-                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_tsunami/ImageServer/tile/{z}/{y}/{x}',
+                  // LAYER TSUNAMI (Circle overlay)
+                  if (showTsunami && _isInTsunamiZone)
+                    CircleLayer(
+                      circles: [
+                        CircleMarker(
+                          point: currentLocation,
+                          radius: 3000, // 3000 meters
+                          useRadiusInMeter: true,
+                          color: AppColors.danger.withValues(alpha: 0.3),
+                          borderColor: AppColors.danger.withValues(alpha: 0.5),
+                          borderStrokeWidth: 2,
+                        ),
+                      ],
                     ),
 
-                  if (showLandslide)
-                    TileLayer(
-                      urlTemplate:
-                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_tanah_longsor/ImageServer/tile/{z}/{y}/{x}',
+                  // LAYER LONGSOR (Circle overlay)
+                  if (showLandslide && _isInLandslideZone)
+                    CircleLayer(
+                      circles: [
+                        CircleMarker(
+                          point: currentLocation,
+                          radius: 3000, // 3000 meters
+                          useRadiusInMeter: true,
+                          color: AppColors.warning.withValues(alpha: 0.3),
+                          borderColor: AppColors.warning.withValues(alpha: 0.5),
+                          borderStrokeWidth: 2,
+                        ),
+                      ],
                     ),
 
-                  if (showEarthquake)
-                    TileLayer(
-                      urlTemplate:
-                          'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_bahaya_gempabumi/ImageServer/tile/{z}/{y}/{x}',
+                  // TITIK GEMPA LIVE (Dari BMKG - Ripple Markers)
+                  if (showEarthquake && recentQuakesAsync.value != null)
+                    MarkerLayer(
+                      markers: recentQuakesAsync.value!.map((gempa) {
+                        final coordsStr = gempa['Coordinates'] as String? ?? '';
+                        final coords = coordsStr.split(',');
+                        LatLng point = const LatLng(0, 0);
+                        if (coords.length == 2) {
+                          point = LatLng(
+                            double.tryParse(coords[0].trim()) ?? 0.0,
+                            double.tryParse(coords[1].trim()) ?? 0.0,
+                          );
+                        }
+
+                        final magStr = gempa['Magnitude'] as String? ?? '0';
+                        final magnitude = double.tryParse(magStr) ?? 0.0;
+
+                        Color markerColor = AppColors.info;
+                        if (magnitude >= 5.0) {
+                          markerColor = AppColors.danger;
+                        } else if (magnitude >= 3.0) {
+                          markerColor = AppColors.warning;
+                        }
+
+                        return Marker(
+                          point: point,
+                          width: 60,
+                          height: 60,
+                          child: GestureDetector(
+                            onTap: () => _showEarthquakeDetails(
+                              context,
+                              gempa,
+                              markerColor,
+                            ),
+                            child: RippleMarker(color: markerColor),
+                          ),
+                        );
+                      }).toList(),
                     ),
 
+                  // TITIK LOKASI USER
                   MarkerLayer(
                     markers: [
                       Marker(
@@ -147,80 +335,143 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                 ],
               ),
 
-              Positioned(
-                bottom: 240,
-                right: 16,
-                child: FloatingActionButton(
-                  backgroundColor: AppColors.white,
-                  foregroundColor: AppColors.primary,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onPressed: () {
-                    _mapController.move(currentLocation, 14.0);
-                  },
-                  child: const Icon(Icons.my_location),
-                ),
-              ),
-
+              // Positioned(
+              //   bottom: 240,
+              //   right: 16,
+              //   child:
+              // ),
               Positioned(
                 bottom: 24,
                 left: 16,
                 right: 16,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.border),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      backgroundColor: AppColors.surface,
+                      foregroundColor: AppColors.primary,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        "Legenda Peta",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
+                      onPressed: () {
+                        _mapController.move(currentLocation, 14.0);
+                      },
+                      child: const Icon(Icons.my_location),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: AppColors.border),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 12),
-                      _LayerToggle(
-                        label: "Zona Bahaya Tsunami",
-                        value: showTsunami,
-                        activeColor: AppColors.primary,
-                        onChanged: (val) => ref
-                            .read(showTsunamiProvider.notifier)
-                            .setLayer(val),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Legenda Peta",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _LayerToggle(
+                            label: "Zona Bahaya Tsunami",
+                            value: showTsunami,
+                            activeColor: AppColors.primary,
+                            isLoading: _isTsunamiLoading,
+                            onChanged: (val) async {
+                              ref
+                                  .read(showTsunamiProvider.notifier)
+                                  .setLayer(val);
+                              if (val) {
+                                setState(() => _isTsunamiLoading = true);
+                                final inarisk = ref.read(
+                                  inariskServiceProvider,
+                                );
+                                final result = await inarisk.checkTsunamiHazard(
+                                  currentLocation.latitude,
+                                  currentLocation.longitude,
+                                );
+                                if (mounted) {
+                                  setState(() {
+                                    _isInTsunamiZone = result;
+                                    _isTsunamiLoading = false;
+                                  });
+                                }
+                              } else {
+                                if (mounted) {
+                                  setState(() => _isInTsunamiZone = false);
+                                }
+                              }
+                            },
+                          ),
+                          _LayerToggle(
+                            label: "Zona Bahaya Longsor",
+                            value: showLandslide,
+                            activeColor: AppColors.primary,
+                            isLoading: _isLandslideLoading,
+                            onChanged: (val) async {
+                              ref
+                                  .read(showLandslideProvider.notifier)
+                                  .setLayer(val);
+                              if (val) {
+                                setState(() => _isLandslideLoading = true);
+                                final inarisk = ref.read(
+                                  inariskServiceProvider,
+                                );
+                                final result = await inarisk
+                                    .checkLandslideHazard(
+                                      currentLocation.latitude,
+                                      currentLocation.longitude,
+                                    );
+                                if (mounted) {
+                                  setState(() {
+                                    _isInLandslideZone = result;
+                                    _isLandslideLoading = false;
+                                  });
+                                }
+                              } else {
+                                if (mounted) {
+                                  setState(() => _isInLandslideZone = false);
+                                }
+                              }
+                            },
+                          ),
+                          _LayerToggle(
+                            label: "Titik Gempa Live",
+                            value: showEarthquake,
+                            activeColor: AppColors.primary,
+                            onChanged: (val) => ref
+                                .read(showEarthquakeProvider.notifier)
+                                .setLayer(val),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Data zona bahaya bersumber dari InaRISK BNPB. Ketersediaan data bergantung pada server BNPB.",
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: AppColors.textHint,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                      _LayerToggle(
-                        label: "Zona Bahaya Longsor",
-                        value: showLandslide,
-                        activeColor: AppColors.primary,
-                        onChanged: (val) => ref
-                            .read(showLandslideProvider.notifier)
-                            .setLayer(val),
-                      ),
-                      _LayerToggle(
-                        label: "Titik Gempa Live",
-                        value: showEarthquake,
-                        activeColor: AppColors.primary,
-                        onChanged: (val) => ref
-                            .read(showEarthquakeProvider.notifier)
-                            .setLayer(val),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -231,17 +482,107 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
   }
 }
 
+// --- RIPPLE MARKER FOR EARTHQUAKES ---
+class RippleMarker extends StatefulWidget {
+  final Color color;
+  const RippleMarker({super.key, required this.color});
+
+  @override
+  State<RippleMarker> createState() => _RippleMarkerState();
+}
+
+class _RippleMarkerState extends State<RippleMarker>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return CustomPaint(
+          painter: _RipplePainter(
+            color: widget.color,
+            animationValue: _animation.value,
+          ),
+          size: const Size(60, 60),
+        );
+      },
+    );
+  }
+}
+
+class _RipplePainter extends CustomPainter {
+  final Color color;
+  final double animationValue;
+
+  _RipplePainter({required this.color, required this.animationValue});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+
+    // Outer ripple (fades out and scales up)
+    final outerScale = 0.4 + (0.6 * animationValue);
+    final outerOpacity = 0.4 * (1.0 - animationValue);
+    final outerRadius = (size.width / 2) * outerScale;
+
+    final outerPaint = Paint()
+      ..color = color.withValues(alpha: outerOpacity)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(center, outerRadius, outerPaint);
+
+    // Middle circle (semi-transparent)
+    final middlePaint = Paint()
+      ..color = color.withValues(alpha: 0.3)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, size.width * 0.25, middlePaint);
+
+    // Inner circle (solid dot)
+    final innerPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, size.width * 0.1, innerPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _RipplePainter oldDelegate) {
+    return oldDelegate.animationValue != animationValue ||
+        oldDelegate.color != color;
+  }
+}
+
 class _LayerToggle extends StatelessWidget {
   final String label;
   final bool value;
   final Color activeColor;
   final ValueChanged<bool> onChanged;
+  final bool isLoading;
 
   const _LayerToggle({
     required this.label,
     required this.value,
     required this.activeColor,
     required this.onChanged,
+    this.isLoading = false,
   });
 
   @override
@@ -251,9 +592,25 @@ class _LayerToggle extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          Row(
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: SizedBox(
+                    width: 12,
+                    height: 12,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+            ],
           ),
           SizedBox(
             height: 32,
