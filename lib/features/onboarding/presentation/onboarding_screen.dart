@@ -773,6 +773,7 @@ class _IdentityFormSlide extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 16),
 
                     // Submit button
                     SizedBox(
