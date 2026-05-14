@@ -44,7 +44,7 @@ class EwsTestingScreen extends ConsumerWidget {
               final dummyGempa = GempaModel(
                 tanggal: '17 Mar 2026',
                 jam: '20:30:00 WIB',
-                dateTime: '2026-03-17T13:30:00+00:00',
+                dateTime: DateTime.now().toIso8601String(),
                 coordinates: '-8.50, 109.00',
                 magnitude: '8.5',
                 kedalaman: '10 km',
@@ -63,6 +63,13 @@ class EwsTestingScreen extends ConsumerWidget {
 
               ref.read(evacuationRouteProvider.notifier).findRouteManual();
 
+              NotificationService.showNotification(
+                id: 1,
+                title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
+                body: 'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Segera evakuasi.',
+                payload: 'DUMMY_NO_ACTION',
+              );
+
               context.pop();
             },
           ),
@@ -78,7 +85,7 @@ class EwsTestingScreen extends ConsumerWidget {
               final dummyGempa = GempaModel(
                 tanggal: '17 Mar 2026',
                 jam: '10:15:00 WIB',
-                dateTime: '2026-03-17T03:15:00+00:00',
+                dateTime: DateTime.now().toIso8601String(),
                 coordinates: '-7.80, 110.36',
                 magnitude: '5.2',
                 kedalaman: '80 km',
@@ -94,6 +101,13 @@ class EwsTestingScreen extends ConsumerWidget {
                     dummyGempa: dummyGempa,
                     dummyIsDiZonaMerah: false,
                   );
+                  
+              NotificationService.showNotification(
+                id: 2,
+                title: '⚠️ PERINGATAN GEMPA BUMI',
+                body: 'Gempa M5.2 terdeteksi. Segera berlindung di tempat aman.',
+                payload: 'DUMMY_NO_ACTION',
+              );
 
               context.pop();
             },

@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:suar_app/features/ews_ai/domain/gempa_model.dart';
 import 'package:suar_app/features/map_evacuation/presentation/geofence_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/services/notification_service.dart';
 import 'ews_provider.dart';
 import 'package:flutter_map/flutter_map.dart';
 import '../../map_evacuation/presentation/map_provider.dart';
@@ -51,7 +52,7 @@ class HomeScreen extends ConsumerWidget {
       if (!next.isLoading &&
           next.hasValue &&
           next.value != null &&
-          previous?.value != next.value) {
+          previous?.value?.gempa.dateTime != next.value?.gempa.dateTime) {
         final userLoc = ref.read(userLocationStreamProvider).value;
         _showEwsAlertModal(context, next.value!, isMapAvailable, userLoc);
       }
@@ -62,32 +63,15 @@ class HomeScreen extends ConsumerWidget {
       next,
     ) {
       if (next.hasValue && next.value != null) {
-        final payload = next.value!;
+        _handleNotificationPayload(context, ref, next.value!);
+      }
+    });
 
-        context.go('/');
-
-        if (payload == 'MOCK_TSUNAMI') {
-          final dummyGempa = GempaModel(
-            tanggal: 'Hari Ini',
-            jam: 'Baru Saja',
-            dateTime: DateTime.now().toIso8601String(),
-            coordinates: '-8.50, 109.00',
-            magnitude: '8.5',
-            kedalaman: '10 km',
-            wilayah: '150 km Barat Daya KAB-PANGANDARAN',
-            potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
-            dirasakan: 'V-VI Pangandaran',
-            shakemapUrl: '',
-          );
-          ref
-              .read(ewsProvider.notifier)
-              .triggerMockThreat(
-                dummyGempa: dummyGempa,
-                dummyIsDiZonaMerah: true,
-              );
-        } else if (payload == 'REAL_EWS') {
-          ref.read(ewsProvider.notifier).checkLatestThreat();
-        }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (NotificationService.initialPayload != null) {
+        final payload = NotificationService.initialPayload!;
+        NotificationService.initialPayload = null;
+        _handleNotificationPayload(context, ref, payload);
       }
     });
 
@@ -464,6 +448,31 @@ class HomeScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _handleNotificationPayload(BuildContext context, WidgetRef ref, String payload) {
+    context.go('/');
+
+    if (payload == 'MOCK_TSUNAMI') {
+      final dummyGempa = GempaModel(
+        tanggal: 'Hari Ini',
+        jam: 'Baru Saja',
+        dateTime: DateTime.now().toIso8601String(),
+        coordinates: '-8.50, 109.00',
+        magnitude: '8.5',
+        kedalaman: '10 km',
+        wilayah: '150 km Barat Daya KAB-PANGANDARAN',
+        potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
+        dirasakan: 'V-VI Pangandaran',
+        shakemapUrl: '',
+      );
+      ref.read(ewsProvider.notifier).triggerMockThreat(
+            dummyGempa: dummyGempa,
+            dummyIsDiZonaMerah: true,
+          );
+    } else if (payload == 'REAL_EWS' || payload == 'EWS_ALERT') {
+      ref.read(ewsProvider.notifier).checkLatestThreat();
+    }
   }
 
   Widget _buildResourceButton(IconData icon, String label) {
