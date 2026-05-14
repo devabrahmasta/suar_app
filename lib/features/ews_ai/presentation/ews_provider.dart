@@ -7,7 +7,7 @@ import '../data/inarisk_service.dart';
 import '../data/gemini_triage_service.dart';
 import '../domain/triage_result_model.dart';
 import '../domain/gempa_model.dart';
-import 'package:geolocator/geolocator.dart'; 
+import 'package:geolocator/geolocator.dart';
 import '../../user/presentation/user_notifier.dart';
 import '../../../core/services/notification_service.dart';
 
@@ -89,8 +89,10 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
           final latGempa = double.tryParse(coords[0].trim()) ?? 0.0;
           final lngGempa = double.tryParse(coords[1].trim()) ?? 0.0;
           final distMeters = Geolocator.distanceBetween(
-            position.latitude, position.longitude, 
-            latGempa, lngGempa
+            position.latitude,
+            position.longitude,
+            latGempa,
+            lngGempa,
           );
           distanceKm = distMeters / 1000;
         }
@@ -139,7 +141,7 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       return EwsAlertData(
         triageResult: finalResult,
         gempa: dummyGempa,
-        distanceKm: 12.5, 
+        distanceKm: 12.5,
       );
     });
   }

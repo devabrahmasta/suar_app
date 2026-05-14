@@ -4,7 +4,8 @@ import 'chat_database.dart';
 class ChatRepository {
   final ChatDatabase _database;
 
-  ChatRepository({ChatDatabase? database}) : _database = database ?? ChatDatabase.instance;
+  ChatRepository({ChatDatabase? database})
+    : _database = database ?? ChatDatabase.instance;
 
   Future<void> saveMessage(MessageModel message) async {
     await _database.insertMessage(message);

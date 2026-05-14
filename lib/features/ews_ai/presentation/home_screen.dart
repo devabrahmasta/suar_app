@@ -48,7 +48,10 @@ class HomeScreen extends ConsumerWidget {
     }
 
     ref.listen<AsyncValue<EwsAlertData?>>(ewsProvider, (previous, next) {
-      if (next.hasValue && next.value != null) {
+      if (!next.isLoading &&
+          next.hasValue &&
+          next.value != null &&
+          previous?.value != next.value) {
         final userLoc = ref.read(userLocationStreamProvider).value;
         _showEwsAlertModal(context, next.value!, isMapAvailable, userLoc);
       }
@@ -179,7 +182,9 @@ class HomeScreen extends ConsumerWidget {
                               ),
                             ),
                             onPressed: () {
-                              final userLoc = ref.read(userLocationStreamProvider).value;
+                              final userLoc = ref
+                                  .read(userLocationStreamProvider)
+                                  .value;
                               _showEwsAlertModal(
                                 context,
                                 alertData!,
@@ -564,19 +569,24 @@ class HomeScreen extends ConsumerWidget {
                               ),
                               child: (userLocation != null && isMapAvailable)
                                   ? ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
                                       child: FlutterMap(
                                         options: MapOptions(
                                           initialCenter: userLocation,
                                           initialZoom: 15.0,
-                                          interactionOptions: const InteractionOptions(
-                                            flags: InteractiveFlag.none,
-                                          ),
+                                          interactionOptions:
+                                              const InteractionOptions(
+                                                flags: InteractiveFlag.none,
+                                              ),
                                         ),
                                         children: [
                                           TileLayer(
-                                            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                            userAgentPackageName: 'com.suar.app',
+                                            urlTemplate:
+                                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                            userAgentPackageName:
+                                                'com.suar.app',
                                           ),
                                           MarkerLayer(
                                             markers: [
@@ -598,9 +608,15 @@ class HomeScreen extends ConsumerWidget {
                                   : Image.asset(
                                       'assets/images/topo_bg.png',
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) => const Center(
-                                        child: Icon(Icons.map_outlined, color: AppColors.textHint, size: 48),
-                                      ),
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              const Center(
+                                                child: Icon(
+                                                  Icons.map_outlined,
+                                                  color: AppColors.textHint,
+                                                  size: 48,
+                                                ),
+                                              ),
                                     ),
                             ),
                             Positioned(

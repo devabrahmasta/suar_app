@@ -11,12 +11,14 @@ final chatRepositoryProvider = Provider<ChatRepository>((ref) {
 final meshServiceProvider = Provider<MeshService>((ref) {
   final chatRepository = ref.watch(chatRepositoryProvider);
   final service = MeshService(chatRepository: chatRepository);
-  
+
   service.onPeersUpdated = () {
     // Memperbarui map endpointId -> nama peer aktif
-    ref.read(connectedPeersProvider.notifier).state = Map.from(service.connectedEndpoints);
+    ref.read(connectedPeersProvider.notifier).state = Map.from(
+      service.connectedEndpoints,
+    );
   };
-  
+
   return service;
 });
 
@@ -42,7 +44,10 @@ final publicMessagesProvider = StreamProvider<List<MessageModel>>((ref) async* {
   }
 });
 
-final dmMessagesProvider = StreamProvider.family<List<MessageModel>, String>((ref, peerId) async* {
+final dmMessagesProvider = StreamProvider.family<List<MessageModel>, String>((
+  ref,
+  peerId,
+) async* {
   final chatRepo = ref.watch(chatRepositoryProvider);
   final meshService = ref.watch(meshServiceProvider);
 
@@ -50,7 +55,8 @@ final dmMessagesProvider = StreamProvider.family<List<MessageModel>, String>((re
   yield messages;
 
   await for (final msg in meshService.messageStream) {
-    if (msg.type == MessageType.dm && (msg.peerId == peerId || msg.senderId == peerId)) {
+    if (msg.type == MessageType.dm &&
+        (msg.peerId == peerId || msg.senderId == peerId)) {
       messages = await chatRepo.getDmMessages(peerId);
       yield messages;
     }

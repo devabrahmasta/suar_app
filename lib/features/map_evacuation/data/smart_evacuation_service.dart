@@ -127,21 +127,30 @@ class SmartEvacuationService {
               snappedPoint,
             );
 
-            print('🔍 Memvalidasi keamanan jalur rute dari sungai di dataran rendah...');
+            print(
+              '🔍 Memvalidasi keamanan jalur rute dari sungai di dataran rendah...',
+            );
             bool isRouteSafe = true;
-            
-            int step = (route.length / 10).ceil(); 
+
+            int step = (route.length / 10).ceil();
             if (step < 1) step = 1;
 
             for (int i = 0; i < route.length; i += step) {
               final routePoint = route[i];
-              final pointElevation = await elevationService.getElevation(routePoint);
-              
+              final pointElevation = await elevationService.getElevation(
+                routePoint,
+              );
+
               if (pointElevation <= 10.0) {
-                final isCrossingRiver = await riverService.isNearRiver(routePoint, radius: 50);
-                
+                final isCrossingRiver = await riverService.isNearRiver(
+                  routePoint,
+                  radius: 50,
+                );
+
                 if (isCrossingRiver) {
-                  print('⚠️ Rute arah $bearing° digugurkan: Di pertengahan jalan memotong/melewati sungai pada elevasi rendah ($pointElevation mdpl).');
+                  print(
+                    '⚠️ Rute arah $bearing° digugurkan: Di pertengahan jalan memotong/melewati sungai pada elevasi rendah ($pointElevation mdpl).',
+                  );
                   isRouteSafe = false;
                   break;
                 }
@@ -149,9 +158,9 @@ class SmartEvacuationService {
             }
 
             if (!isRouteSafe) {
-              continue; 
+              continue;
             }
-            
+
             print('🎉 RUTE EVAKUASI DITEMUKAN!');
             return route;
           } catch (e) {

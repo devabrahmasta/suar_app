@@ -42,7 +42,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               Iconsax.wifi,
               color: isConnected ? AppColors.success : AppColors.textHint,
             ),
-          )
+          ),
         ],
       ),
       body: Column(
@@ -55,7 +55,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       Center(
                         child: Text(
                           'Terhubung dengan ${connectedPeers.length} peer(s).',
-                          style: const TextStyle(color: AppColors.textSecondary),
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -91,9 +93,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             padding: const EdgeInsets.all(16.0),
             decoration: const BoxDecoration(
               color: AppColors.white,
-              border: Border(
-                top: BorderSide(color: AppColors.border),
-              ),
+              border: Border(top: BorderSide(color: AppColors.border)),
             ),
             child: Row(
               children: [
@@ -104,12 +104,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     decoration: InputDecoration(
                       hintText: 'Tulis pesan...',
                       filled: true,
-                      fillColor: isConnected ? AppColors.background : AppColors.surface,
+                      fillColor: isConnected
+                          ? AppColors.background
+                          : AppColors.surface,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24.0),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
                     ),
                   ),
                 ),

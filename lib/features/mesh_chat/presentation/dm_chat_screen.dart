@@ -12,11 +12,7 @@ class DmChatScreen extends ConsumerStatefulWidget {
   final String peerId;
   final String peerName;
 
-  const DmChatScreen({
-    super.key,
-    required this.peerId,
-    required this.peerName,
-  });
+  const DmChatScreen({super.key, required this.peerId, required this.peerName});
 
   @override
   ConsumerState<DmChatScreen> createState() => _DmChatScreenState();
@@ -41,7 +37,7 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
     if (user == null) return; // User harus terautentikasi
 
     final meshService = ref.read(meshServiceProvider);
-    
+
     final message = MessageModel(
       id: const Uuid().v4(),
       senderId: user.deviceId,
@@ -55,7 +51,7 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
 
     meshService.sendMessage(message);
     _messageController.clear();
-    
+
     Future.delayed(const Duration(milliseconds: 100), () {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -80,7 +76,9 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
               radius: 16,
               backgroundColor: AppColors.primaryLight,
               child: Text(
-                widget.peerName.isNotEmpty ? widget.peerName[0].toUpperCase() : '?',
+                widget.peerName.isNotEmpty
+                    ? widget.peerName[0].toUpperCase()
+                    : '?',
                 style: const TextStyle(
                   color: AppColors.primaryDark,
                   fontSize: 14,
@@ -107,7 +105,7 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
                     ),
                   );
                 }
-                
+
                 return ListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.all(16.0),
@@ -117,13 +115,22 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
                     final isMe = msg.senderId == currentUser?.deviceId;
 
                     return Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: isMe
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 8.0),
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 10.0,
+                        ),
                         decoration: BoxDecoration(
-                          color: isMe ? AppColors.primaryLight : AppColors.surface,
-                          border: isMe ? null : Border.all(color: AppColors.border),
+                          color: isMe
+                              ? AppColors.primaryLight
+                              : AppColors.surface,
+                          border: isMe
+                              ? null
+                              : Border.all(color: AppColors.border),
                           borderRadius: BorderRadius.only(
                             topLeft: const Radius.circular(16),
                             topRight: const Radius.circular(16),
@@ -134,7 +141,9 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
                         child: Text(
                           msg.content,
                           style: TextStyle(
-                            color: isMe ? AppColors.primaryDark : AppColors.textPrimary,
+                            color: isMe
+                                ? AppColors.primaryDark
+                                : AppColors.textPrimary,
                           ),
                         ),
                       ),
@@ -150,9 +159,7 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
             padding: const EdgeInsets.all(16.0),
             decoration: const BoxDecoration(
               color: AppColors.white,
-              border: Border(
-                top: BorderSide(color: AppColors.border),
-              ),
+              border: Border(top: BorderSide(color: AppColors.border)),
             ),
             child: Row(
               children: [
@@ -167,17 +174,16 @@ class _DmChatScreenState extends ConsumerState<DmChatScreen> {
                         borderRadius: BorderRadius.circular(24.0),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: _sendMessage,
-                  icon: const Icon(
-                    Iconsax.send_1,
-                    color: AppColors.primary,
-                  ),
+                  icon: const Icon(Iconsax.send_1, color: AppColors.primary),
                 ),
               ],
             ),

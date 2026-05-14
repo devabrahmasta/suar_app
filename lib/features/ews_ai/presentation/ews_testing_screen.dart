@@ -60,7 +60,7 @@ class EwsTestingScreen extends ConsumerWidget {
                     dummyGempa: dummyGempa,
                     dummyIsDiZonaMerah: true,
                   );
-              
+
               ref.read(evacuationRouteProvider.notifier).findRouteManual();
 
               context.pop();
@@ -209,7 +209,9 @@ class EwsTestingScreen extends ConsumerWidget {
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Peringatan disetel! Silakan minimize aplikasi atau matikan layar HP Anda sekarang.'),
+                  content: Text(
+                    'Peringatan disetel! Silakan minimize aplikasi atau matikan layar HP Anda sekarang.',
+                  ),
                   backgroundColor: AppColors.info,
                   duration: Duration(seconds: 5),
                 ),
@@ -221,7 +223,8 @@ class EwsTestingScreen extends ConsumerWidget {
                 NotificationService.showNotification(
                   id: 999,
                   title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
-                  body: 'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Tekan untuk instruksi evakuasi segera.',
+                  body:
+                      'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Tekan untuk instruksi evakuasi segera.',
                   payload: 'MOCK_TSUNAMI',
                 );
               });

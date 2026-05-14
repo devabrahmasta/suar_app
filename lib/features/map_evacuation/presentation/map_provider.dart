@@ -61,7 +61,7 @@ final smartEvacuationProvider = Provider<SmartEvacuationService>((ref) {
   );
 });
 
-final riverServiceProvider = Provider<RiverService>((ref){
+final riverServiceProvider = Provider<RiverService>((ref) {
   return RiverService(ref.watch(dioProvider));
 });
 
@@ -101,7 +101,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
       final cacheService = MapCacheService();
       await cacheService.saveOfflineRoute(freshRoute);
 
-      if (freshRoute.isNotEmpty){
+      if (freshRoute.isNotEmpty) {
         final bounds = LatLngBounds.fromPoints([startLocation, ...freshRoute]);
         const distance = Distance();
 
@@ -111,7 +111,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
 
         ref.invalidate(mapCacheStatusProvider);
       }
-      
+
       print('🌐 Rute manual sukses didapat dan disimpan ke Cache!');
       return freshRoute;
     });
@@ -150,10 +150,14 @@ final mapCacheStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   }
 });
 
-final recentEarthquakesProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+final recentEarthquakesProvider = FutureProvider<List<Map<String, dynamic>>>((
+  ref,
+) async {
   try {
     final dio = ref.watch(dioProvider);
-    final response = await dio.get('https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json');
+    final response = await dio.get(
+      'https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json',
+    );
     if (response.statusCode == 200) {
       final data = response.data;
       final gempaList = data['Infogempa']['gempa'] as List;

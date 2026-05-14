@@ -10,7 +10,7 @@ import 'chat_repository.dart';
 
 class MeshService {
   final ChatRepository chatRepository;
-  
+
   static const Strategy strategy = Strategy.P2P_CLUSTER;
   static const String serviceId = 'com.suar.mesh';
 
@@ -118,7 +118,7 @@ class MeshService {
   void _onConnectionInitiated(String endpointId, ConnectionInfo info) {
     // We accept all incoming connections for the mesh
     _pendingEndpoints[endpointId] = info.endpointName;
-    
+
     Nearby().acceptConnection(
       endpointId,
       onPayLoadRecieved: (endpointId, payload) {
@@ -130,7 +130,10 @@ class MeshService {
     );
   }
 
-  Future<void> _handleIncomingPayload(String senderEndpointId, Uint8List bytes) async {
+  Future<void> _handleIncomingPayload(
+    String senderEndpointId,
+    Uint8List bytes,
+  ) async {
     try {
       final jsonStr = utf8.decode(bytes);
       final map = jsonDecode(jsonStr);
@@ -146,7 +149,9 @@ class MeshService {
 
       // 3. Relay (Forward) jika hopCount < 5
       if (message.hopCount < 5) {
-        final forwardedMessage = message.copyWith(hopCount: message.hopCount + 1);
+        final forwardedMessage = message.copyWith(
+          hopCount: message.hopCount + 1,
+        );
         _forwardMessage(forwardedMessage, excludeEndpointId: senderEndpointId);
       }
     } catch (e) {
@@ -163,12 +168,18 @@ class MeshService {
     _forwardMessage(message);
   }
 
-  Future<void> _forwardMessage(MessageModel message, {String? excludeEndpointId}) async {
+  Future<void> _forwardMessage(
+    MessageModel message, {
+    String? excludeEndpointId,
+  }) async {
     final bytes = utf8.encode(jsonEncode(message.toMap()));
     for (final endpointId in connectedEndpoints.keys) {
       if (endpointId != excludeEndpointId) {
         try {
-          await Nearby().sendBytesPayload(endpointId, Uint8List.fromList(bytes));
+          await Nearby().sendBytesPayload(
+            endpointId,
+            Uint8List.fromList(bytes),
+          );
         } catch (e) {
           // Gagal kirim ke satu peer, lanjutkan ke peer lain
         }

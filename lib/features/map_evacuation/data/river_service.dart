@@ -8,7 +8,8 @@ class RiverService {
 
   Future<bool> isNearRiver(LatLng point, {int radius = 50}) async {
     try {
-      final query = '''
+      final query =
+          '''
         [out:json];
         (
           way["waterway"="river"](around:$radius, ${point.latitude}, ${point.longitude});
@@ -23,7 +24,7 @@ class RiverService {
         data: query,
         options: Options(
           contentType: 'text/plain',
-          sendTimeout: const Duration(seconds: 5), 
+          sendTimeout: const Duration(seconds: 5),
           receiveTimeout: const Duration(seconds: 5),
         ),
       );

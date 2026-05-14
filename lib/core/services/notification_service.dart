@@ -17,11 +17,12 @@ class NotificationService {
 
     _notificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.requestNotificationsPermission();
 
     await _notificationsPlugin.initialize(
-      settings: initializationSettings, 
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
         selectNotificationStream.add(response.payload);
       },
@@ -36,19 +37,20 @@ class NotificationService {
   }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'suar_darurat_v4',
-      'Peringatan Darurat',
-      channelDescription: 'Notifikasi untuk peringatan gempa & tsunami EWS',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-      sound: RawResourceAndroidNotificationSound('chicken_screaming'),
-      playSound: true,
-      audioAttributesUsage: AudioAttributesUsage.alarm,
+          'suar_darurat_v4',
+          'Peringatan Darurat',
+          channelDescription: 'Notifikasi untuk peringatan gempa & tsunami EWS',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+          sound: RawResourceAndroidNotificationSound('chicken_screaming'),
+          playSound: true,
+          audioAttributesUsage: AudioAttributesUsage.alarm,
+        );
+
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
     );
-    
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await _notificationsPlugin.show(
       id: id,
