@@ -44,7 +44,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                 _buildCard(
                   label: 'Panggilan Darurat',
                   nomor: '112',
-                  icon: Icons.emergency,
+                  icon: Icons.warning,
                   color: AppColors.danger,
                 ),
                 _buildCard(
