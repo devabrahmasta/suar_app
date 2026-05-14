@@ -17,7 +17,7 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
   @override
   Future<GeofenceState> build() async {
     ref.listen(ewsProvider, (previous, next) {
-      if (next.hasValue && next.value?.statusTindakan == 'EVAKUASI') {
+      if (next.hasValue && next.value?.triageResult.statusTindakan == 'EVAKUASI') {
         _triggerEmergencyOverride();
       }
     });

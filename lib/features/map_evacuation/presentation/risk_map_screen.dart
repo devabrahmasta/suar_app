@@ -45,11 +45,18 @@ final showEarthquakeProvider = NotifierProvider<EarthquakeLayerNotifier, bool>((
   return EarthquakeLayerNotifier();
 });
 
-class RiskMapScreen extends ConsumerWidget {
+class RiskMapScreen extends ConsumerStatefulWidget {
   const RiskMapScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RiskMapScreen> createState() => _RiskMapScreenState();
+}
+
+class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
+  final MapController _mapController = MapController();
+
+  @override
+  Widget build(BuildContext context) {
     final locationAsync = ref.watch(userLocationStreamProvider);
 
     final showTsunami = ref.watch(showTsunamiProvider);
@@ -57,9 +64,17 @@ class RiskMapScreen extends ConsumerWidget {
     final showEarthquake = ref.watch(showEarthquakeProvider);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Peta Risiko Bencana'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        titleTextStyle: const TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: locationAsync.when(
         loading: () => const Center(
@@ -77,6 +92,7 @@ class RiskMapScreen extends ConsumerWidget {
           return Stack(
             children: [
               FlutterMap(
+                mapController: _mapController,
                 options: MapOptions(
                   initialCenter: currentLocation,
                   initialZoom: 13.0,
@@ -132,60 +148,78 @@ class RiskMapScreen extends ConsumerWidget {
               ),
 
               Positioned(
-                top: 16,
+                bottom: 240,
                 right: 16,
-                child: Card(
+                child: FloatingActionButton(
+                  backgroundColor: AppColors.white,
+                  foregroundColor: AppColors.primary,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  color: AppColors.white.withValues(alpha: 0.9),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8.0,
-                      horizontal: 12.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "PILIH LAYER",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
+                  onPressed: () {
+                    _mapController.move(currentLocation, 14.0);
+                  },
+                  child: const Icon(Icons.my_location),
+                ),
+              ),
 
-                        _LayerToggle(
-                          label: "Tsunami",
-                          value: showTsunami,
-                          activeColor: AppColors.primary,
-                          onChanged: (val) => ref
-                              .read(showTsunamiProvider.notifier)
-                              .setLayer(val),
+              Positioned(
+                bottom: 24,
+                left: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: AppColors.border),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Legenda Peta",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
                         ),
-
-                        _LayerToggle(
-                          label: "Longsor",
-                          value: showLandslide,
-                          activeColor: AppColors.warning,
-                          onChanged: (val) => ref
-                              .read(showLandslideProvider.notifier)
-                              .setLayer(val),
-                        ),
-
-                        _LayerToggle(
-                          label: "Gempa Bumi",
-                          value: showEarthquake,
-                          activeColor: AppColors.danger,
-                          onChanged: (val) => ref
-                              .read(showEarthquakeProvider.notifier)
-                              .setLayer(val),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 12),
+                      _LayerToggle(
+                        label: "Zona Bahaya Tsunami",
+                        value: showTsunami,
+                        activeColor: AppColors.primary,
+                        onChanged: (val) => ref
+                            .read(showTsunamiProvider.notifier)
+                            .setLayer(val),
+                      ),
+                      _LayerToggle(
+                        label: "Zona Bahaya Longsor",
+                        value: showLandslide,
+                        activeColor: AppColors.primary,
+                        onChanged: (val) => ref
+                            .read(showLandslideProvider.notifier)
+                            .setLayer(val),
+                      ),
+                      _LayerToggle(
+                        label: "Titik Gempa Live",
+                        value: showEarthquake,
+                        activeColor: AppColors.primary,
+                        onChanged: (val) => ref
+                            .read(showEarthquakeProvider.notifier)
+                            .setLayer(val),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -212,22 +246,26 @@ class _LayerToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Transform.scale(
-          scale: 0.8,
-          child: Switch(
-            value: value,
-            activeColor: activeColor,
-            onChanged: onChanged,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
-        ),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-        ),
-      ],
+          SizedBox(
+            height: 32,
+            child: Switch(
+              value: value,
+              activeColor: AppColors.white,
+              activeTrackColor: activeColor,
+              onChanged: onChanged,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

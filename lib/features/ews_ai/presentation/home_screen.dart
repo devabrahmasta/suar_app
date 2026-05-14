@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:suar_app/features/map_evacuation/presentation/geofence_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import 'ews_provider.dart';
-import '../domain/triage_result_model.dart';
 import 'package:flutter_map/flutter_map.dart';
 import '../../map_evacuation/presentation/map_provider.dart';
 
@@ -29,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
     bool isMapAvailable = true;
 
     if (isCacheReady) {
-      mapTitle = 'Peta (Offline Ready)';
+      mapTitle = 'Peta Evakuasi (Offline Ready)';
       mapSubtitle = 'Aman, jalur tersedia tanpa internet';
       mapIcon = Icons.offline_pin;
       mapBadgeColor = AppColors.success;
@@ -46,7 +45,7 @@ class HomeScreen extends ConsumerWidget {
       isMapAvailable = false;
     }
 
-    ref.listen<AsyncValue<TriageResult?>>(ewsProvider, (previous, next) {
+    ref.listen<AsyncValue<EwsAlertData?>>(ewsProvider, (previous, next) {
       if (next.hasValue && next.value != null) {
         _showEwsAlertModal(context, next.value!, isMapAvailable);
       }
@@ -56,27 +55,12 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.emergency_share, color: AppColors.primary),
+            Image.asset('assets/images/suar_logo.png', height: 32),
             const SizedBox(width: 8),
             Text('SUAR', style: Theme.of(context).textTheme.headlineMedium),
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.bug_report, color: AppColors.textHint),
-            tooltip: 'EWS Simulator',
-            onPressed: () => context.push('/testing'),
-          ),
-
-          IconButton(
-            icon: const Icon(
-              Icons.sd_storage_outlined,
-              color: AppColors.textHint,
-            ),
-            tooltip: 'Penyimpanan Peta',
-            onPressed: () => context.push('/cache-management'),
-          ),
-
           IconButton(
             icon: const Icon(
               Icons.notifications_active,
@@ -95,43 +79,9 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.primaryLight),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.circle, color: AppColors.success, size: 12),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mesh Network Aktif',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '5 orang terhubung di sekitar Anda',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.sensors, color: AppColors.textSecondary),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
             ewsState.when(
-              data: (result) {
+              data: (alertData) {
+                final result = alertData?.triageResult;
                 if (result == null) {
                   return _buildStatusCard(
                     color: AppColors.successLight,
@@ -140,30 +90,56 @@ class HomeScreen extends ConsumerWidget {
                     title: 'Tidak ada peringatan aktif',
                     subtitle: 'Kondisi saat ini aman dan terkendali.',
                   );
-                } else if (result.statusTindakan == 'BERLINDUNG') {
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: () =>
-                        _showEwsAlertModal(context, result, isMapAvailable),
-                    child: _buildStatusCard(
-                      color: AppColors.warningLight,
-                      iconColor: AppColors.warning,
-                      icon: Icons.shield,
-                      title: 'WASPADA GEMPA',
-                      subtitle: 'Tekan untuk melihat instruksi keselamatan.',
-                    ),
-                  );
                 } else {
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(16),
-                    onTap: () =>
-                        _showEwsAlertModal(context, result, isMapAvailable),
-                    child: _buildStatusCard(
-                      color: AppColors.dangerLight,
-                      iconColor: AppColors.danger,
-                      icon: Icons.warning,
-                      title: 'PERINGATAN AKTIF',
-                      subtitle: 'Tekan untuk melihat instruksi evakuasi.',
+                  final isEvakuasi = result.statusTindakan == 'EVAKUASI';
+                  final bgColor = isEvakuasi ? AppColors.danger : AppColors.warning;
+                  return Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      children: [
+                        const Icon(Icons.warning_amber_rounded, color: AppColors.white, size: 64),
+                        const SizedBox(height: 16),
+                        Text(
+                          isEvakuasi ? 'POTENSI TSUNAMI' : 'POTENSI GEMPA',
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Peringatan dini aktif. Segera ambil tindakan!',
+                          style: TextStyle(color: AppColors.white, fontSize: 14),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 48,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.white,
+                              foregroundColor: bgColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () => _showEwsAlertModal(context, alertData!, isMapAvailable),
+                            child: const Text(
+                              'LIHAT INSTRUKSI AI & RUTE',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -185,54 +161,146 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
 
-            _buildMenuCard(
-              context,
-              icon: Icons.chat,
-              title: 'Mesh Chat',
-              subtitle: 'Public Channel & Direct Message',
-            ),
-            const SizedBox(height: 16),
-            _buildMenuCard(
-              context,
-              icon: mapIcon,
-              iconColor: mapBadgeColor,
-              title: mapTitle,
-              subtitle: mapSubtitle,
-              isMap: true,
-              isMapAvailable: isMapAvailable,
-              onTap: isMapAvailable
-                  ? () => context.push('/map')
-                  : () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Peta tidak dapat diakses tanpa internet! Unduh terlebih dahulu saat online.',
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppColors.border),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Icon(mapIcon, color: mapBadgeColor),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            mapTitle,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
-                          backgroundColor: AppColors.danger,
                         ),
-                      );
-                    },
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 150,
+                    width: double.infinity,
+                    color: AppColors.border,
+                    child: isMapAvailable
+                        ? Consumer(
+                            builder: (context, ref, child) {
+                              final locationAsync = ref.watch(userLocationStreamProvider);
+                              return locationAsync.when(
+                                data: (currentLocation) => FlutterMap(
+                                  options: MapOptions(
+                                    initialCenter: currentLocation,
+                                    initialZoom: 15.0,
+                                    interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+                                  ),
+                                  children: [
+                                    TileLayer(
+                                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                      userAgentPackageName: 'com.suar.app',
+                                    ),
+                                    MarkerLayer(
+                                      markers: [
+                                        Marker(
+                                          point: currentLocation,
+                                          width: 30,
+                                          height: 30,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.primaryLight.withValues(alpha: 0.5),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: const Center(
+                                              child: Icon(Icons.my_location, color: AppColors.primary, size: 16),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                error: (err, stack) => const Center(
+                                  child: Text('Gagal memuat cuplikan peta', style: TextStyle(color: AppColors.textHint, fontSize: 12)),
+                                ),
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.map_outlined, color: AppColors.textHint, size: 32),
+                                SizedBox(height: 8),
+                                Text('Peta ditangguhkan (Mode Offline)', style: TextStyle(color: AppColors.textHint, fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          side: const BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: isMapAvailable
+                            ? () => context.push('/map')
+                            : () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Peta tidak dapat diakses tanpa internet! Unduh terlebih dahulu saat online.'),
+                                    backgroundColor: AppColors.danger,
+                                  ),
+                                );
+                              },
+                        child: const Text('Buka Peta Layar Penuh', style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
 
             Text(
-              'SUMBER DAYA CEPAT',
+              'SUMBER DAYA PASCA-EVAKUASI',
               style: Theme.of(context).textTheme.labelSmall,
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
-                  child: _buildResourceButton(
-                    Icons.medical_services,
-                    'P3K Dasar',
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => context.push('/first-aid'),
+                    child: _buildResourceButton(
+                      Icons.medical_services,
+                      'P3K Dasar',
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildResourceButton(
-                    Icons.contact_phone,
-                    'Nomor Darurat',
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => context.push('/emergency-numbers'),
+                    child: _buildResourceButton(
+                      Icons.contact_phone,
+                      'Nomor Darurat',
+                    ),
                   ),
                 ),
               ],
@@ -240,7 +308,6 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-
     );
   }
 
@@ -252,10 +319,10 @@ class HomeScreen extends ConsumerWidget {
     required String subtitle,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: iconColor.withValues(alpha: 0.3)),
       ),
       child: Row(
@@ -284,173 +351,13 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMenuCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    Color iconColor = AppColors.primary,
-    bool isMap = false,
-    bool isMapAvailable = true,
-    VoidCallback? onTap,
-  }) {
-    return Material(
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppColors.border),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: iconColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(icon, color: AppColors.white),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          subtitle,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, color: AppColors.textHint),
-                ],
-              ),
-            ),
-            if (isMap)
-              isMapAvailable
-                  ? Consumer(
-                      builder: (context, ref, child) {
-                        final locationAsync = ref.watch(
-                          userLocationStreamProvider,
-                        );
-
-                        return Container(
-                          height: 120,
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                            color: AppColors.border,
-                          ),
-                          child: locationAsync.when(
-                            data: (currentLocation) => FlutterMap(
-                              options: MapOptions(
-                                initialCenter: currentLocation,
-                                initialZoom: 15.0,
-                                interactionOptions: const InteractionOptions(
-                                  flags: InteractiveFlag.none,
-                                ),
-                              ),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName: 'com.suar.app',
-                                ),
-                                MarkerLayer(
-                                  markers: [
-                                    Marker(
-                                      point: currentLocation,
-                                      width: 30,
-                                      height: 30,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: AppColors.primaryLight
-                                              .withValues(alpha: 0.5),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.my_location,
-                                            color: AppColors.primary,
-                                            size: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                            error: (err, stack) => const Center(
-                              child: Text(
-                                'Gagal memuat cuplikan peta',
-                                style: TextStyle(
-                                  color: AppColors.textHint,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : Container(
-                      height: 120,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(color: AppColors.border),
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.map_outlined,
-                              color: AppColors.textHint,
-                              size: 32,
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Peta ditangguhkan (Mode Offline)',
-                              style: TextStyle(
-                                color: AppColors.textHint,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildResourceButton(IconData icon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border, width: 1),
       ),
       child: Column(
         children: [
@@ -467,9 +374,11 @@ class HomeScreen extends ConsumerWidget {
 
   void _showEwsAlertModal(
     BuildContext context,
-    TriageResult result,
+    EwsAlertData alertData,
     bool isMapAvailable,
   ) {
+    final result = alertData.triageResult;
+    final gempa = alertData.gempa;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
     final themeColor = isEvakuasi ? AppColors.danger : AppColors.warning;
     final themeLightColor = isEvakuasi
@@ -553,22 +462,22 @@ class HomeScreen extends ConsumerWidget {
                         children: [
                           _buildStatCard(
                             'MAGNITUDE',
-                            '7.8 SR',
-                            '+0.2',
+                            '${gempa.magnitude} SR',
+                            'Update',
                             isRed: isEvakuasi,
                             themeColor: themeColor,
                           ),
                           _buildStatCard(
                             'KEDALAMAN',
-                            '10 km',
-                            'Stabil',
+                            gempa.kedalaman,
+                            'Data BMKG',
                             isRed: false,
                             themeColor: themeColor,
                           ),
                           _buildStatCard(
-                            'JARAK',
-                            '2.5 km',
-                            'Dekat',
+                            'JARAK PUSAT',
+                            '${alertData.distanceKm.toStringAsFixed(1)} km',
+                            'Dari Anda',
                             isRed: isEvakuasi,
                             themeColor: themeColor,
                           ),
