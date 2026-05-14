@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:suar_app/core/services/notification_service.dart';
 import 'package:suar_app/features/map_evacuation/data/map_cache_service.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -194,6 +195,36 @@ class EwsTestingScreen extends ConsumerWidget {
                   ),
                 );
               }
+            },
+          ),
+
+          const SizedBox(height: 16),
+
+          _ScenarioCard(
+            title: 'Skenario 4: Push Notification Darurat',
+            description:
+                'Klik ini lalu minimize/tutup aplikasi. Dalam 15 detik, HP Anda akan menerima peringatan darurat. (Ekspektasi: Saat notif diklik, aplikasi terbuka, pop-up Tsunami muncul, dan peta terunduh otomatis)',
+            icon: Icons.notification_important,
+            color: AppColors.primary,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Peringatan disetel! Silakan minimize aplikasi atau matikan layar HP Anda sekarang.'),
+                  backgroundColor: AppColors.info,
+                  duration: Duration(seconds: 5),
+                ),
+              );
+
+              context.pop();
+
+              Future.delayed(const Duration(seconds: 15), () {
+                NotificationService.showNotification(
+                  id: 999,
+                  title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
+                  body: 'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Tekan untuk instruksi evakuasi segera.',
+                  payload: 'MOCK_TSUNAMI',
+                );
+              });
             },
           ),
         ],
