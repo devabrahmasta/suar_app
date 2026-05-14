@@ -9,6 +9,7 @@ import '../domain/triage_result_model.dart';
 import '../domain/gempa_model.dart';
 import 'package:geolocator/geolocator.dart'; 
 import '../../user/presentation/user_notifier.dart';
+import '../../../core/services/notification_service.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
@@ -27,6 +28,10 @@ final inariskServiceProvider = Provider<InaRiskService>((ref) {
 final geminiTriageServiceProvider = Provider<GeminiTriageService>((ref) {
   final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
   return GeminiTriageService(apiKey: apiKey);
+});
+
+final notificationPayloadProvider = StreamProvider<String?>((ref) {
+  return NotificationService.selectNotificationStream.stream;
 });
 
 class EwsAlertData {

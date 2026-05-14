@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:suar_app/features/ews_ai/domain/gempa_model.dart';
 import 'package:suar_app/features/map_evacuation/presentation/geofence_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import 'ews_provider.dart';
@@ -48,6 +49,36 @@ class HomeScreen extends ConsumerWidget {
     ref.listen<AsyncValue<EwsAlertData?>>(ewsProvider, (previous, next) {
       if (next.hasValue && next.value != null) {
         _showEwsAlertModal(context, next.value!, isMapAvailable);
+      }
+    });
+
+    ref.listen<AsyncValue<String?>>(notificationPayloadProvider, (previous, next) {
+      if (next.hasValue && next.value != null) {
+        final payload = next.value!;
+
+        context.go('/');
+        
+        if (payload == 'MOCK_TSUNAMI') {
+          final dummyGempa = GempaModel(
+            tanggal: 'Hari Ini',
+            jam: 'Baru Saja',
+            dateTime: DateTime.now().toIso8601String(),
+            coordinates: '-8.50, 109.00',
+            magnitude: '8.5',
+            kedalaman: '10 km',
+            wilayah: '150 km Barat Daya KAB-PANGANDARAN',
+            potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
+            dirasakan: 'V-VI Pangandaran',
+            shakemapUrl: '',
+          );
+          ref.read(ewsProvider.notifier).triggerMockThreat(
+            dummyGempa: dummyGempa,
+            dummyIsDiZonaMerah: true,
+          );
+        } 
+        else if (payload == 'REAL_EWS') {
+          ref.read(ewsProvider.notifier).checkLatestThreat();
+        }
       }
     });
 
