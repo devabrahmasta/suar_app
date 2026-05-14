@@ -149,3 +149,19 @@ final mapCacheStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
     return {'count': 0, 'sizeMb': 0.0};
   }
 });
+
+final recentEarthquakesProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
+  try {
+    final dio = ref.watch(dioProvider);
+    final response = await dio.get('https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json');
+    if (response.statusCode == 200) {
+      final data = response.data;
+      final gempaList = data['Infogempa']['gempa'] as List;
+      return gempaList.cast<Map<String, dynamic>>();
+    }
+    return [];
+  } catch (e) {
+    print('⚠️ BMKG Earthquakes Error: $e');
+    return [];
+  }
+});
