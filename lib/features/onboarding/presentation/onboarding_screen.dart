@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/features/onboarding/presentation/widget/onboarding_slide.dart';
+import 'package:suar_app/features/onboarding/presentation/home_location_picker_screen.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:suar_app/features/user/presentation/user_notifier.dart';
 
@@ -18,19 +20,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _pageController = PageController();
   final _formKey = GlobalKey<FormState>();
   final _namaController = TextEditingController();
+  final TextEditingController _homeTypeController = TextEditingController();
 
   static const int _totalSlides = 4;
   int _currentIndex = 0;
   bool _isLoading = false;
-  String _homeType = 'Rumah Tapak';
   double? _homeLat;
   double? _homeLng;
+  String? _homeAddress;
   bool _isFetchingLocation = false;
 
   @override
   void dispose() {
     _pageController.dispose();
     _namaController.dispose();
+    _homeTypeController.dispose();
     super.dispose();
   }
 
@@ -355,7 +359,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           .read(userProvider.notifier)
           .createUser(
             name: _namaController.text.trim(),
-            homeType: _homeType,
+            homeType: _homeTypeController.text.trim(),
             homeLat: _homeLat,
             homeLng: _homeLng,
           );
@@ -367,81 +371,85 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ── Back Button ────────────────────────────────────────────────
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 16.0,
-                  top: 8.0,
-                  bottom: 8.0,
-                ),
-                child: AnimatedOpacity(
-                  opacity: _currentIndex > 0 ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 200),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: AppColors.textPrimary,
+      resizeToAvoidBottomInset: true,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        child: SafeArea(
+          child: Column(
+            children: [
+              // ── Back Button ────────────────────────────────────────────────
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16.0,
+                    top: 8.0,
+                    bottom: 8.0,
+                  ),
+                  child: AnimatedOpacity(
+                    opacity: _currentIndex > 0 ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: AppColors.textPrimary,
+                      ),
+                      onPressed: () {
+                        if (_currentIndex > 0) {
+                          _pageController.previousPage(
+                            duration: const Duration(milliseconds: 350),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
                     ),
-                    onPressed: () {
-                      if (_currentIndex > 0) {
-                        _pageController.previousPage(
-                          duration: const Duration(milliseconds: 350),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    },
                   ),
                 ),
               ),
-            ),
 
-            // ── Slides ─────────────────────────────────────────────────────
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (i) => setState(() => _currentIndex = i),
-                children: [
-                  // Slide 1 — Sistem Peringatan
-                  OnboardingSlide(
-                    image: 'assets/images/slide_1.png',
-                    title: 'Sistem Peringatan',
-                    desc:
-                        'SUAR tetap menyala saat segalanya padam. Terhubung dengan relawan dan tim darurat tanpa butuh internet.',
-                    buttonText: 'Lanjut',
-                    isLoading: false,
-                    onButtonPressed: _nextPage,
-                  ),
+              // ── Slides ─────────────────────────────────────────────────────
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (i) => setState(() => _currentIndex = i),
+                  children: [
+                    // Slide 1 — Sistem Peringatan
+                    OnboardingSlide(
+                      image: 'assets/images/slide_1.png',
+                      title: 'Sistem Peringatan',
+                      desc:
+                          'SUAR tetap menyala saat segalanya padam. Terhubung dengan relawan dan tim darurat tanpa butuh internet.',
+                      buttonText: 'Lanjut',
+                      isLoading: false,
+                      onButtonPressed: _nextPage,
+                    ),
 
-                  // Slide 2 — Akses Peta Evakuasi
-                  OnboardingSlide(
-                    image: 'assets/images/slide_2.png',
-                    title: 'Akses Peta Evakuasi',
-                    desc:
-                        'Peta jalur evakuasi tersimpan offline. SUAR butuh GPS Anda untuk menunjukkan rute darurat terdekat ke titik aman.',
-                    buttonText: 'Lanjut',
-                    isLoading: _isLoading && _currentIndex == 1,
-                    onButtonPressed: _handleLocationSlide,
-                  ),
+                    // Slide 2 — Akses Peta Evakuasi
+                    OnboardingSlide(
+                      image: 'assets/images/slide_2.png',
+                      title: 'Akses Peta Evakuasi',
+                      desc:
+                          'Peta jalur evakuasi tersimpan offline. SUAR butuh GPS Anda untuk menunjukkan rute darurat terdekat ke titik aman.',
+                      buttonText: 'Lanjut',
+                      isLoading: _isLoading && _currentIndex == 1,
+                      onButtonPressed: _handleLocationSlide,
+                    ),
 
-                  // Slide 3 — Optimasi Baterai
-                  OnboardingSlide(
-                    image: 'assets/images/slide_3.png',
-                    title: 'Optimasi Baterai',
-                    desc:
-                        'Agar SUAR tetap aktif di latar belakang saat situasi darurat, izinkan aplikasi berjalan bebas dari pembatas baterai.',
-                    buttonText: 'Lanjut',
-                    isLoading: _isLoading && _currentIndex == 2,
-                    onButtonPressed: _handleBatterySlide,
-                  ),
+                    // Slide 3 — Optimasi Baterai
+                    OnboardingSlide(
+                      image: 'assets/images/slide_3.png',
+                      title: 'Optimasi Baterai',
+                      desc:
+                          'Agar SUAR tetap aktif di latar belakang saat situasi darurat, izinkan aplikasi berjalan bebas dari pembatas baterai.',
+                      buttonText: 'Lanjut',
+                      isLoading: _isLoading && _currentIndex == 2,
+                      onButtonPressed: _handleBatterySlide,
+                    ),
 
-                  // Slide 4 — Jaringan Offline & Bluetooth Mesh
-                  /*
+                    // Slide 4 — Jaringan Offline & Bluetooth Mesh
+                    /*
                   OnboardingSlide(
                     image: 'assets/images/slide_4.png',
                     title: 'Jaringan Offline & Bluetooth Mesh',
@@ -453,61 +461,78 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   */
 
-                  // Slide 5 — Identitas Radar (Form)
-                  _IdentityFormSlide(
-                    formKey: _formKey,
-                    namaController: _namaController,
-                    isLoading: _isLoading && _currentIndex == 3,
-                    onSubmit: _handleSubmit,
-                    homeType: _homeType,
-                    onHomeTypeChanged: (val) =>
-                        setState(() => _homeType = val!),
-                    isFetchingLocation: _isFetchingLocation,
-                    isHomeLocationSet: _homeLat != null,
-                    onSetHomeLocation: () async {
-                      setState(() => _isFetchingLocation = true);
-                      try {
-                        final pos = await Geolocator.getCurrentPosition();
-                        setState(() {
-                          _homeLat = pos.latitude;
-                          _homeLng = pos.longitude;
-                        });
-                      } catch (e) {
-                        _showDangerSnackBar(
-                          'Gagal mendapatkan lokasi. Pastikan GPS aktif.',
-                        );
-                      } finally {
-                        setState(() => _isFetchingLocation = false);
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
+                    // Slide 5 — Identitas Radar (Form)
+                    _IdentityFormSlide(
+                      formKey: _formKey,
+                      namaController: _namaController,
+                      homeTypeController: _homeTypeController,
+                      homeAddress: _homeAddress,
+                      isLoading: _isLoading && _currentIndex == 3,
+                      onSubmit: _handleSubmit,
+                      isFetchingLocation: _isFetchingLocation,
+                      isHomeLocationSet: _homeLat != null,
+                      onSetHomeLocation: () async {
+                        setState(() => _isFetchingLocation = true);
+                        try {
+                          final pos = await Geolocator.getCurrentPosition();
+                          if (!mounted) return;
+                          final selectedLocation =
+                              await Navigator.push<(LatLng, String)>(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => HomeLocationPickerScreen(
+                                    initialLocation: LatLng(
+                                      pos.latitude,
+                                      pos.longitude,
+                                    ),
+                                  ),
+                                ),
+                              );
 
-            // ── Dot indicators ─────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _totalSlides,
-                  (i) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    height: 8,
-                    width: _currentIndex == i ? 24 : 8,
-                    decoration: BoxDecoration(
-                      color: _currentIndex == i
-                          ? AppColors.primary
-                          : AppColors.border,
-                      borderRadius: BorderRadius.circular(4),
+                          if (selectedLocation != null) {
+                            setState(() {
+                              _homeLat = selectedLocation.$1.latitude;
+                              _homeLng = selectedLocation.$1.longitude;
+                              _homeAddress = selectedLocation.$2;
+                            });
+                          }
+                        } catch (e) {
+                          _showDangerSnackBar(
+                            'Gagal mendapatkan lokasi. Pastikan GPS aktif.',
+                          );
+                        } finally {
+                          setState(() => _isFetchingLocation = false);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              // ── Dot indicators ─────────────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.only(top: 16, bottom: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _totalSlides,
+                    (i) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      height: 8,
+                      width: _currentIndex == i ? 24 : 8,
+                      decoration: BoxDecoration(
+                        color: _currentIndex == i
+                            ? AppColors.primary
+                            : AppColors.border,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -521,11 +546,10 @@ class _IdentityFormSlide extends StatelessWidget {
   const _IdentityFormSlide({
     required this.formKey,
     required this.namaController,
+    required this.homeTypeController,
+    required this.homeAddress,
     required this.isLoading,
     required this.onSubmit,
-    // Tambahan Callback untuk state parent
-    required this.homeType,
-    required this.onHomeTypeChanged,
     required this.isFetchingLocation,
     required this.onSetHomeLocation,
     required this.isHomeLocationSet,
@@ -533,11 +557,10 @@ class _IdentityFormSlide extends StatelessWidget {
 
   final GlobalKey<FormState> formKey;
   final TextEditingController namaController;
+  final TextEditingController homeTypeController;
+  final String? homeAddress;
   final bool isLoading;
   final VoidCallback onSubmit;
-
-  final String? homeType;
-  final ValueChanged<String?> onHomeTypeChanged;
 
   final bool isFetchingLocation;
   final VoidCallback onSetHomeLocation;
@@ -547,203 +570,249 @@ class _IdentityFormSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      child: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Identitas Radar', style: theme.textTheme.headlineMedium),
-            const SizedBox(height: 6),
-            Text(
-              'Siapa kamu di jaringan SUAR?',
-              style: theme.textTheme.bodyMedium,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight - 64 > 0
+                  ? constraints.maxHeight - 64
+                  : 0,
             ),
-            const SizedBox(height: 24),
+            child: IntrinsicHeight(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Identitas Radar',
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Siapa kamu di jaringan SUAR?',
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 24),
 
-            // Warning box
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.dangerLight,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Iconsax.warning_2_copy,
-                    color: AppColors.danger,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Gunakan data asli. Anda hanya dikenali dari identitas ini saat jaringan offline.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.danger,
-                        fontSize: 13,
+                          // Warning box
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: AppColors.dangerLight,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Iconsax.warning_2,
+                                  color: AppColors.danger,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Gunakan data asli. Anda hanya dikenali dari identitas ini saat jaringan offline.',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: AppColors.danger,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 32),
+
+                          // NAMA LENGKAP
+                          Text(
+                            'Nama Lengkap',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: namaController,
+                            textCapitalization: TextCapitalization.words,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) => onSubmit(),
+                            validator: (v) => (v == null || v.trim().isEmpty)
+                                ? 'Nama lengkap tidak boleh kosong.'
+                                : null,
+                            decoration: InputDecoration(
+                              hintText: 'cth. Budi Santoso',
+                              prefixIcon: const Icon(Iconsax.user),
+                              filled: true,
+                              fillColor: AppColors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+                          Text(
+                            'Jenis Tempat TInggal',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: homeTypeController,
+                            textCapitalization: TextCapitalization.words,
+                            textInputAction: TextInputAction.done,
+                            validator: (v) => (v == null || v.trim().isEmpty)
+                                ? 'Jenis tempat tinggal tidak boleh kosong.'
+                                : null,
+                            decoration: InputDecoration(
+                              hintText: 'cth. Rumah Tapak',
+                              prefixIcon: const Icon(Iconsax.house),
+                              filled: true,
+                              fillColor: AppColors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Lokasi Tempat Tinggal',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 54,
+                            child: OutlinedButton.icon(
+                              onPressed: isFetchingLocation
+                                  ? null
+                                  : onSetHomeLocation,
+                              icon: isFetchingLocation
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Icon(
+                                      isHomeLocationSet
+                                          ? Iconsax.location
+                                          : Iconsax.gps_copy,
+                                    ),
+                              label: Text(
+                                isHomeLocationSet
+                                    ? (homeAddress ?? 'Lokasi Disimpan')
+                                    : 'Tentukan Lokasi',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: isHomeLocationSet
+                                    ? AppColors.success
+                                    : AppColors.primary,
+                                side: BorderSide(
+                                  color: isHomeLocationSet
+                                      ? AppColors.success
+                                      : AppColors.primary,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
+                    const SizedBox(height: 16),
 
-            const SizedBox(height: 32),
-
-            // NAMA LENGKAP
-            Text(
-              'NAMA LENGKAP',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: AppColors.textSecondary,
-                letterSpacing: 1.2,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: namaController,
-              textCapitalization: TextCapitalization.words,
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => onSubmit(),
-              validator: (v) => (v == null || v.trim().isEmpty)
-                  ? 'Nama lengkap tidak boleh kosong.'
-                  : null,
-              decoration: InputDecoration(
-                hintText: 'cth. Budi Santoso',
-                prefixIcon: const Icon(Iconsax.user_copy),
-                filled: true,
-                fillColor: AppColors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.border),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.border),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.primary),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 32),
-            Text(
-              'JENIS TEMPAT TINGGAL',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: AppColors.textSecondary,
-                letterSpacing: 1.2,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: homeType,
-              isExpanded: true,
-              decoration: InputDecoration(
-                // labelText: 'Tipe Tempat Tinggal',
-                prefixIcon: const Icon(Iconsax.house_2_copy),
-                filled: true,
-                fillColor: AppColors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.border),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.border),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  borderSide: const BorderSide(color: AppColors.primary),
-                ),
-              ),
-              items: ['Rumah Tapak', 'Apartemen/Rusun', 'Gedung/Kantor'].map((
-                type,
-              ) {
-                return DropdownMenuItem(value: type, child: Text(type));
-              }).toList(),
-              onChanged: onHomeTypeChanged,
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: OutlinedButton.icon(
-                onPressed: isFetchingLocation ? null : onSetHomeLocation,
-                icon: isFetchingLocation
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Icon(
-                        isHomeLocationSet
-                            ? Iconsax.tick_circle_copy
-                            : Iconsax.gps_copy,
-                      ),
-                label: Text(
-                  isHomeLocationSet
-                      ? 'Lokasi Rumah Disimpan'
-                      : 'Kunci Lokasi Rumah Ini',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: isHomeLocationSet
-                      ? AppColors.success
-                      : AppColors.primary,
-                  side: BorderSide(
-                    color: isHomeLocationSet
-                        ? AppColors.success
-                        : AppColors.primary,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 48),
-
-            // Submit button
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                onPressed: isLoading ? null : onSubmit,
-                child: isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          color: AppColors.white,
+                    // Submit button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: AppColors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
-                      )
-                    : const Text(
-                        'Masuk Aplikasi',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        onPressed: isLoading ? null : onSubmit,
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: AppColors.white,
+                                ),
+                              )
+                            : const Text(
+                                'Masuk Aplikasi',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

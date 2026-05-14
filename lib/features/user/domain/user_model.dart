@@ -8,7 +8,7 @@ class UserModel {
   UserModel({
     required this.fullName,
     required this.deviceId,
-    this.homeType = 'Rumah Tapak',
+    required this.homeType,
     this.homeLatitude,
     this.homeLongitude,
   });
@@ -27,7 +27,7 @@ class UserModel {
     return UserModel(
       fullName: map['fullName'] ?? '',
       deviceId: map['deviceId'] ?? '',
-      homeType: map['homeType'] ?? 'Rumah Tapak',
+      homeType: map['homeType'] ?? '',
       homeLatitude: map['homeLatitude']?.toDouble(),
       homeLongitude: map['homeLongitude']?.toDouble(),
     );
