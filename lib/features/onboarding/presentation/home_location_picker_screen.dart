@@ -102,6 +102,9 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
               initialZoom: 16.0,
               maxZoom: 18.0,
               onPositionChanged: (position, hasGesture) {
+                // Update the tracked center coordinate to the new map center
+                _currentCenter = position.center;
+
                 if (_currentAddress != "Mencari alamat...") {
                   setState(() => _currentAddress = "Mencari alamat...");
                 }
