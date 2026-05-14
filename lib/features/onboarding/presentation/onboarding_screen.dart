@@ -591,12 +591,12 @@ class _IdentityFormSlide extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Identitas Radar',
+                            'Identitas Keselamatan',
                             style: theme.textTheme.headlineMedium,
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Siapa kamu di jaringan SUAR?',
+                            'Bantu AI mengenali kondisi lokasimu',
                             style: theme.textTheme.bodyMedium,
                           ),
                           const SizedBox(height: 24),
@@ -619,7 +619,7 @@ class _IdentityFormSlide extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    'Gunakan data asli. Anda hanya dikenali dari identitas ini saat jaringan offline.',
+                                    'Gunakan data asli. AI akan menggunakan info letak dan jenis bangunan ini untuk menyusun instruksi evakuasi khusus untukmu saat bencana terjadi.',
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: AppColors.danger,
                                       fontSize: 13,
