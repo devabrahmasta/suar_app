@@ -36,7 +36,7 @@ class InaRiskService {
       }
     } catch (e) {
       print('⚠️ InaRISK Error: $e');
-      return true;
+      return false; // Jangan asumsikan zona merah jika gagal, agar rute darat tetap bisa dicari
     }
   }
 
