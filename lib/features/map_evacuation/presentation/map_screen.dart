@@ -166,7 +166,49 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         ),
                       );
                     }
-                    return const SizedBox.shrink();
+
+                    return Card(
+                      color: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: AppColors.success,
+                                  size: 24,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'RUTE AMAN DITEMUKAN',
+                                  style: TextStyle(
+                                    color: AppColors.success,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Ikuti garis rute pada peta menuju dataran tinggi. Segera tinggalkan area pesisir sekarang juga!',
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 13,
+                                height: 1.4,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   },
                   loading: () => const Card(
                     color: AppColors.surface,
