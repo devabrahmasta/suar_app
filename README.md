@@ -124,7 +124,7 @@ lib/
 ## 🛠️ Panel Developer (Skenario Pengujian)
 
 Untuk mempermudah presentasi atau pengujian tanpa harus menunggu bencana asli terjadi, SUAR dilengkapi dengan **EWS Simulator**.
-Akses fitur ini melalui ikon 🐛 (*Bug*) di AppBar Home Screen untuk menjalankan:
+Akses fitur ini melalui ikon kumbang (*Bug*) di Profile Screen untuk menjalankan:
 
 - Simulasi Gempa Tsunami + Masuk Zona Merah (InaRISK).
 - Simulasi Gempa Ringan Darat.
@@ -137,9 +137,9 @@ Akses fitur ini melalui ikon 🐛 (*Bug*) di AppBar Home Screen untuk menjalanka
 
 Kami menyambut segala bentuk kontribusi! Jika Anda ingin berkontribusi pada proyek ini:
 1. Lakukan *Fork* pada repository ini.
-2. Buat *branch* fitur Anda (`git checkout -b feature/FiturKerenAnda`).
-3. Lakukan *Commit* perubahan Anda (`git commit -m 'Menambahkan FiturKerenAnda'`).
-4. *Push* ke branch tersebut (`git push origin feature/FiturKerenAnda`).
+2. Buat *branch* fitur Anda (`git checkout -b feature/FiturAnda`).
+3. Lakukan *Commit* perubahan Anda (`git commit -m 'Menambahkan FiturAnda'`).
+4. *Push* ke branch tersebut (`git push origin feature/FiturAnda`).
 5. Buka sebuah *Pull Request*.
 
 ## 📄 Lisensi
