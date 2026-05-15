@@ -142,10 +142,6 @@ Kami menyambut segala bentuk kontribusi! Jika Anda ingin berkontribusi pada proy
 4. *Push* ke branch tersebut (`git push origin feature/FiturAnda`).
 5. Buka sebuah *Pull Request*.
 
-## 📄 Lisensi
-
--
-
 <br>
 
 <div align="center">
