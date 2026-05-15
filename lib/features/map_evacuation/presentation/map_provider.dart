@@ -77,7 +77,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
       final cachedRoute = await cacheService.getOfflineRoute();
 
       if (cachedRoute != null && cachedRoute.isNotEmpty) {
-        debugPrint('🚀 Otomatis memuat rute dari Cache (Mode Offline Aktif)');
+        debugPrint('Otomatis memuat rute dari Cache (Mode Offline Aktif)');
         return cachedRoute;
       }
       throw VerticalEvacuationException(
@@ -113,7 +113,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
         ref.invalidate(mapCacheStatusProvider);
       }
 
-      debugPrint('🌐 Rute manual sukses didapat dan disimpan ke Cache!');
+      debugPrint('Rute manual sukses didapat dan disimpan ke Cache!');
       return freshRoute;
     });
   }
