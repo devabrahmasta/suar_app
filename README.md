@@ -144,7 +144,7 @@ Kami menyambut segala bentuk kontribusi! Jika Anda ingin berkontribusi pada proy
 
 ## 📄 Lisensi
 
-Didistribusikan di bawah Lisensi MIT. Lihat `LICENSE` untuk informasi lebih lanjut.
+-
 
 <br>
 
