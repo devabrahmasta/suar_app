@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -38,7 +39,9 @@ class RiverService {
       }
       return false;
     } catch (e) {
-      print('⚠️ River API Error: Batal mengecek sungai (dianggap aman) -> $e');
+      debugPrint(
+        'River API Error: Batal mengecek sungai (dianggap aman) -> $e',
+      );
       return false;
     }
   }

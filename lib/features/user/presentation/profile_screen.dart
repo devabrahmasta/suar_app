@@ -98,7 +98,7 @@ class ProfileScreen extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
-              // Group 1: Data & Developer
+              // Data & Developer
               Text(
                 'DATA & DEVELOPER',
                 style: theme.textTheme.labelSmall?.copyWith(
@@ -136,7 +136,7 @@ class ProfileScreen extends ConsumerWidget {
 
               const SizedBox(height: 24),
 
-              // Group 2: Support
+              // Support
               Text(
                 'BANTUAN',
                 style: theme.textTheme.labelSmall?.copyWith(

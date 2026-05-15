@@ -59,8 +59,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
   }
 
-  // Returns true  → user chose the positive action (retry / open settings)
-  // Returns false → user chose skip
   Future<bool> _showRationaleDialog({
     required String title,
     required String body,
@@ -122,7 +120,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return result ?? false;
   }
 
-  // ── Slide 2: Location Permission ───────────────────────────────────────────
+  // Slide 2: Location Permission
   Future<void> _handleLocationSlide() async {
     setState(() => _isLoading = true);
     try {
@@ -132,7 +130,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         permission = await Geolocator.requestPermission();
       }
 
-      // Still denied after first request → show rationale dialog
       if (permission == LocationPermission.denied) {
         if (!mounted) return;
         setState(() => _isLoading = false);
@@ -145,7 +142,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         );
         if (!mounted) return;
         if (retry) {
-          // Recurse to try again
           return _handleLocationSlide();
         } else {
           _showDangerSnackBar('Izin lokasi wajib diberikan untuk evakuasi.');
@@ -153,7 +149,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         }
       }
 
-      // Permanently denied → direct user to app settings
       if (permission == LocationPermission.deniedForever) {
         if (!mounted) return;
         setState(() => _isLoading = false);
@@ -168,7 +163,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         if (!mounted) return;
         if (openSettings) {
           await openAppSettings();
-          // Re-check after returning from settings
           final recheck = await Geolocator.checkPermission();
           if (recheck == LocationPermission.whileInUse ||
               recheck == LocationPermission.always) {
@@ -188,7 +182,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
-  // ── Slide 3: Battery Optimization ─────────────────────────────────────────
+  // Slide 3: Battery Optimization
   Future<void> _handleBatterySlide() async {
     setState(() => _isLoading = true);
     try {
@@ -208,7 +202,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         if (retry) {
           return _handleBatterySlide();
         } else {
-          // Battery is skippable — warn but allow to proceed
           _showWarningSnackBar('Fitur background mungkin tidak optimal.');
           _nextPage();
         }
@@ -236,7 +229,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             _nextPage();
           }
         } else {
-          // Still skippable
           _showWarningSnackBar('Fitur background mungkin tidak optimal.');
           _nextPage();
         }
@@ -249,105 +241,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
   }
 
-  // ── Slide 4: Bluetooth & Nearby Wifi ──────────────────────────────────────
-  /*
-  Future<void> _handleMeshSlide() async {
-    setState(() => _isLoading = true);
-    try {
-      final permissions = [
-        Permission.bluetooth,
-        Permission.bluetoothAdvertise,
-        Permission.bluetoothConnect,
-        Permission.bluetoothScan,
-        Permission.nearbyWifiDevices,
-      ];
-
-      final statuses = await permissions.request();
-
-      final isModernGranted =
-          statuses[Permission.bluetoothScan]!.isGranted &&
-          statuses[Permission.bluetoothConnect]!.isGranted &&
-          statuses[Permission.nearbyWifiDevices]!.isGranted;
-
-      final isLegacyGranted = statuses[Permission.bluetooth]!.isGranted;
-
-      if (isModernGranted || isLegacyGranted) {
-        _nextPage();
-        return;
-      }
-
-      if (!mounted) return;
-      setState(() => _isLoading = false);
-
-      bool anyPermanent =
-          statuses[Permission.bluetoothScan]!.isPermanentlyDenied ||
-          statuses[Permission.bluetoothConnect]!.isPermanentlyDenied ||
-          statuses[Permission.nearbyWifiDevices]!.isPermanentlyDenied;
-
-      if (!anyPermanent && !isModernGranted) {
-        anyPermanent = statuses[Permission.bluetooth]!.isPermanentlyDenied;
-      }
-
-      if (anyPermanent) {
-        final openSettings = await _showRationaleDialog(
-          title: 'Izin Perangkat Sekitar Diperlukan',
-          body:
-              'SUAR membutuhkan Bluetooth dan Wi-Fi terdekat untuk komunikasi '
-              'mesh peer-to-peer saat jaringan putus. Anda telah menolak izin ini '
-              'sebelumnya. Silakan buka Pengaturan > Aplikasi > SUAR > Izin untuk '
-              'mengaktifkannya secara manual.',
-          isPermanent: true,
-        );
-        if (!mounted) return;
-        if (openSettings) {
-          await openAppSettings();
-          final modernOk =
-              await Permission.bluetoothScan.isGranted &&
-              await Permission.bluetoothConnect.isGranted &&
-              await Permission.nearbyWifiDevices.isGranted;
-          final legacyOk = await Permission.bluetooth.isGranted;
-
-          if (modernOk || legacyOk) {
-            _nextPage();
-          } else {
-            _showDangerSnackBar(
-              'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
-            );
-          }
-        } else {
-          _showDangerSnackBar(
-            'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
-          );
-        }
-      } else {
-        final retry = await _showRationaleDialog(
-          title: 'Izin Perangkat Sekitar Diperlukan',
-          body:
-              'SUAR membutuhkan Bluetooth dan Wi-Fi terdekat untuk komunikasi '
-              'mesh peer-to-peer agar Anda tetap terhubung dengan relawan saat '
-              'internet tidak tersedia.',
-          isPermanent: false,
-        );
-        if (!mounted) return;
-        if (retry) {
-          return _handleMeshSlide();
-        } else {
-          _showDangerSnackBar(
-            'Izin perangkat sekitar wajib untuk fitur Mesh Offline.',
-          );
-        }
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-  */
-
-  // ── Slide 5: Submit Identity ───────────────────────────────────────────────
+  // Slide 4: Submit Identity
   Future<void> _handleSubmit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    // Validasi tambahan: Pastikan lokasi rumah sudah dikunci
     if (_homeLat == null || _homeLng == null) {
       _showWarningSnackBar('Mohon set koordinat tempat tinggal Anda.');
       return;
@@ -378,7 +275,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // ── Back Button ────────────────────────────────────────────────
+              // Back Button
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
@@ -408,7 +305,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ),
 
-              // ── Slides ─────────────────────────────────────────────────────
+              // Slides
               Expanded(
                 child: PageView(
                   controller: _pageController,
@@ -448,19 +345,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       onButtonPressed: _handleBatterySlide,
                     ),
 
-                    // Slide 4 — Jaringan Offline & Bluetooth Mesh
-                    /*
-                  OnboardingSlide(
-                    image: 'assets/images/slide_4.png',
-                    title: 'Jaringan Offline & Bluetooth Mesh',
-                    desc:
-                        'Berkomunikasi langsung dengan relawan terdekat tanpa internet menggunakan teknologi peer-to-peer terenkripsi.',
-                    buttonText: 'Lanjut',
-                    isLoading: _isLoading && _currentIndex == 3,
-                    onButtonPressed: _handleMeshSlide,
-                  ),
-                  */
-
                     // Slide 5 — Identitas Radar (Form)
                     _IdentityFormSlide(
                       formKey: _formKey,
@@ -475,7 +359,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         setState(() => _isFetchingLocation = true);
                         try {
                           final pos = await Geolocator.getCurrentPosition();
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           final selectedLocation =
                               await Navigator.push<(LatLng, String)>(
                                 context,
@@ -509,7 +393,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ),
 
-              // ── Dot indicators ─────────────────────────────────────────────
+              // Dot indicators
               Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 24),
                 child: Row(
@@ -539,9 +423,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Slide 5 — Identity Form
-// ─────────────────────────────────────────────────────────────────────────────
 class _IdentityFormSlide extends StatelessWidget {
   const _IdentityFormSlide({
     required this.formKey,

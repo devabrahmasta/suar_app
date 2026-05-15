@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
@@ -94,7 +95,9 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       }
 
       bool isAtHome = false;
-      if (hasLocation && user.homeLatitude != null && user.homeLongitude != null) {
+      if (hasLocation &&
+          user.homeLatitude != null &&
+          user.homeLongitude != null) {
         final distanceToHome = Geolocator.distanceBetween(
           currentLat,
           currentLng,
@@ -120,13 +123,13 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
             distanceKm = distMeters / 1000;
           }
         } catch (e) {
-          print("Gagal menghitung jarak gempa: $e");
+          debugPrint("Gagal menghitung jarak gempa: $e");
         }
       }
 
       final mag = double.tryParse(gempa.magnitude) ?? 0.0;
       final isTsunami = gempa.potensi.toLowerCase().contains('tsunami');
-      
+
       bool isSignificant = false;
       if (isTsunami || mag >= 7.0) {
         isSignificant = true;

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/features/map_evacuation/data/river_service.dart';
 import '../../ews_ai/data/inarisk_service.dart';
@@ -30,7 +31,7 @@ class SmartEvacuationService {
 
     const distanceCalculator = Distance();
 
-    print('\n=== MULAI ANALISIS RUTE EVAKUASI (HYBRID SNAP) ===');
+    debugPrint('\n=== MULAI ANALISIS RUTE EVAKUASI (HYBRID SNAP) ===');
 
     for (double radius in searchRadii) {
       List<Map<String, dynamic>> validCandidates = [];
@@ -48,17 +49,17 @@ class SmartEvacuationService {
             candidatePoint.longitude,
           );
           if (isRedZone) {
-            print('❌ Arah $bearing°: Di Zona Merah InaRISK');
+            debugPrint('Arah $bearing°: Di Zona Merah InaRISK');
             return null;
           }
 
           final elevation = await elevationService.getElevation(candidatePoint);
           if (elevation <= 5.0) {
-            print('❌ Arah $bearing°: Elevasi rendah ($elevation m)');
+            debugPrint('Arah $bearing°: Elevasi rendah ($elevation m)');
             return null;
           }
 
-          print('✅ Arah $bearing° lolos! (Elevasi: $elevation m)');
+          debugPrint('Arah $bearing° lolos! (Elevasi: $elevation m)');
           return {
             'point': candidatePoint,
             'elevation': elevation,
@@ -74,7 +75,7 @@ class SmartEvacuationService {
         if (res != null) validCandidates.add(res);
       }
 
-      print('\nTotal kandidat kasar: ${validCandidates.length}');
+      debugPrint('\nTotal kandidat kasar: ${validCandidates.length}');
 
       if (validCandidates.isNotEmpty) {
         validCandidates.sort(
@@ -85,14 +86,14 @@ class SmartEvacuationService {
         for (var candidate in validCandidates) {
           final bearing = candidate['bearing'];
           final originalPoint = candidate['point'] as LatLng;
-          print('\n⏳ Mengeksekusi kandidat terbaik arah $bearing°...');
+          debugPrint('\nMengeksekusi kandidat terbaik arah $bearing°...');
 
           final snappedPoint = await routingService.getSnappedPoint(
             originalPoint,
           );
           if (snappedPoint == null) {
-            print(
-              '⚠️ Arah $bearing° diabaikan: Tidak ada akses jalan pejalan kaki terdekat (Terisolasi).',
+            debugPrint(
+              'Arah $bearing° diabaikan: Tidak ada akses jalan pejalan kaki terdekat (Terisolasi).',
             );
             continue;
           }
@@ -102,8 +103,8 @@ class SmartEvacuationService {
             snappedPoint.longitude,
           );
           if (isSnappedRedZone) {
-            print(
-              '⚠️ Arah $bearing° diabaikan: Titik jalan mundur ke Zona Merah Tsunami!',
+            debugPrint(
+              'Arah $bearing° diabaikan: Titik jalan mundur ke Zona Merah Tsunami!',
             );
             continue;
           }
@@ -112,23 +113,23 @@ class SmartEvacuationService {
             snappedPoint,
           );
           if (snappedElevation <= 5.0) {
-            print(
-              '⚠️ Arah $bearing° diabaikan: Jalan raya berada di elevasi rendah ($snappedElevation m).',
+            debugPrint(
+              'Arah $bearing° diabaikan: Jalan raya berada di elevasi rendah ($snappedElevation m).',
             );
             continue;
           }
 
           try {
-            print(
-              '🛣️ Validasi sukses! Membangun rute ke jalan aspal arah $bearing°...',
+            debugPrint(
+              'Validasi sukses! Membangun rute ke jalan aspal arah $bearing°...',
             );
             final route = await routingService.getEvacuationRoute(
               currentLocation,
               snappedPoint,
             );
 
-            print(
-              '🔍 Memvalidasi keamanan jalur rute dari sungai di dataran rendah...',
+            debugPrint(
+              'Memvalidasi keamanan jalur rute dari sungai di dataran rendah...',
             );
             bool isRouteSafe = true;
 
@@ -148,8 +149,8 @@ class SmartEvacuationService {
                 );
 
                 if (isCrossingRiver) {
-                  print(
-                    '⚠️ Rute arah $bearing° digugurkan: Di pertengahan jalan memotong/melewati sungai pada elevasi rendah ($pointElevation mdpl).',
+                  debugPrint(
+                    'Rute arah $bearing° digugurkan: Di pertengahan jalan memotong/melewati sungai pada elevasi rendah ($pointElevation mdpl).',
                   );
                   isRouteSafe = false;
                   break;
@@ -161,11 +162,11 @@ class SmartEvacuationService {
               continue;
             }
 
-            print('🎉 RUTE EVAKUASI DITEMUKAN!');
+            debugPrint('RUTE EVAKUASI DITEMUKAN!');
             return route;
           } catch (e) {
-            print(
-              '⚠️ Rute darat gagal dibuat (kemungkinan terhalang sungai): $e',
+            debugPrint(
+              'Rute darat gagal dibuat (kemungkinan terhalang sungai): $e',
             );
             continue;
           }
@@ -173,8 +174,8 @@ class SmartEvacuationService {
       }
     }
 
-    print(
-      '🚨 KESIMPULAN: Semua titik jalan kaki gagal. Harus evakuasi vertikal.',
+    debugPrint(
+      'KESIMPULAN: Semua titik jalan kaki gagal. Harus evakuasi vertikal.',
     );
     throw VerticalEvacuationException(
       'Tidak ditemukan rute darat yang aman. Lakukan Evakuasi Vertikal ke gedung tinggi terdekat!',

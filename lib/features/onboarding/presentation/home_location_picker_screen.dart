@@ -102,7 +102,6 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
               initialZoom: 16.0,
               maxZoom: 18.0,
               onPositionChanged: (position, hasGesture) {
-                // Update the tracked center coordinate to the new map center
                 _currentCenter = position.center;
 
                 if (_currentAddress != "Mencari alamat...") {
@@ -141,7 +140,7 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 15,
                     offset: const Offset(0, 4),
                   ),

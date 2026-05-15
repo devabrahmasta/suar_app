@@ -135,6 +135,8 @@ class CacheManagementScreen extends ConsumerWidget {
                             ref.invalidate(mapCacheStatsProvider);
                             ref.invalidate(mapCacheStatusProvider);
 
+                            if (!context.mounted) return;
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(

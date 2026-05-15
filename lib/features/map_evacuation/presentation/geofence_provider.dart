@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -58,7 +59,7 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
     } else if (!isRedZone && currentState != GeofenceState.safe) {
       _dwellTimer?.cancel();
       state = const AsyncData(GeofenceState.safe);
-      print("Geofence: Batal unduh, pengguna hanya lewat.");
+      debugPrint("Geofence: Batal unduh, pengguna hanya lewat.");
     }
   }
 
@@ -67,7 +68,9 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
 
     _dwellTimer = Timer(const Duration(seconds: 15), () async {
       state = const AsyncData(GeofenceState.dwelling);
-      print("Geofence: Waktu singgah tercapai. Mulai sinkronisasi peta...");
+      debugPrint(
+        "Geofence: Waktu singgah tercapai. Mulai sinkronisasi peta...",
+      );
       await _downloadAndCacheMap(location);
     });
   }
@@ -82,7 +85,9 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
     );
 
     if (isRedZone && state.value != GeofenceState.dwelling) {
-      print("Geofence: EMERGENCY OVERRIDE! Memaksa unduhan peta sekarang!");
+      debugPrint(
+        "Geofence: EMERGENCY OVERRIDE! Memaksa unduhan peta sekarang!",
+      );
       _dwellTimer?.cancel();
       state = const AsyncData(GeofenceState.dwelling);
       await _downloadAndCacheMap(_lastKnownLocation!);
@@ -94,7 +99,7 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
     final hasInternet = !networkState.contains(ConnectivityResult.none);
 
     if (!hasInternet) {
-      print(
+      debugPrint(
         "Geofence: Batal sinkronisasi peta karena internet tiba-tiba terputus.",
       );
       return;
@@ -109,7 +114,7 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
         route = await smartEvacuation.findOptimalRoute(location);
         await cacheService.saveOfflineRoute(route);
       } catch (e) {
-        print('Geofence (Evakuasi Vertikal): $e');
+        debugPrint('Geofence (Evakuasi Vertikal): $e');
       }
 
       if (route != null && route.isNotEmpty) {
@@ -123,9 +128,9 @@ class GeofenceNotifier extends AsyncNotifier<GeofenceState> {
       }
 
       ref.invalidate(mapCacheStatusProvider);
-      print("Geofence: Peta Dynamic & Rute sukses diamankan!");
+      debugPrint("Geofence: Peta Dynamic & Rute sukses diamankan!");
     } catch (e) {
-      print("Geofence Cache Error: $e");
+      debugPrint("Geofence Cache Error: $e");
     }
   }
 }

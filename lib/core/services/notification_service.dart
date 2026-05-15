@@ -27,7 +27,8 @@ class NotificationService {
         await _notificationsPlugin.getNotificationAppLaunchDetails();
 
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      initialPayload = notificationAppLaunchDetails?.notificationResponse?.payload;
+      initialPayload =
+          notificationAppLaunchDetails?.notificationResponse?.payload;
     }
 
     await _notificationsPlugin.initialize(

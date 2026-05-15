@@ -10,18 +10,11 @@ class ShellScreen extends StatelessWidget {
   const ShellScreen({super.key, required this.navigationShell});
 
   int _getSelectedIndex(int currentIndex) {
-    if (currentIndex == 0) return 0;
-    // index 1 is Chat, which is hidden. We fallback to 0 if it's somehow opened.
-    if (currentIndex == 2) return 1;
-    if (currentIndex == 3) return 2;
-    return 0;
+    return currentIndex;
   }
 
   int _getBranchIndex(int tabIndex) {
-    if (tabIndex == 0) return 0;
-    if (tabIndex == 1) return 2;
-    if (tabIndex == 2) return 3;
-    return 0;
+    return tabIndex;
   }
 
   @override
@@ -64,7 +57,6 @@ class ShellScreen extends StatelessWidget {
           },
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home_1), label: 'Home'),
-            // NavigationDestination(icon: Icon(Iconsax.message), label: 'Chat'),
             NavigationDestination(icon: Icon(Iconsax.map), label: 'Map'),
             NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
           ],

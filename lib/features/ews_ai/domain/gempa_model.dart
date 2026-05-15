@@ -2,7 +2,7 @@ class GempaModel {
   final String tanggal;
   final String jam;
   final String dateTime;
-  final String coordinates; // latlong
+  final String coordinates;
   final String magnitude;
   final String kedalaman;
   final String wilayah;

@@ -7,7 +7,6 @@ import 'package:suar_app/core/theme/app_colors.dart';
 import 'map_provider.dart';
 import '../../ews_ai/presentation/ews_provider.dart';
 
-// --- LAYER NOTIFIERS ---
 class TsunamiLayerNotifier extends Notifier<bool> {
   @override
   bool build() => false;
@@ -38,7 +37,6 @@ final showEarthquakeProvider = NotifierProvider<EarthquakeLayerNotifier, bool>(
   () => EarthquakeLayerNotifier(),
 );
 
-// --- MAIN SCREEN ---
 class RiskMapScreen extends ConsumerStatefulWidget {
   const RiskMapScreen({super.key});
 
@@ -244,14 +242,14 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                           ref.read(showTsunamiProvider.notifier).setLayer(val);
                           if (val) {
                             setStateModal(() => _isTsunamiLoading = true);
-                            this.setState(() => _isTsunamiLoading = true);
+                            setState(() => _isTsunamiLoading = true);
                             final inarisk = ref.read(inariskServiceProvider);
                             final result = await inarisk.checkTsunamiHazard(
                               currentLocation.latitude,
                               currentLocation.longitude,
                             );
                             if (mounted) {
-                              this.setState(() {
+                              setState(() {
                                 _isInTsunamiZone = result;
                                 _isTsunamiLoading = false;
                               });
@@ -259,7 +257,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                             }
                           } else {
                             if (mounted) {
-                              this.setState(() => _isInTsunamiZone = false);
+                              setState(() => _isInTsunamiZone = false);
                             }
                           }
                         },
@@ -275,14 +273,14 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                               .setLayer(val);
                           if (val) {
                             setStateModal(() => _isLandslideLoading = true);
-                            this.setState(() => _isLandslideLoading = true);
+                            setState(() => _isLandslideLoading = true);
                             final inarisk = ref.read(inariskServiceProvider);
                             final result = await inarisk.checkLandslideHazard(
                               currentLocation.latitude,
                               currentLocation.longitude,
                             );
                             if (mounted) {
-                              this.setState(() {
+                              setState(() {
                                 _isInLandslideZone = result;
                                 _isLandslideLoading = false;
                               });
@@ -290,7 +288,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                             }
                           } else {
                             if (mounted) {
-                              this.setState(() => _isInLandslideZone = false);
+                              setState(() => _isInLandslideZone = false);
                             }
                           }
                         },
@@ -364,7 +362,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                 mapController: _mapController,
                 options: MapOptions(
                   initialCenter: currentLocation,
-                  initialZoom: 5.0, // Di-zoom out sedikit agar gempa terlihat
+                  initialZoom: 5.0,
                 ),
                 children: [
                   TileLayer(
@@ -373,13 +371,13 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                     userAgentPackageName: 'com.suar.app',
                   ),
 
-                  // LAYER TSUNAMI (Circle overlay)
+                  // LAYER TSUNAMI
                   if (showTsunami && _isInTsunamiZone)
                     CircleLayer(
                       circles: [
                         CircleMarker(
                           point: currentLocation,
-                          radius: 3000, // 3000 meters
+                          radius: 3000,
                           useRadiusInMeter: true,
                           color: AppColors.danger.withValues(alpha: 0.3),
                           borderColor: AppColors.danger.withValues(alpha: 0.5),
@@ -388,13 +386,13 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                       ],
                     ),
 
-                  // LAYER LONGSOR (Circle overlay)
+                  // LAYER LONGSOR
                   if (showLandslide && _isInLandslideZone)
                     CircleLayer(
                       circles: [
                         CircleMarker(
                           point: currentLocation,
-                          radius: 3000, // 3000 meters
+                          radius: 3000,
                           useRadiusInMeter: true,
                           color: AppColors.warning.withValues(alpha: 0.3),
                           borderColor: AppColors.warning.withValues(alpha: 0.5),
@@ -403,7 +401,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                       ],
                     ),
 
-                  // TITIK GEMPA LIVE (Dari BMKG - Ripple Markers)
+                  // TITIK GEMPA LIVE
                   if (showEarthquake && recentQuakesAsync.value != null)
                     MarkerLayer(
                       markers: recentQuakesAsync.value!.map((gempa) {
@@ -469,11 +467,6 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                 ],
               ),
 
-              // Positioned(
-              //   bottom: 240,
-              //   right: 16,
-              //   child:
-              // ),
               Positioned(
                 bottom: 24,
                 right: 16,
@@ -517,7 +510,6 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
   }
 }
 
-// --- RIPPLE MARKER FOR EARTHQUAKES ---
 class RippleMarker extends StatefulWidget {
   final Color color;
   const RippleMarker({super.key, required this.color});
@@ -574,7 +566,7 @@ class _RipplePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
 
-    // Outer ripple (fades out and scales up)
+    // Outer ripple
     final outerScale = 0.4 + (0.6 * animationValue);
     final outerOpacity = 0.4 * (1.0 - animationValue);
     final outerRadius = (size.width / 2) * outerScale;
@@ -585,13 +577,13 @@ class _RipplePainter extends CustomPainter {
 
     canvas.drawCircle(center, outerRadius, outerPaint);
 
-    // Middle circle (semi-transparent)
+    // Middle circle
     final middlePaint = Paint()
       ..color = color.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, size.width * 0.25, middlePaint);
 
-    // Inner circle (solid dot)
+    // Inner circle
     final innerPaint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
@@ -651,7 +643,7 @@ class _LayerToggle extends StatelessWidget {
             height: 32,
             child: Switch(
               value: value,
-              activeColor: AppColors.white,
+              activeThumbColor: AppColors.white,
               activeTrackColor: activeColor,
               onChanged: onChanged,
             ),

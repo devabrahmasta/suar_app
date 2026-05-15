@@ -66,7 +66,8 @@ class EwsTestingScreen extends ConsumerWidget {
               NotificationService.showNotification(
                 id: 1,
                 title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
-                body: 'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Segera evakuasi.',
+                body:
+                    'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Segera evakuasi.',
                 payload: 'DUMMY_NO_ACTION',
               );
 
@@ -101,11 +102,12 @@ class EwsTestingScreen extends ConsumerWidget {
                     dummyGempa: dummyGempa,
                     dummyIsDiZonaMerah: false,
                   );
-                  
+
               NotificationService.showNotification(
                 id: 2,
                 title: '⚠️ PERINGATAN GEMPA BUMI',
-                body: 'Gempa M5.2 terdeteksi. Segera berlindung di tempat aman.',
+                body:
+                    'Gempa M5.2 terdeteksi. Segera berlindung di tempat aman.',
                 payload: 'DUMMY_NO_ACTION',
               );
 
@@ -167,7 +169,7 @@ class EwsTestingScreen extends ConsumerWidget {
                   route = await smartEvacuation.findOptimalRoute(centerPoint);
                   await cacheService.saveOfflineRoute(route);
                 } catch (e) {
-                  print('Mode Evakuasi Vertikal: $e');
+                  debugPrint('Mode Evakuasi Vertikal: $e');
                 }
 
                 if (route != null && route.isNotEmpty) {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 
 class InaRiskService {
@@ -16,7 +17,7 @@ class InaRiskService {
           'f': 'json',
           'geometryType': 'esriGeometryPoint',
           'geometry': '$longitude,$latitude',
-          'inSR': '4326', // Spatial Reference WGS84
+          'inSR': '4326',
           'spatialRel': 'esriSpatialRelIntersects',
           'returnGeometry': 'false',
           'outFields': '*',
@@ -35,8 +36,8 @@ class InaRiskService {
         throw Exception('Gagal menghubungi server InaRISK BNPB');
       }
     } catch (e) {
-      print('⚠️ InaRISK Error: $e');
-      return false; // Jangan asumsikan zona merah jika gagal, agar rute darat tetap bisa dicari
+      debugPrint('InaRISK Error: $e');
+      return false;
     }
   }
 
@@ -51,7 +52,7 @@ class InaRiskService {
           'f': 'json',
           'geometryType': 'esriGeometryPoint',
           'geometry': '$longitude,$latitude',
-          'inSR': '4326', // Spatial Reference WGS84
+          'inSR': '4326',
           'spatialRel': 'esriSpatialRelIntersects',
           'returnGeometry': 'false',
           'outFields': '*',
@@ -70,7 +71,7 @@ class InaRiskService {
         return false;
       }
     } catch (e) {
-      print('⚠️ InaRISK Landslide Error: $e');
+      debugPrint('InaRISK Landslide Error: $e');
       return false;
     }
   }

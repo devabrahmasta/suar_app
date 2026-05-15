@@ -25,24 +25,20 @@ class HomeScreen extends ConsumerWidget {
     final hasInternet = !networkState.contains(ConnectivityResult.none);
 
     String mapTitle = 'Peta Evakuasi';
-    String mapSubtitle = 'Memuat status peta...';
     IconData mapIcon = Icons.map;
     Color mapBadgeColor = AppColors.primary;
     bool isMapAvailable = true;
 
     if (isCacheReady) {
       mapTitle = 'Peta Evakuasi (Offline Ready)';
-      mapSubtitle = 'Aman, jalur tersedia tanpa internet';
       mapIcon = Icons.offline_pin;
       mapBadgeColor = AppColors.success;
     } else if (hasInternet) {
       mapTitle = 'Peta (Live Online)';
-      mapSubtitle = 'Menggunakan data untuk memuat peta';
       mapIcon = Icons.wifi;
       mapBadgeColor = AppColors.info;
     } else {
       mapTitle = 'Peta Belum Tersedia';
-      mapSubtitle = 'Tidak ada internet & belum diunduh';
       mapIcon = Icons.wifi_off;
       mapBadgeColor = AppColors.danger;
       isMapAvailable = false;
@@ -450,7 +446,11 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  void _handleNotificationPayload(BuildContext context, WidgetRef ref, String payload) {
+  void _handleNotificationPayload(
+    BuildContext context,
+    WidgetRef ref,
+    String payload,
+  ) {
     context.go('/');
 
     if (payload == 'MOCK_TSUNAMI') {
@@ -466,10 +466,9 @@ class HomeScreen extends ConsumerWidget {
         dirasakan: 'V-VI Pangandaran',
         shakemapUrl: '',
       );
-      ref.read(ewsProvider.notifier).triggerMockThreat(
-            dummyGempa: dummyGempa,
-            dummyIsDiZonaMerah: true,
-          );
+      ref
+          .read(ewsProvider.notifier)
+          .triggerMockThreat(dummyGempa: dummyGempa, dummyIsDiZonaMerah: true);
     } else if (payload == 'REAL_EWS' || payload == 'EWS_ALERT') {
       ref.read(ewsProvider.notifier).checkLatestThreat();
     }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
@@ -76,7 +77,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
       final cachedRoute = await cacheService.getOfflineRoute();
 
       if (cachedRoute != null && cachedRoute.isNotEmpty) {
-        print('🚀 Otomatis memuat rute dari Cache (Mode Offline Aktif)');
+        debugPrint('🚀 Otomatis memuat rute dari Cache (Mode Offline Aktif)');
         return cachedRoute;
       }
       throw VerticalEvacuationException(
@@ -112,7 +113,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
         ref.invalidate(mapCacheStatusProvider);
       }
 
-      print('🌐 Rute manual sukses didapat dan disimpan ke Cache!');
+      debugPrint('🌐 Rute manual sukses didapat dan disimpan ke Cache!');
       return freshRoute;
     });
   }
@@ -165,7 +166,7 @@ final recentEarthquakesProvider = FutureProvider<List<Map<String, dynamic>>>((
     }
     return [];
   } catch (e) {
-    print('⚠️ BMKG Earthquakes Error: $e');
+    debugPrint('BMKG Earthquakes Error: $e');
     return [];
   }
 });
