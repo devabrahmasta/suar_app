@@ -1,149 +1,220 @@
 <div align="center">
-  
-  # 🚨 SUAR (Sistem Peringatan Dini & Evakuasi Bencana)
-  
-  **Aplikasi mitigasi bencana *offline-first* dengan integrasi AI Triage, rute evakuasi cerdas, pemantauan latar belakang, dan komunikasi Mesh (P2P).**
+  <img src="assets/images/suar_logo.png" alt="SUAR Logo" width="120" style="border-radius: 24px; margin-bottom: 16px;"/>
 
-  ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
-  ![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)
-  ![Riverpod](https://img.shields.io/badge/Riverpod-blue?style=for-the-badge)
-  ![Gemini AI](https://img.shields.io/badge/Gemini%20AI-Flash%201.5-orange?style=for-the-badge)
-  ![Workmanager](https://img.shields.io/badge/Background-Workmanager-brightgreen?style=for-the-badge)
+  # 🚨 SUAR (Sistem Ubiquitous Adaptif Respons)
+  ### *Tetap Menyala Saat Segalanya Padam*
 
-  <br>
+  **Aplikasi Mitigasi Bencana *Offline-First* dengan Integrasi AI Triage, Rute Evakuasi Cerdas, Pemantauan Latar Belakang, dan Komunikasi P2P Mesh Network.**
+
+  [![Flutter](https://img.shields.io/badge/Flutter-3.10%2B-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
+  [![Dart](https://img.shields.io/badge/Dart-3.0%2B-%230175C2.svg?style=for-the-badge&logo=Dart&logoColor=white)](https://dart.dev)
+  [![Riverpod](https://img.shields.io/badge/Riverpod-State%20Management-blue?style=for-the-badge)](https://riverpod.dev)
+  [![Gemini AI](https://img.shields.io/badge/Gemini%20AI-Flash%201.5-orange?style=for-the-badge)](https://deepmind.google/technologies/gemini/)
+  [![Platform](https://img.shields.io/badge/Platform-Android-green?style=for-the-badge&logo=android)](https://www.android.com)
+
+  ---
 
   ### 📥 [Unduh Aplikasi (APK) - Rilis Terbaru](https://drive.google.com/drive/folders/1NNJlm1PrmNcebeoa7-MFdydZu_QjBkW9?usp=sharing)
-  *(Klik tautan di atas untuk mengunduh versi rilis Android dari SUAR)*
+  *(Klik tautan di atas untuk mengunduh versi rilis Android stabil dari SUAR)*
 
 </div>
 
 ---
 
+## 📖 Daftar Isi
+1. [Tentang SUAR](#-tentang-suar)
+2. [Fitur Utama](#-fitur-utama)
+3. [Arsitektur Sistem & Alur Data](#-arsitektur-sistem--alur-data)
+4. [Teknologi yang Digunakan (Tech Stack)](#-teknologi-yang-digunakan-tech-stack)
+5. [Struktur Direktori Proyek](#-struktur-diretori-proyek)
+6. [Panduan Memulai (Getting Started)](#-panduan-memulai-getting-started)
+   - [Prasyarat](#prasyarat)
+   - [Instalasi](#instalasi)
+   - [Konfigurasi Environment Variables](#konfigurasi-environment-variables)
+   - [Menjalankan Aplikasi](#menjalankan-aplikasi)
+7. [Panel Developer & Simulasi Pengujian](#-panel-developer--simulasi-pengujian)
+8. [Tim & Kontributor](#-tim--kontributor)
+
+---
+
 ## 📖 Tentang SUAR
 
-**SUAR** hadir untuk menjembatani titik kritis antara terjadinya bencana alam (gempa bumi & tsunami) dengan tindakan penyelamatan diri. Ketika infrastruktur telekomunikasi lumpuh pasca-bencana, SUAR tetap beroperasi sebagai "kompas penyelamat" berkat arsitektur *Offline-First* yang tangguh.
+**SUAR** dirancang untuk menjembatani titik kritis antara terjadinya bencana alam (terutama gempa bumi & tsunami) dengan tindakan penyelamatan diri. Ketika bencana skala besar melanda, infrastruktur telekomunikasi seluler dan internet sering kali lumpuh total, memicu disorientasi massal dan memutus jalur komunikasi penyelamatan. 
 
-Aplikasi ini menggabungkan data seismik waktu-nyata, analisis spasial risiko bencana, dan Kecerdasan Buatan (AI) untuk memberikan instruksi keselamatan yang dipersonalisasi sesuai lokasi presisi pengguna, bahkan berjalan aktif di latar belakang perangkat.
+SUAR hadir sebagai solusi tangguh berbasis **Offline-First**. Dengan menggabungkan data BMKG secara real-time, analisis spasial peta risiko InaRISK BNPB, dan pemrosesan AI, SUAR mengunduh peta serta rute evakuasi secara otomatis sebelum sinyal hilang. Ketika internet mati sepenuhnya, navigasi luring dan fitur komunikasi berbasis jaringan peer-to-peer (Mesh Network) tetap dapat digunakan untuk menghubungkan korban di daerah terdampak.
+
+Aplikasi ini dikembangkan untuk ajang **IDCamp Dicoding Challenge 2026** di bawah tema *"Small Apps for Big Preparedness"*. Seluruh kebutuhan pengembangan telah didokumentasikan pada berkas [SUAR_PRD.md](./SUAR_PRD.md).
+
+---
 
 ## ✨ Fitur Utama
 
 ### 🧠 1. AI Triage EWS (Early Warning System)
-Menarik data gempa bumi langsung dari **BMKG** dan menganalisis posisi pengguna terhadap peta risiko tsunami **InaRISK BNPB**. Mesin **Google Gemini 1.5 Flash** kemudian menghasilkan keputusan *Triage* (Evakuasi vs. Berlindung) dan panduan darurat secara instan.
+* **BMKG Integration:** Secara berkala memantau data gempa bumi langsung dari API BMKG saat terhubung ke internet.
+* **InaRISK Spatial Analysis:** Menganalisis radius bahaya tsunami dan zona risiko BNPB berdasarkan titik GPS koordinat pengguna.
+* **Google Gemini AI Flash:** Menghasilkan keputusan *Triage* darurat secara cerdas (keputusan untuk Evakuasi vs. Berlindung di Tempat) beserta instruksi keselamatan yang dipersonalisasi sesuai profil geografis pengguna.
+* **Offline Advisor Fallback:** Apabila koneksi internet terputus sebelum analisis AI selesai, aplikasi mengaktifkan algoritma penilai risiko berbasis aturan BNPB lokal.
 
 ### 🗺️ 2. Smart Offline Evacuation (Hybrid Snapping)
-Sistem pemetaan yang revolusioner untuk evakuasi tanpa internet:
-* **Geofence Caching:** Otomatis mengunduh peta (*map tiles*) radius 3KM di latar belakang saat pengguna terdeteksi memasuki Zona Merah InaRISK.
-* **Hybrid Routing Algorithm:** Mencari dataran tinggi terdekat (>5 meter) yang aman dari tsunami menggunakan algoritma 8-arah mata angin, memvalidasi elevasi via OpenRouteService (ORS), dan men-*snap* rute ke jalur khusus pejalan kaki (`foot-walking`).
-* **Offline Fallback:** Menyimpan rute evakuasi ke memori internal (`SharedPreferences`) untuk langsung ditampilkan saat koneksi terputus.
+* **Just-In-Time (JIT) Geofence Caching:** Otomatis mengunduh peta (*map tiles*) radius 3-5 KM di latar belakang saat pengguna terdeteksi memasuki Zona Merah InaRISK.
+* **Hybrid Routing & Elevation Snapping:** Menentukan dataran tinggi aman terdekat (>5 meter) menggunakan algoritma 8-arah mata angin, memverifikasi rute evakuasi pejalan kaki (`foot-walking`) dengan API OpenRouteService (ORS), dan menyimpan data polyline rute secara lokal.
+* **Offline Fallback Navigation:** Menampilkan visualisasi peta yang di-cache, posisi GPS real-time (via satelit), dan rute evakuasi secara visual tanpa memerlukan internet sama sekali.
 
-### 🔔 3. Sistem Pemantauan Latar Belakang (Background Monitoring)
-SUAR tidak pernah tidur. Menggunakan `Workmanager` dan isolasi Dart latar belakang, aplikasi akan secara periodik mengecek peringatan gempa terkini dari BMKG dan memberikan **Notifikasi Lokal** (*push notification*) yang interaktif seketika ada ancaman di sekitar pengguna.
+### 🔔 3. Pemantauan Latar Belakang (Background Monitoring)
+* **Background Polling:** Menggunakan `Workmanager` dan isolasi latar belakang Dart untuk terus mengamati aktivitas seismik BMKG meskipun aplikasi sedang ditutup.
+* **Foreground Service Safety Net:** Mencegah sistem operasi Android melakukan penghentian paksa (*kill app*) dengan mendaftarkan layanan mitigasi di status bar.
+* **Interactive Local Notifications:** Mengirimkan notifikasi darurat suara/getar keras secara instan ketika ada peringatan dini yang relevan di sekitar pengguna.
 
-### 📡 4. Mesh Network Chat *(Akan diimplementasikan di masa depan)*
-*Status: Planned / Dalam Perencanaan*
-* Komunikasi P2P (*Peer-to-Peer*) menggunakan modul Bluetooth/Wi-Fi Direct.
-* *Public Channel* untuk broadcast darurat dan *Direct Message* untuk mencari anggota keluarga tanpa memerlukan sinyal BTS/Internet sama sekali.
-
----
-
-## 🏗️ Arsitektur & Tech Stack
-
-Proyek ini dibangun dengan standar industri dan mengikuti prinsip **Clean Architecture** (Feature-First) untuk menjaga skalabilitas kode.
-
-* **Framework:** Flutter (SDK ^3.10.0 atau lebih baru)
-* **State Management:** Riverpod 2.x (`flutter_riverpod`)
-* **Routing:** GoRouter (Declarative Routing)
-* **Maps & GIS:** 
-    * `flutter_map` & `latlong2`
-    * `flutter_map_tile_caching` (FMTC ObjectBox Backend)
-    * OpenRouteService (Directions, Snap, & Elevation API)
-* **AI Integration:** `google_generative_ai` (Gemini)
-* **Background Tasks:** `workmanager`, `flutter_local_notifications`
-* **Network & Hardware:** `dio`, `geolocator`, `connectivity_plus`
+### 📡 4. Jaringan Obrolan Mesh P2P (Offline Mesh Chat)
+* **Auto-Discovery:** Memindai dan menghubungkan perangkat terdekat yang menginstal SUAR secara otomatis menggunakan protokol Bluetooth & Wi-Fi Direct (melalui `nearby_connections`).
+* **Multi-Hop Relay:** Pesan chat dikirimkan melalui jalur estafet dari satu perangkat ke perangkat lain (hingga 5 hop/lompatan) untuk menjangkau area di luar jangkauan sinyal Bluetooth langsung.
+* **Public & Private Channels:** Menyediakan channel publik untuk siaran darurat massal dan chat privat 1-on-1 untuk melacak keberadaan rekan atau anggota keluarga.
 
 ---
 
-## 🚀 Memulai (Getting Started)
+## 📐 Arsitektur Sistem & Alur Data
+
+SUAR dirancang menggunakan pola **Clean Architecture** dengan pendekatan berbasis fitur (*Feature-First*). Berikut adalah gambaran alur kerja sistem saat mendeteksi bencana hingga mengaktifkan mode penyelamatan luring:
+
+```mermaid
+flowchart TD
+    subgraph OnlineState[Kondisi Online / Siaga]
+        BMKG[BMKG API Polling] -->|Terdeteksi Gempa/Tsunami| EWS[EWS Trigger & Alert]
+        GPS[GPS Koordinat Pengguna] -->|Pengecekan Lokasi| InaRISK{Zona Risiko InaRISK?}
+        InaRISK -->|Ya| CacheMap[JIT Map Cache Download]
+        InaRISK -->|Ya| RouteGen[ORS Offline Route Gen]
+    end
+
+    subgraph OfflineState[Kondisi Offline / Darurat]
+        RouteGen -->|Simpan Rute Evakuasi| LocalDB[(SQLite DB & SharedPreferences)]
+        CacheMap -->|Simpan Tiles Peta| FMTC[FMTC Offline Tiles Cache]
+        LocalDB & FMTC -->|Render Peta & Rute Offline| NavUI[Offline Navigation UI]
+        
+        Gemini[Google Gemini AI] -->|Analisis Online| Advisor[AI Disaster Advisor]
+        RuleEngine[Rule-based BNPB Engine] -->|Analisis Fallback Offline| Advisor
+        
+        P2P[Nearby Connections] -->|P2P Bluetooth/Wi-Fi Direct| Mesh[Mesh Network Chat]
+    end
+
+    EWS -->|Takeover Layar Penuh| Advisor
+    Advisor -->|Rekomendasi Tindakan| NavUI
+    GPS -->|Navigasi Satelit Luring| NavUI
+```
+
+---
+
+## 🏗️ Teknologi yang Digunakan (Tech Stack)
+
+Konfigurasi dependensi lengkap dikelola di [pubspec.yaml](./pubspec.yaml).
+
+* **Framework:** Flutter (SDK ^3.10.4 atau lebih baru)
+* **Bahasa Pemrograman:** Dart (SDK ^3.0.0)
+* **Manajemen State & Routing:**
+  - `flutter_riverpod` (v3.x) - Manajemen state reaktif dan terisolasi
+  - `go_router` (v17.x) - Sistem navigasi deklaratif berbasis URL
+* **Peta Luring & Data Geospasial:**
+  - `flutter_map` - Rendering visualisasi peta interaktif
+  - `flutter_map_tile_caching` (FMTC) - Penyimpanan caching luring peta berbasis SQLite/ObjectBox
+  - `latlong2` & `geolocator` - Kalkulasi posisi geografis dan navigasi GPS luring
+* **Komunikasi P2P & Latar Belakang:**
+  - `nearby_connections` - Engine P2P (Bluetooth & Wi-Fi Direct) untuk Mesh Chat luring
+  - `workmanager` & `flutter_local_notifications` - Pengecekan data darurat dan notifikasi berkala di latar belakang
+* **Integrasi AI & Jaringan:**
+  - `google_generative_ai` - Integrasi Google Gemini 1.5 Flash untuk analisis darurat
+  - `dio` - HTTP Client untuk pemanggilan API BMKG dan OpenRouteService
+
+---
+
+## 📂 Struktur Direktori Proyek
+
+Aplikasi ini diorganisasikan dengan arsitektur **Feature-First** untuk menjaga kebersihan kode dan kemudahan pengembangan paralel:
+
+* **[lib/](./lib)**
+  * **[core/](./lib/core)**
+    * [router/](./lib/core/router) - Konfigurasi deklaratif GoRouter (Navigasi): [app_router.dart](./lib/core/router/app_router.dart)
+    * [services/](./lib/core/services) - Layanan global background task: [background_service.dart](./lib/core/services/background_service.dart) & [notification_service.dart](./lib/core/services/notification_service.dart)
+    * [theme/](./lib/core/theme) - Desain sistem, warna aksesibilitas tinggi, & tema aplikasi: [app_theme.dart](./lib/core/theme/app_theme.dart) & [app_colors.dart](./lib/core/theme/app_colors.dart)
+  * **[features/](./lib/features)**
+    * [ews_ai/](./lib/features/ews_ai) - Fitur deteksi gempa BMKG, koordinat InaRISK, dan Google Gemini AI
+    * [map_evacuation/](./lib/features/map_evacuation) - Fitur peta luring, navigasi GPS, cache tiles, & ORS routing
+    * [offline_mesh_chat/](./lib/features/offline_mesh_chat) - Komunikasi P2P Mesh luring (Bluetooth & Wi-Fi Direct)
+    * [onboarding/](./lib/features/onboarding) - Perizinan kritis (GPS, Bluetooth, Battery Optimization)
+    * [resources/](./lib/features/resources) - Panduan tanggap bencana offline
+    * [user/](./lib/features/user) - Profil pengguna & panel simulator pengujian
+  * **[shared/](./lib/shared)** - Komponen widget reusable global
+  * [main.dart](./lib/main.dart) - Entry point utama inisialisasi aplikasi SUAR
+
+---
+
+## 🚀 Panduan Memulai (Getting Started)
 
 ### Prasyarat
-Pastikan lingkungan pengembangan Anda sudah siap:
-* [Flutter SDK](https://docs.flutter.dev/get-started/install) 
-* Android Studio / VS Code
-* Git
+Sebelum menjalankan aplikasi ini, pastikan Anda telah menyiapkan lingkungan berikut:
+* **Flutter SDK** version `^3.10.4` ke atas.
+* **Android SDK** dengan minimal target API 26 (Android 8.0 Oreo) untuk mendukung Nearby Connections.
+* Akun **Google AI Studio** (untuk API Key Gemini).
+* Akun **OpenRouteService** (untuk API Key ORS).
 
 ### Instalasi
 
-1. **Kloning Repository**
+1. **Kloning Repositori**
    ```bash
-   git clone https://github.com/username-anda/suar_app.git
+   git clone https://github.com/devabrahmasta/suar_app.git
    cd suar_app
    ```
 
-2. **Unduh Dependencies**
+2. **Dapatkan Dependensi Paket**
    ```bash
    flutter pub get
    ```
 
-3. **Pengaturan Environment Variables (.env)**
-   Buat sebuah file bernama `.env` di direktori root (sejajar dengan `pubspec.yaml`) dan masukkan API Key Anda:
+3. **Konfigurasi Environment Variables (.env)**
+   Buat berkas [.env](./.env) baru di direktori utama proyek (sejajar dengan `pubspec.yaml`), lalu masukkan API key Anda:
    ```env
    GEMINI_API_KEY=masukkan_api_key_google_gemini_anda_di_sini
    ORS_API_KEY=masukkan_api_key_open_route_service_anda_di_sini
    ```
 
-4. **Jalankan Aplikasi**
-   Sebaiknya jalankan pada *real device* (perangkat asli) untuk pengujian GPS dan Background Service yang akurat.
+4. **Kompilasi dan Jalankan**
+   Hubungkan perangkat Android asli (*real device*) via kabel data (diperlukan untuk pengujian sensor GPS, Bluetooth, dan tugas latar belakang secara akurat):
    ```bash
    flutter run
    ```
 
 ---
 
-## 📂 Struktur Direktori
+## 🛠️ Panel Developer & Simulasi Pengujian
 
-Proyek ini menggunakan arsitektur berbasis fitur (*Feature-First Architecture*):
+Untuk mempermudah pengujian di lingkungan lab/tanpa harus menunggu terjadinya bencana alam nyata, SUAR dilengkapi dengan **EWS Simulator**. Fitur ini dapat diakses melalui tombol ikon debug kumbang (**Bug**) di halaman Profil Pengguna.
 
-```text
-lib/
-├── core/
-│   ├── router/           # Konfigurasi GoRouter (Navigasi deklaratif)
-│   ├── services/         # Layanan inti (Background Service, Notifications)
-│   └── theme/            # Desain sistem, warna, dan tipografi UI
-├── features/
-│   ├── ews_ai/           # Integrasi BMKG, InaRISK, dan Gemini AI Triage
-│   ├── map_evacuation/   # Sistem Peta, Hybrid Snapping, dan Caching Offline
-│   ├── offline_mesh_chat/# [Akan Datang] Komunikasi P2P / Mesh
-│   ├── onboarding/       # Izin akses perangkat & perkenalan aplikasi
-│   ├── resources/        # Manajemen data aset/panduan siaga
-│   └── user/             # Profil pengguna dan pengaturan
-└── main.dart             # Entry point utama aplikasi
-```
+Pengujian simulasi mencakup:
+* **Simulasi Gempa Berpotensi Tsunami + Masuk Zona Bahaya:** Memicu *Takeover Screen* darurat, mengaktifkan download peta otomatis, dan menghasilkan rute evakuasi luring.
+* **Simulasi Gempa Ringan Darat:** Memicu panduan *Shelter in Place* (Bertindung di tempat) tanpa menyalakan navigasi evakuasi.
+* **Simulasi P2P Discovery:** Mensimulasikan perangkat luring lain dalam mesh network.
+* **Simulasi Background Service & Notifikasi:** Memaksa WorkManager berjalan secara instan untuk mengetes notifikasi lokal.
 
 ---
 
-## 🛠️ Panel Developer (Skenario Pengujian)
+## 🤝 Tim & Kontributor
 
-Untuk mempermudah presentasi atau pengujian tanpa harus menunggu bencana asli terjadi, SUAR dilengkapi dengan **EWS Simulator**.
-Akses fitur ini melalui ikon kumbang (*Bug*) di Profile Screen untuk menjalankan:
+Proyek SUAR dirancang, dibangun, dan diselesaikan oleh tim profesional berikut:
 
-- Simulasi Gempa Tsunami + Masuk Zona Merah (InaRISK).
-- Simulasi Gempa Ringan Darat.
-- Simulasi pengunduhan Map Cache dan rute offline secara paksa.
-- Uji coba Local Notification dan Background Trigger.
+| Foto Kontributor | Nama Kontributor | Peran Utama | Deskripsi Tanggung Jawab |
+|:---:|---|---|---|
+| <img src="https://github.com/waladilintang.png" width="80" style="border-radius:50%"/> | **Waladi Lintang Novianto** | `Backend & Engine Developer` | Bertanggung jawab atas pengembangan sistem database lokal (SQLite), backend polling API BMKG, integrasi OpenRouteService, pemrosesan latar belakang (Workmanager/Foreground Service), dan arsitektur komunikasi Peer-to-Peer Mesh Network. |
+| <img src="https://github.com/devabrahmasta.png" width="80" style="border-radius:50%"/> | **Pande Made Deva Brahmasta** | `Frontend & UI/UX Integration` | Bertanggung jawab atas perancangan state management (Riverpod), implementasi alur navigasi (GoRouter), rendering peta offline (flutter_map & FMTC), integrasi Google Gemini AI API, dan integrasi simulator pengujian developer. |
+| <img src="https://github.com/gracerianty.png" width="80" style="border-radius:50%"/> | **Grace Rianty Butar Butar** | `UI/UX Designer` | Bertanggung jawab atas riset kebutuhan korban bencana, pembuatan desain antarmuka aplikasi ramah situasi darurat (*Panic-Friendly UI*), penyusunan skema warna aksesibilitas tinggi untuk area luring, dan pemodelan interaksi pengguna (UX). |
 
 ---
 
-## 🤝 Kontribusi
+## 📄 Apresiasi & Lisensi
 
-Kami menyambut segala bentuk kontribusi! Jika Anda ingin berkontribusi pada proyek ini:
-1. Lakukan *Fork* pada repository ini.
-2. Buat *branch* fitur Anda (`git checkout -b feature/FiturAnda`).
-3. Lakukan *Commit* perubahan Anda (`git commit -m 'Menambahkan FiturAnda'`).
-4. *Push* ke branch tersebut (`git push origin feature/FiturAnda`).
-5. Buka sebuah *Pull Request*.
+Aplikasi ini dikembangkan sepenuhnya sebagai proyek submisi untuk **IDCamp Dicoding Challenge 2026** di bawah kategori aplikasi mitigasi kebencanaan (*Small Apps for Big Preparedness*).
+
+* **Kredit Sumber Data:** Data gempa bumi disediakan oleh **BMKG Open Data**. Analisis zona risiko didasarkan pada data bahaya dari **InaRISK BNPB**. Peta dasar dilayani oleh kontributor **OpenStreetMap**.
 
 <br>
 
 <div align="center">
-<i>Dibuat dengan dedikasi untuk memperkuat resiliensi masyarakat Indonesia dalam menghadapi bencana alam.</i>
+  <i>Dibuat dengan dedikasi untuk memperkuat kesiapsiagaan dan resiliensi masyarakat Indonesia dalam menghadapi bencana alam. 🇮🇩</i>
 </div>
