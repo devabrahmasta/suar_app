@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="assets/images/suar_logo.png" alt="SUAR Logo" width="120" style="border-radius: 24px; margin-bottom: 16px;"/>
+  <img src="frontend/assets/images/suar_logo.png" alt="SUAR Logo" width="120" style="border-radius: 24px; margin-bottom: 16px;"/>
 
-  # 🚨 SUAR (Sistem Ubiquitous Adaptif Respons)
+  # 🚨 SUAR
   ### *Tetap Menyala Saat Segalanya Padam*
 
   **Aplikasi Mitigasi Bencana *Offline-First* dengan Integrasi AI Triage, Rute Evakuasi Cerdas, Pemantauan Latar Belakang, dan Komunikasi P2P Mesh Network.**
@@ -105,7 +105,7 @@ flowchart TD
 
 ## 🏗️ Teknologi yang Digunakan (Tech Stack)
 
-Konfigurasi dependensi lengkap dikelola di [pubspec.yaml](./pubspec.yaml).
+Konfigurasi dependensi lengkap dikelola di [pubspec.yaml](./frontend/pubspec.yaml).
 
 * **Framework:** Flutter (SDK ^3.10.4 atau lebih baru)
 * **Bahasa Pemrograman:** Dart (SDK ^3.0.0)
@@ -127,22 +127,24 @@ Konfigurasi dependensi lengkap dikelola di [pubspec.yaml](./pubspec.yaml).
 
 ## 📂 Struktur Direktori Proyek
 
-Aplikasi ini diorganisasikan dengan arsitektur **Feature-First** untuk menjaga kebersihan kode dan kemudahan pengembangan paralel:
+Aplikasi ini dikembangkan dengan pendekatan monorepo. Berikut adalah pembagian struktur direktorinya:
 
-* **[lib/](./lib)**
-  * **[core/](./lib/core)**
-    * [router/](./lib/core/router) - Konfigurasi deklaratif GoRouter (Navigasi): [app_router.dart](./lib/core/router/app_router.dart)
-    * [services/](./lib/core/services) - Layanan global background task: [background_service.dart](./lib/core/services/background_service.dart) & [notification_service.dart](./lib/core/services/notification_service.dart)
-    * [theme/](./lib/core/theme) - Desain sistem, warna aksesibilitas tinggi, & tema aplikasi: [app_theme.dart](./lib/core/theme/app_theme.dart) & [app_colors.dart](./lib/core/theme/app_colors.dart)
-  * **[features/](./lib/features)**
-    * [ews_ai/](./lib/features/ews_ai) - Fitur deteksi gempa BMKG, koordinat InaRISK, dan Google Gemini AI
-    * [map_evacuation/](./lib/features/map_evacuation) - Fitur peta luring, navigasi GPS, cache tiles, & ORS routing
-    * [offline_mesh_chat/](./lib/features/offline_mesh_chat) - Komunikasi P2P Mesh luring (Bluetooth & Wi-Fi Direct)
-    * [onboarding/](./lib/features/onboarding) - Perizinan kritis (GPS, Bluetooth, Battery Optimization)
-    * [resources/](./lib/features/resources) - Panduan tanggap bencana offline
-    * [user/](./lib/features/user) - Profil pengguna & panel simulator pengujian
-  * **[shared/](./lib/shared)** - Komponen widget reusable global
-  * [main.dart](./lib/main.dart) - Entry point utama inisialisasi aplikasi SUAR
+* **[frontend/](./frontend)** — Seluruh kode Flutter dan konfigurasinya:
+  * **[lib/](./frontend/lib)** — Kode sumber aplikasi Flutter:
+    * **[core/](./frontend/lib/core)**
+      * [router/](./frontend/lib/core/router) - Konfigurasi deklaratif GoRouter (Navigasi): [app_router.dart](./frontend/lib/core/router/app_router.dart)
+      * [services/](./frontend/lib/core/services) - Layanan global background task: [background_service.dart](./frontend/lib/core/services/background_service.dart) & [notification_service.dart](./frontend/lib/core/services/notification_service.dart)
+      * [theme/](./frontend/lib/core/theme) - Desain sistem, warna aksesibilitas tinggi, & tema aplikasi: [app_theme.dart](./frontend/lib/core/theme/app_theme.dart) & [app_colors.dart](./frontend/lib/core/theme/app_colors.dart)
+    * **[features/](./frontend/lib/features)**
+      * [ews_ai/](./frontend/lib/features/ews_ai) - Fitur deteksi gempa BMKG, koordinat InaRISK, dan Google Gemini AI
+      * [map_evacuation/](./frontend/lib/features/map_evacuation) - Fitur peta luring, navigasi GPS, cache tiles, & ORS routing
+      * [offline_mesh_chat/](./frontend/lib/features/offline_mesh_chat) - Komunikasi P2P Mesh luring (Bluetooth & Wi-Fi Direct)
+      * [onboarding/](./frontend/lib/features/onboarding) - Perizinan kritis (GPS, Bluetooth, Battery Optimization)
+      * [resources/](./frontend/lib/features/resources) - Panduan tanggap bencana offline
+      * [user/](./frontend/lib/features/user) - Profil pengguna & panel simulator pengujian
+    * **[shared/](./frontend/lib/shared)** - Komponen widget reusable global
+    * [main.dart](./frontend/lib/main.dart) - Entry point utama inisialisasi aplikasi SUAR
+* **[backend/](./backend)** — Seluruh kode backend dan konfigurasinya.
 
 ---
 
@@ -160,7 +162,7 @@ Sebelum menjalankan aplikasi ini, pastikan Anda telah menyiapkan lingkungan beri
 1. **Kloning Repositori**
    ```bash
    git clone https://github.com/devabrahmasta/suar_app.git
-   cd suar_app
+   cd suar_app/frontend
    ```
 
 2. **Dapatkan Dependensi Paket**
@@ -169,7 +171,7 @@ Sebelum menjalankan aplikasi ini, pastikan Anda telah menyiapkan lingkungan beri
    ```
 
 3. **Konfigurasi Environment Variables (.env)**
-   Buat berkas [.env](./.env) baru di direktori utama proyek (sejajar dengan `pubspec.yaml`), lalu masukkan API key Anda:
+   Buat berkas [.env](./frontend/.env) baru di direktori `frontend/` (sejajar dengan `pubspec.yaml`), lalu masukkan API key Anda:
    ```env
    GEMINI_API_KEY=masukkan_api_key_google_gemini_anda_di_sini
    ORS_API_KEY=masukkan_api_key_open_route_service_anda_di_sini
