@@ -203,7 +203,7 @@ Proyek SUAR dirancang, dibangun, dan diselesaikan oleh tim profesional berikut:
 
 | Foto Kontributor | Nama Kontributor | Peran Utama | Deskripsi Tanggung Jawab |
 |:---:|---|---|---|
-| <img src="https://github.com/waladilintang.png" width="80" style="border-radius:50%"/> | **Waladi Lintang Novianto** | `Backend & Engine Developer` | Bertanggung jawab atas pengembangan sistem database lokal (SQLite), backend polling API BMKG, integrasi OpenRouteService, pemrosesan latar belakang (Workmanager/Foreground Service), dan arsitektur komunikasi Peer-to-Peer Mesh Network. |
+| <img src="https://github.com/LintangNov.png" width="80" style="border-radius:50%"/> | **Waladi Lintang Novianto** | `Backend Developer` | Bertanggung jawab atas pengembangan sistem database lokal (SQLite), backend polling API BMKG, integrasi OpenRouteService, pemrosesan latar belakang (Workmanager/Foreground Service), dan arsitektur komunikasi Peer-to-Peer Mesh Network. |
 | <img src="https://github.com/devabrahmasta.png" width="80" style="border-radius:50%"/> | **Pande Made Deva Brahmasta** | `Frontend & UI/UX Integration` | Bertanggung jawab atas perancangan state management (Riverpod), implementasi alur navigasi (GoRouter), rendering peta offline (flutter_map & FMTC), integrasi Google Gemini AI API, dan integrasi simulator pengujian developer. |
 | <img src="https://github.com/gracerianty.png" width="80" style="border-radius:50%"/> | **Grace Rianty Butar Butar** | `UI/UX Designer` | Bertanggung jawab atas riset kebutuhan korban bencana, pembuatan desain antarmuka aplikasi ramah situasi darurat (*Panic-Friendly UI*), penyusunan skema warna aksesibilitas tinggi untuk area luring, dan pemodelan interaksi pengguna (UX). |
 
