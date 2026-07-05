@@ -7,6 +7,24 @@ import { UserDevice } from '../users/entities/user-device.entity';
 import * as GeoJSON from 'geojson';
 import * as crypto from 'crypto';
 
+interface BmkgGempa {
+  Tanggal: string;
+  Jam: string;
+  DateTime: string;
+  Coordinates: string;
+  Magnitude: string;
+  Kedalaman: string;
+  Wilayah: string;
+  Potensi: string;
+  Dirasakan?: string;
+}
+
+interface BmkgEarthquakeResponse {
+  Infogempa?: {
+    gempa?: BmkgGempa;
+  };
+}
+
 @Injectable()
 export class AlertsService implements OnModuleInit {
   private readonly logger = new Logger(AlertsService.name);
@@ -20,7 +38,9 @@ export class AlertsService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.logger.log('AlertsService has been initialized. Polling starts automatically.');
+    this.logger.log(
+      'AlertsService has been initialized. Polling starts automatically.',
+    );
   }
 
   @Interval(30000) // Poll every 30 seconds
@@ -37,27 +57,36 @@ export class AlertsService implements OnModuleInit {
     this.isPolling = true;
     try {
       this.logger.log('Starting polling BMKG EWS API...');
-      const response = await fetch('https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json');
-      
+      const response = await fetch(
+        'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json',
+      );
+
       if (!response.ok) {
         throw new Error(`BMKG API returned status code: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as BmkgEarthquakeResponse;
       if (!data || !data.Infogempa || !data.Infogempa.gempa) {
         this.logger.warn('Received invalid data format from BMKG API');
         return;
       }
 
       const rawGempa = data.Infogempa.gempa;
-      
+
       // Generate unique hash using DateTime and Coordinates
-      const bmkgId = this.generateUniqueBmkgId(rawGempa.DateTime, rawGempa.Coordinates);
-      
+      const bmkgId = this.generateUniqueBmkgId(
+        rawGempa.DateTime,
+        rawGempa.Coordinates,
+      );
+
       // Check for duplication
-      const existingAlert = await this.alertRepository.findOne({ where: { bmkgId } });
+      const existingAlert = await this.alertRepository.findOne({
+        where: { bmkgId },
+      });
       if (existingAlert) {
-        this.logger.log(`Earthquake alert already processed (bmkgId: ${bmkgId.substring(0, 8)}). Skipping.`);
+        this.logger.log(
+          `Earthquake alert already processed (bmkgId: ${bmkgId.substring(0, 8)}). Skipping.`,
+        );
         return;
       }
 
@@ -70,7 +99,8 @@ export class AlertsService implements OnModuleInit {
       const date = new Date(rawGempa.DateTime);
       const wilayah = rawGempa.Wilayah;
       const potensi = rawGempa.Potensi;
-      const dirasakan = rawGempa.Dirasakan || 'Tidak dirasakan secara signifikan';
+      const dirasakan =
+        rawGempa.Dirasakan || 'Tidak dirasakan secara signifikan';
 
       const epicenter: GeoJSON.Point = {
         type: 'Point',
@@ -95,47 +125,61 @@ export class AlertsService implements OnModuleInit {
 
       if (passesThreshold) {
         this.logger.warn(
-          `[EWS TRIGGERED] New Earthquake Alert: M ${magnitude} Mw, Depth ${depth} km. Epicenter: ${wilayah}.`
+          `[EWS TRIGGERED] New Earthquake Alert: M ${magnitude} Mw, Depth ${depth} km. Epicenter: ${wilayah}.`,
         );
-        
+
         // Determine dynamic radius
         const radiusInKm = this.calculateDynamicRadius(magnitude, potensi);
-        this.logger.log(`Calculated dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`);
-        
+        this.logger.log(
+          `Calculated dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
+        );
+
         // Query impacted devices
-        const impactedDevices = await this.findDevicesInImpactZone(longitude, latitude, radiusInKm);
-        
-        this.logger.warn(`Found ${impactedDevices.length} devices in the impact zone.`);
-        
+        const impactedDevices = await this.findDevicesInImpactZone(
+          longitude,
+          latitude,
+          radiusInKm,
+        );
+
+        this.logger.warn(
+          `Found ${impactedDevices.length} devices in the impact zone.`,
+        );
+
         // Broadcast simulation
         for (const device of impactedDevices) {
-          const isTsunami = potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
+          const isTsunami =
+            potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
           const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
-          
+
           this.logger.warn(
-            `[FCM BROADCAST] Sending Alert to Device ${device.deviceId} (Token: ${device.fcmToken}) - Action Status: ${statusTindakan} | MMI: ${dirasakan}`
+            `[FCM BROADCAST] Sending Alert to Device ${device.deviceId} (Token: ${device.fcmToken}) - Action Status: ${statusTindakan} | MMI: ${dirasakan}`,
           );
         }
       } else {
         this.logger.log(
-          `[EWS IGNORED] Earthquake below threshold: M ${magnitude} Mw, Depth ${depth} km. Saved to logs.`
+          `[EWS IGNORED] Earthquake below threshold: M ${magnitude} Mw, Depth ${depth} km. Saved to logs.`,
         );
       }
-
     } catch (error) {
-      this.logger.error(`Error polling BMKG EWS API: ${error.message}`);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      this.logger.error(`Error polling BMKG EWS API: ${errorMessage}`);
     } finally {
       this.isPolling = false;
     }
   }
 
-  private generateUniqueBmkgId(dateTimeISO: string, coordinates: string): string {
+  private generateUniqueBmkgId(
+    dateTimeISO: string,
+    coordinates: string,
+  ): string {
     const rawString = `${dateTimeISO}_${coordinates}`;
     return crypto.createHash('sha256').update(rawString).digest('hex');
   }
 
   private calculateDynamicRadius(magnitude: number, potensi: string): number {
-    const isTsunami = potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
+    const isTsunami =
+      potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
     if (isTsunami) {
       return 250; // Tsunami potential or large earthquakes impact up to 250 km radius (especially coastlines)
     }

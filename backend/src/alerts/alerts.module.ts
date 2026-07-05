@@ -6,9 +6,7 @@ import { AlertsService } from './alerts.service';
 import { AlertsController } from './alerts.controller';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([EarthquakeAlert, UserDevice]),
-  ],
+  imports: [TypeOrmModule.forFeature([EarthquakeAlert, UserDevice])],
   controllers: [AlertsController],
   providers: [AlertsService],
   exports: [AlertsService],

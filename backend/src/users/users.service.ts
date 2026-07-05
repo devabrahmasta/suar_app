@@ -58,7 +58,9 @@ export class UsersService {
     });
 
     if (!device) {
-      throw new NotFoundException(`Perangkat dengan ID ${deviceId} tidak ditemukan`);
+      throw new NotFoundException(
+        `Perangkat dengan ID ${deviceId} tidak ditemukan`,
+      );
     }
 
     device.lastLocation = {
