@@ -144,7 +144,13 @@ Aplikasi ini dikembangkan dengan pendekatan monorepo. Berikut adalah pembagian s
       * [user/](./frontend/lib/features/user) - Profil pengguna & panel simulator pengujian
     * **[shared/](./frontend/lib/shared)** - Komponen widget reusable global
     * [main.dart](./frontend/lib/main.dart) - Entry point utama inisialisasi aplikasi SUAR
-* **[backend/](./backend)** — Seluruh kode backend dan konfigurasinya.
+* **[backend/](./backend)** — Seluruh kode backend NestJS & PostgreSQL + PostGIS:
+  * **[src/](./backend/src)** — Kode sumber backend:
+    * **[alerts/](./backend/src/alerts)** - Modul EWS polling BMKG, de-duplikasi hash gempa, filter threshold, dan kueri spasial.
+    * **[users/](./backend/src/users)** - Modul pendaftaran perangkat FCM dan pembaruan koordinat `lastLocation` spasial.
+  * **[test/](./backend/test)** — Automated E2E & unit spec tests.
+  * [Dockerfile](./backend/Dockerfile) — Konfigurasi Docker container untuk Hugging Face Spaces.
+  * [README.md](./backend/README.md) — Konfigurasi metadata Hugging Face Spaces.
 
 ---
 
@@ -153,11 +159,12 @@ Aplikasi ini dikembangkan dengan pendekatan monorepo. Berikut adalah pembagian s
 ### Prasyarat
 Sebelum menjalankan aplikasi ini, pastikan Anda telah menyiapkan lingkungan berikut:
 * **Flutter SDK** version `^3.10.4` ke atas.
-* **Android SDK** dengan minimal target API 26 (Android 8.0 Oreo) untuk mendukung Nearby Connections.
+* **Node.js** version `^18.0.0` atau `^20.0.0` (untuk backend).
+* **Docker** & **Docker Compose** (untuk database PostGIS lokal).
 * Akun **Google AI Studio** (untuk API Key Gemini).
 * Akun **OpenRouteService** (untuk API Key ORS).
 
-### Instalasi
+### Instalasi & Menjalankan Frontend (Aplikasi Flutter)
 
 1. **Kloning Repositori**
    ```bash
@@ -182,6 +189,54 @@ Sebelum menjalankan aplikasi ini, pastikan Anda telah menyiapkan lingkungan beri
    ```bash
    flutter run
    ```
+
+### Instalasi & Menjalankan Backend (NestJS + PostGIS)
+
+1. **Pindah ke Direktori Backend**
+   ```bash
+   cd suar_app/backend
+   ```
+
+2. **Instal Dependensi NPM**
+   ```bash
+   npm install
+   ```
+
+3. **Jalankan Database PostgreSQL + PostGIS (Docker)**
+   Pastikan Docker daemon Anda aktif, lalu jalankan container database:
+   ```bash
+   docker compose up -d
+   ```
+
+4. **Konfigurasi Environment Variables (.env)**
+   Salin berkas `.env.example` ke `.env` dan sesuaikan kredensial database Anda (default sudah diatur agar terhubung langsung ke Docker PostGIS lokal):
+   ```bash
+   cp .env.example .env
+   ```
+
+5. **Jalankan Server Backend**
+   - **Mode Development (dengan Watcher):**
+     ```bash
+     npm run start:dev
+     ```
+   - **Menjalankan Unit Test Otomatis:**
+     ```bash
+     npm run test
+     ```
+
+---
+
+## 📖 Dokumentasi API Interaktif (Swagger UI)
+
+Backend SUAR telah terintegrasi dengan **Swagger UI** untuk memudahkan pengujian API secara interaktif.
+
+* **Link Dokumentasi API Produksi (Live di Hugging Face):** [https://lintangnv-suar-backend.hf.space/api/docs](https://lintangnv-suar-backend.hf.space/api/docs)
+* **Link Dokumentasi API Lokal:** `http://localhost:3000/api/docs` (setelah server lokal dijalankan)
+
+Dokumentasi ini menyediakan antarmuka interaktif untuk mencoba endpoint berikut:
+- **`POST /users/register-device`**: Mendaftarkan atau memperbarui token FCM perangkat beserta lokasi rumah (`homeLocation`).
+- **`POST /users/update-location`**: Memperbarui koordinat GPS aktif terakhir dari perangkat pengguna untuk kueri spasial PostGIS.
+- **`POST /alerts/trigger-poll`**: Memicu polling manual data gempa bumi BMKG secara instan untuk simulasi peringatan dini.
 
 ---
 
