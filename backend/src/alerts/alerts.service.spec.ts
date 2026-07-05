@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -53,8 +55,12 @@ describe('AlertsService', () => {
     }).compile();
 
     service = module.get<AlertsService>(AlertsService);
-    alertRepository = module.get<Repository<EarthquakeAlert>>(getRepositoryToken(EarthquakeAlert));
-    deviceRepository = module.get<Repository<UserDevice>>(getRepositoryToken(UserDevice));
+    alertRepository = module.get<Repository<EarthquakeAlert>>(
+      getRepositoryToken(EarthquakeAlert),
+    );
+    deviceRepository = module.get<Repository<UserDevice>>(
+      getRepositoryToken(UserDevice),
+    );
 
     jest.clearAllMocks();
   });
@@ -118,7 +124,9 @@ describe('AlertsService', () => {
 
       mockAlertRepository.findOne.mockResolvedValue(null);
       mockAlertRepository.create.mockImplementation((dto) => dto);
-      mockAlertRepository.save.mockImplementation((dto) => Promise.resolve({ id: 'new-id', ...dto }));
+      mockAlertRepository.save.mockImplementation((dto) =>
+        Promise.resolve({ id: 'new-id', ...dto }),
+      );
 
       const mockDevices = [
         { deviceId: 'device-1', fcmToken: 'token-1' },
@@ -135,7 +143,7 @@ describe('AlertsService', () => {
           magnitude: 6.6,
           isBroadcasted: true,
           potensi: 'Berpotensi tsunami',
-        })
+        }),
       );
       expect(alertRepository.save).toHaveBeenCalled();
       expect(deviceRepository.createQueryBuilder).toHaveBeenCalled();
@@ -172,7 +180,7 @@ describe('AlertsService', () => {
         expect.objectContaining({
           magnitude: 4.2,
           isBroadcasted: false,
-        })
+        }),
       );
       expect(deviceRepository.createQueryBuilder).not.toHaveBeenCalled();
     });
