@@ -128,6 +128,39 @@ class SuarBackendService {
       debugPrint('SuarBackendService: Pengiriman dilewati untuk efisiensi daya & jaringan.');
     }
   }
+
+  Future<Map<String, dynamic>> simulateAlert({
+    required double magnitude,
+    required String depth,
+    required double latitude,
+    required double longitude,
+    required String potensi,
+    required String wilayah,
+  }) async {
+    try {
+      debugPrint('SuarBackendService: Mengirim permintaan simulasi gempa ke backend: $wilayah');
+      final response = await _dio.post(
+        '$_baseUrl/alerts/simulate',
+        data: {
+          'magnitude': magnitude,
+          'depth': depth,
+          'latitude': latitude,
+          'longitude': longitude,
+          'potensi': potensi,
+          'wilayah': wilayah,
+        },
+      );
+      debugPrint('SuarBackendService: Respons simulasi status: ${response.statusCode}');
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return Map<String, dynamic>.from(response.data);
+      } else {
+        throw Exception('Gagal melakukan simulasi: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('SuarBackendService Error simulateAlert: $e');
+      rethrow;
+    }
+  }
 }
 
 final suarBackendServiceProvider = Provider<SuarBackendService>((ref) {

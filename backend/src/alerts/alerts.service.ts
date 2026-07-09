@@ -73,116 +73,7 @@ export class AlertsService implements OnModuleInit {
         return;
       }
 
-      const rawGempa = data.Infogempa.gempa;
-
-      // Generate unique hash using DateTime and Coordinates
-      const bmkgId = this.generateUniqueBmkgId(
-        rawGempa.DateTime,
-        rawGempa.Coordinates,
-      );
-
-      // Check for duplication
-      const existingAlert = await this.alertRepository.findOne({
-        where: { bmkgId },
-      });
-      if (existingAlert) {
-        this.logger.log(
-          `Earthquake alert already processed (bmkgId: ${bmkgId.substring(0, 8)}). Skipping.`,
-        );
-        return;
-      }
-
-      // Parse values
-      const magnitude = parseFloat(rawGempa.Magnitude);
-      const depth = parseInt(rawGempa.Kedalaman.replace(/[^0-9]/g, ''), 10);
-      const [latStr, lonStr] = rawGempa.Coordinates.split(',');
-      const latitude = parseFloat(latStr);
-      const longitude = parseFloat(lonStr);
-      const date = new Date(rawGempa.DateTime);
-      const wilayah = rawGempa.Wilayah;
-      const potensi = rawGempa.Potensi;
-      const dirasakan =
-        rawGempa.Dirasakan || 'Tidak dirasakan secara signifikan';
-
-      const epicenter: GeoJSON.Point = {
-        type: 'Point',
-        coordinates: [longitude, latitude],
-      };
-
-      // Filter thresholds: Magnitude >= 5.0 and Depth < 100 km (tsunami danger limit)
-      const passesThreshold = magnitude >= 5.0 && depth < 100;
-
-      const newAlert = this.alertRepository.create({
-        bmkgId,
-        magnitude,
-        depth: `${depth} km`,
-        wilayah,
-        potensi,
-        epicenter,
-        isBroadcasted: passesThreshold,
-        alertTime: date,
-      });
-
-      await this.alertRepository.save(newAlert);
-
-      if (passesThreshold) {
-        this.logger.warn(
-          `[EWS TRIGGERED] New Earthquake Alert: M ${magnitude} Mw, Depth ${depth} km. Epicenter: ${wilayah}.`,
-        );
-
-        // Determine dynamic radius
-        const radiusInKm = this.calculateDynamicRadius(magnitude, potensi);
-        this.logger.log(
-          `Calculated dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
-        );
-
-        // Query impacted devices
-        const impactedDevices = await this.findDevicesInImpactZone(
-          longitude,
-          latitude,
-          radiusInKm,
-        );
-
-        this.logger.warn(
-          `Found ${impactedDevices.length} devices in the impact zone.`,
-        );
-
-        if (impactedDevices.length > 0) {
-          const isTsunami =
-            potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
-          const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
-
-          const title = isTsunami
-            ? '🚨 PERINGATAN TSUNAMI (SUAR)'
-            : '⚠️ PERINGATAN GEMPA BUMI (SUAR)';
-          const body = `Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: ${statusTindakan}.`;
-
-          const tokens = impactedDevices.map((d) => d.fcmToken);
-
-          const payloadData = {
-            type: 'EARTHQUAKE_ALERT',
-            magnitude: magnitude.toString(),
-            depth: `${depth} km`,
-            wilayah,
-            potensi,
-            statusTindakan,
-            coordinates: `${latitude},${longitude}`,
-            dateTime: date.toISOString(),
-          };
-
-          // Kirim notifikasi nyata ke Firebase Admin SDK
-          await this.firebaseService.sendPushNotification(
-            tokens,
-            title,
-            body,
-            payloadData,
-          );
-        }
-      } else {
-        this.logger.log(
-          `[EWS IGNORED] Earthquake below threshold: M ${magnitude} Mw, Depth ${depth} km. Saved to logs.`,
-        );
-      }
+      await this.processEarthquake(data.Infogempa.gempa, false);
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
@@ -190,6 +81,156 @@ export class AlertsService implements OnModuleInit {
     } finally {
       this.isPolling = false;
     }
+  }
+
+  async simulateAlert(dto: {
+    magnitude: number;
+    depth: string;
+    latitude: number;
+    longitude: number;
+    potensi: string;
+    wilayah: string;
+  }): Promise<any> {
+    const simulatedGempa: BmkgGempa = {
+      Tanggal: new Date().toLocaleDateString('id-ID'),
+      Jam: new Date().toLocaleTimeString('id-ID'),
+      DateTime: new Date().toISOString(),
+      Coordinates: `${dto.latitude},${dto.longitude}`,
+      Magnitude: dto.magnitude.toString(),
+      Kedalaman: dto.depth,
+      Wilayah: dto.wilayah,
+      Potensi: dto.potensi,
+    };
+
+    return this.processEarthquake(simulatedGempa, true);
+  }
+
+  private async processEarthquake(
+    rawGempa: BmkgGempa,
+    isSimulation = false,
+  ): Promise<any> {
+    // Generate unique hash using DateTime and Coordinates if not simulation
+    const bmkgId = isSimulation
+      ? `SIMULASI_${Date.now()}`
+      : this.generateUniqueBmkgId(rawGempa.DateTime, rawGempa.Coordinates);
+
+    // Check for duplication if not simulation
+    if (!isSimulation) {
+      const existingAlert = await this.alertRepository.findOne({
+        where: { bmkgId },
+      });
+      if (existingAlert) {
+        this.logger.log(
+          `Earthquake alert already processed (bmkgId: ${bmkgId.substring(0, 8)}). Skipping.`,
+        );
+        return { success: true, message: 'Duplicate alert' };
+      }
+    }
+
+    // Parse values
+    const magnitude = parseFloat(rawGempa.Magnitude);
+    const depth = parseInt(rawGempa.Kedalaman.replace(/[^0-9]/g, ''), 10);
+    const [latStr, lonStr] = rawGempa.Coordinates.split(',');
+    const latitude = parseFloat(latStr);
+    const longitude = parseFloat(lonStr);
+    const date = new Date(rawGempa.DateTime);
+    const wilayah = rawGempa.Wilayah;
+    const potensi = rawGempa.Potensi;
+
+    const epicenter: GeoJSON.Point = {
+      type: 'Point',
+      coordinates: [longitude, latitude],
+    };
+
+    // Filter thresholds: Magnitude >= 5.0 and Depth < 100 km (tsunami danger limit)
+    // For simulation, we always pass threshold check
+    const passesThreshold = isSimulation || (magnitude >= 5.0 && depth < 100);
+
+    const newAlert = this.alertRepository.create({
+      bmkgId,
+      magnitude,
+      depth: `${depth} km`,
+      wilayah,
+      potensi,
+      epicenter,
+      isBroadcasted: passesThreshold,
+      alertTime: date,
+    });
+
+    await this.alertRepository.save(newAlert);
+
+    let impactedCount = 0;
+    let radiusInKm = 0;
+
+    if (passesThreshold) {
+      this.logger.warn(
+        `[EWS TRIGGERED${isSimulation ? ' - SIMULATION' : ''}] New Earthquake Alert: M ${magnitude} Mw, Depth ${depth} km. Epicenter: ${wilayah}.`,
+      );
+
+      // Determine dynamic radius
+      radiusInKm = this.calculateDynamicRadius(magnitude, depth, potensi);
+      this.logger.log(
+        `Calculated dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
+      );
+
+      // Query impacted devices
+      const impactedDevices = await this.findDevicesInImpactZone(
+        longitude,
+        latitude,
+        radiusInKm,
+      );
+
+      impactedCount = impactedDevices.length;
+
+      this.logger.warn(
+        `Found ${impactedDevices.length} devices in the impact zone for ${isSimulation ? 'simulated' : 'real'} earthquake.`,
+      );
+
+      if (impactedDevices.length > 0) {
+        const isTsunami =
+          potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
+        const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
+
+        const prefix = isSimulation ? '[SIMULASI] ' : '';
+        const title = isTsunami
+          ? `🚨 ${prefix}PERINGATAN TSUNAMI (SUAR)`
+          : `⚠️ ${prefix}PERINGATAN GEMPA BUMI (SUAR)`;
+        const body = `${prefix}Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: ${statusTindakan}.`;
+
+        const tokens = impactedDevices.map((d) => d.fcmToken);
+
+        const payloadData = {
+          type: 'EARTHQUAKE_ALERT',
+          magnitude: magnitude.toString(),
+          depth: `${depth} km`,
+          wilayah: isSimulation ? `${wilayah} (Simulasi)` : wilayah,
+          potensi,
+          statusTindakan,
+          coordinates: `${latitude},${longitude}`,
+          dateTime: date.toISOString(),
+          isSimulation: isSimulation ? 'true' : 'false',
+        };
+
+        // Kirim notifikasi nyata ke Firebase Admin SDK
+        await this.firebaseService.sendPushNotification(
+          tokens,
+          title,
+          body,
+          payloadData,
+        );
+      }
+    } else {
+      this.logger.log(
+        `[EWS IGNORED] Earthquake below threshold: M ${magnitude} Mw, Depth ${depth} km. Saved to logs.`,
+      );
+    }
+
+    return {
+      success: true,
+      alertId: newAlert.id,
+      impactedCount,
+      radiusInKm,
+    };
   }
 
   private generateUniqueBmkgId(
@@ -200,16 +241,31 @@ export class AlertsService implements OnModuleInit {
     return crypto.createHash('sha256').update(rawString).digest('hex');
   }
 
-  private calculateDynamicRadius(magnitude: number, potensi: string): number {
+  private calculateDynamicRadius(
+    magnitude: number,
+    depth: number,
+    potensi: string,
+  ): number {
     const isTsunami =
       potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
+
+    let baseRadius = 50;
     if (isTsunami) {
-      return 250; // Tsunami potential or large earthquakes impact up to 250 km radius (especially coastlines)
+      baseRadius = 250;
+    } else if (magnitude >= 6.0) {
+      baseRadius = 150;
+    } else if (magnitude >= 5.5) {
+      baseRadius = 100;
     }
 
-    if (magnitude >= 6.0) return 150;
-    if (magnitude >= 5.5) return 100;
-    return 50; // For magnitude 5.0 - 5.4
+    // Koreksi kedalaman (Depth Attenuation Factor):
+    // Semakin dalam pusat gempa, semakin kecil jangkauan rambat energi getaran di permukaan.
+    if (depth >= 70) {
+      return Math.round(baseRadius * 0.5); // Reduksi 50% untuk gempa dalam (>= 70 km)
+    } else if (depth >= 30) {
+      return Math.round(baseRadius * 0.75); // Reduksi 25% untuk gempa menengah (30 - 69 km)
+    }
+    return baseRadius; // Gempa dangkal (<30 km) memiliki radius dampak maksimal
   }
 
   private async findDevicesInImpactZone(

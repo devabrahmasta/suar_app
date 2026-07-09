@@ -12,6 +12,7 @@ import '../../features/user/presentation/profile_screen.dart';
 import 'shell_screen.dart';
 import '../../features/ews_ai/presentation/home_screen.dart';
 import '../../features/ews_ai/presentation/ews_testing_screen.dart';
+import '../../features/ews_ai/presentation/ews_interactive_simulator_screen.dart';
 import '../../features/map_evacuation/presentation/risk_map_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -56,6 +57,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/testing',
         name: 'testing',
         builder: (context, state) => const EwsTestingScreen(),
+      ),
+
+      GoRoute(
+        path: '/interactive-simulator',
+        name: 'interactive_simulator',
+        builder: (context, state) => const EwsInteractiveSimulatorScreen(),
       ),
 
       GoRoute(

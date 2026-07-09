@@ -361,6 +361,19 @@ class EwsTestingScreen extends ConsumerWidget {
               }
             },
           ),
+          const SizedBox(height: 16),
+
+          _ScenarioCard(
+            title: 'Skenario 7: Simulasi Gempa Peta Interaktif',
+            description:
+                'Buka panel simulator gempa interaktif berbasis peta. Anda bisa memilih episenter di peta dan melihat radius dampak & jarak dinamis. (Rekomendasi untuk live demo)',
+            icon: Icons.map,
+            color: Colors.blueAccent,
+            onTap: () {
+              context.pop();
+              context.push('/interactive-simulator');
+            },
+          ),
         ],
       ),
     );
