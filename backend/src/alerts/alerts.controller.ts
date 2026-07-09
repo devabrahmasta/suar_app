@@ -1,4 +1,4 @@
-import { Controller, Post, Get } from '@nestjs/common';
+import { Controller, Post, Get, Body } from '@nestjs/common';
 import { AlertsService } from './alerts.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
@@ -18,6 +18,28 @@ export class AlertsController {
   async triggerPoll() {
     await this.alertsService.pollBmkg();
     return { success: true, message: 'BMKG Poll triggered manually' };
+  }
+
+  @Post('simulate')
+  @ApiOperation({
+    summary: 'Simulate a custom earthquake for EWS dynamic geofencing tests',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Custom simulated earthquake processed successfully.',
+  })
+  async simulateAlert(
+    @Body()
+    body: {
+      magnitude: number;
+      depth: string;
+      latitude: number;
+      longitude: number;
+      potensi: string;
+      wilayah: string;
+    },
+  ) {
+    return this.alertsService.simulateAlert(body);
   }
 
   @Get('latest')
