@@ -9,6 +9,9 @@ import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart'
 import '../../../core/theme/app_colors.dart';
 import '../domain/gempa_model.dart';
 import 'ews_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:suar_app/core/services/suar_backend_service.dart';
+import 'package:suar_app/features/user/presentation/user_notifier.dart';
 
 class EwsTestingScreen extends ConsumerWidget {
   const EwsTestingScreen({super.key});
@@ -244,6 +247,118 @@ class EwsTestingScreen extends ConsumerWidget {
                   payload: 'MOCK_TSUNAMI',
                 );
               });
+            },
+          ),
+          const SizedBox(height: 24),
+          const Divider(),
+          const SizedBox(height: 16),
+          const Text(
+            'Pengujian Integrasi Cloud Backend (NestJS)',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Gunakan opsi di bawah ini untuk berinteraksi langsung dengan API backend yang telah dideploy di Hugging Face Spaces.',
+            style: TextStyle(color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 24),
+
+          _ScenarioCard(
+            title: 'Skenario 5: Trigger Polling Real-Time',
+            description:
+                'Memaksa backend NestJS untuk melakukan polling ke BMKG secara instan via API POST /alerts/trigger-poll. (Ekspektasi: Koneksi sukses & database terupdate)',
+            icon: Icons.sync,
+            color: Colors.teal,
+            onTap: () async {
+              final messenger = ScaffoldMessenger.of(context);
+              final dio = ref.read(dioProvider);
+              final baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';
+
+              messenger.showSnackBar(
+                const SnackBar(
+                  content: Text('Mengirim sinyal pemicu polling ke backend...'),
+                  backgroundColor: AppColors.info,
+                ),
+              );
+              context.pop();
+
+              try {
+                final response = await dio.post('$baseUrl/alerts/trigger-poll');
+                if (response.statusCode == 201 || response.statusCode == 200) {
+                  messenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Berhasil memicu polling BMKG di backend!'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                } else {
+                  throw Exception('Respons status: ${response.statusCode}');
+                }
+              } catch (e) {
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Gagal memicu polling backend: $e'),
+                    backgroundColor: AppColors.danger,
+                  ),
+                );
+              }
+            },
+          ),
+          const SizedBox(height: 16),
+
+          _ScenarioCard(
+            title: 'Skenario 6: Paksa Kirim GPS ke Backend',
+            description:
+                'Mengambil GPS HP dan langsung mengirimkannya ke PostgreSQL/PostGIS backend, melewati filter optimasi jarak. (Ekspektasi: Koordinat masuk ke database Supabase seketika)',
+            icon: Icons.my_location,
+            color: Colors.deepPurple,
+            onTap: () async {
+              final messenger = ScaffoldMessenger.of(context);
+              final user = ref.read(userProvider);
+              final locService = ref.read(locationServiceProvider);
+              final backendService = ref.read(suarBackendServiceProvider);
+
+              if (user == null) {
+                messenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Gagal: Profil pengguna lokal kosong.'),
+                    backgroundColor: AppColors.danger,
+                  ),
+                );
+                context.pop();
+                return;
+              }
+
+              messenger.showSnackBar(
+                const SnackBar(
+                  content: Text('Membaca GPS dan memaksakan pengiriman ke backend...'),
+                  backgroundColor: AppColors.info,
+                ),
+              );
+              context.pop();
+
+              try {
+                final position = await locService.getCurrentPosition();
+                await backendService.updateLocation(
+                  deviceId: user.deviceId,
+                  latitude: position.latitude,
+                  longitude: position.longitude,
+                );
+
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Sukses sinkronisasi koordinat: (${position.latitude}, ${position.longitude})'),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+              } catch (e) {
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Gagal sinkronisasi GPS ke backend: $e'),
+                    backgroundColor: AppColors.danger,
+                  ),
+                );
+              }
             },
           ),
         ],
