@@ -11,6 +11,7 @@ import '../domain/gempa_model.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../user/presentation/user_notifier.dart';
 import '../../../core/services/notification_service.dart';
+import '../../../core/services/suar_backend_service.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
@@ -75,6 +76,14 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         currentLng = position.longitude;
         currentSpeed = position.speed;
         hasLocation = true;
+
+        // Kirim pembaruan lokasi secara teroptimasi ke backend
+        final backendService = ref.read(suarBackendServiceProvider);
+        await backendService.updateLocationWithOptimization(
+          deviceId: user.deviceId,
+          latitude: currentLat,
+          longitude: currentLng,
+        );
       } catch (e) {
         if (user.homeLatitude != null && user.homeLongitude != null) {
           currentLat = user.homeLatitude!;

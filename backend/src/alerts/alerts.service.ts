@@ -212,4 +212,11 @@ export class AlertsService implements OnModuleInit {
       )
       .getMany();
   }
+
+  async getLatestAlert(): Promise<EarthquakeAlert | null> {
+    return this.alertRepository.findOne({
+      where: {},
+      order: { alertTime: 'DESC' },
+    });
+  }
 }

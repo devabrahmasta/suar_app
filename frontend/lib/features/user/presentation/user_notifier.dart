@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../../main.dart';
 import '../domain/user_model.dart';
 import '../data/user_local_service.dart';
+import '../../../core/services/suar_backend_service.dart';
 
 class UserNotifier extends Notifier<UserModel?> {
   @override
@@ -12,7 +13,25 @@ class UserNotifier extends Notifier<UserModel?> {
     final String? userJson = prefs.getString('user_cache');
 
     if (userJson != null) {
-      return UserModel.fromMap(jsonDecode(userJson));
+      final user = UserModel.fromMap(jsonDecode(userJson));
+      
+      // Sinkronisasi status perangkat ke backend secara asynchronous di background
+      Future.microtask(() async {
+        try {
+          final backendService = ref.read(suarBackendServiceProvider);
+          await backendService.registerDevice(
+            deviceId: user.deviceId,
+            fcmToken: 'mock_token_${user.deviceId.substring(0, 8)}',
+            homeType: user.homeType,
+            homeLatitude: user.homeLatitude,
+            homeLongitude: user.homeLongitude,
+          );
+        } catch (e) {
+          // Gagal koneksi backend diabaikan agar offline-first tetap berjalan mulus
+        }
+      });
+      
+      return user;
     }
     return null;
   }
@@ -34,6 +53,20 @@ class UserNotifier extends Notifier<UserModel?> {
 
     await UserLocalService.saveUser(user);
     state = user;
+
+    // Registrasi perangkat baru ke cloud backend
+    try {
+      final backendService = ref.read(suarBackendServiceProvider);
+      await backendService.registerDevice(
+        deviceId: generatedDeviceId,
+        fcmToken: 'mock_token_${generatedDeviceId.substring(0, 8)}',
+        homeType: homeType,
+        homeLatitude: homeLat,
+        homeLongitude: homeLng,
+      );
+    } catch (e) {
+      // Gagal koneksi backend diabaikan agar offline-first tetap berjalan mulus
+    }
   }
 }
 

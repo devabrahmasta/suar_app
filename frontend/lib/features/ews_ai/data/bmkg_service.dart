@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../domain/gempa_model.dart';
 
 class BmkgService {
@@ -7,6 +9,19 @@ class BmkgService {
   BmkgService(this._dio);
 
   Future<GempaModel> fetchLatestEarthquake() async {
+    // 1. Coba ambil dari NestJS backend kita terlebih dahulu (data ter-filter dan ter-evaluasi)
+    try {
+      final String baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';
+      final response = await _dio.get('$baseUrl/alerts/latest');
+      if (response.statusCode == 200 && response.data != null) {
+        debugPrint('Backend: Berhasil mengambil data gempa terproses dari cloud.');
+        return GempaModel.fromBackendJson(response.data);
+      }
+    } catch (e) {
+      debugPrint('Backend: Gagal mengambil data /alerts/latest ($e). Melakukan fallback langsung ke BMKG...');
+    }
+
+    // 2. Fallback langsung ke API BMKG jika backend down/offline
     try {
       const url = 'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json';
 
