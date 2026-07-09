@@ -23,6 +23,7 @@ class SuarBackendService {
     double? homeLongitude,
   }) async {
     try {
+      debugPrint('SuarBackendService: Mengirim permintaan registerDevice untuk perangkat: $deviceId');
       final response = await _dio.post(
         '$_baseUrl/users/register-device',
         data: {
@@ -33,12 +34,12 @@ class SuarBackendService {
           'homeLongitude': homeLongitude,
         },
       );
+      debugPrint('SuarBackendService: Respons registerDevice status: ${response.statusCode}, data: ${response.data}');
       if (response.statusCode != 201 && response.statusCode != 200) {
         throw Exception('Gagal registrasi perangkat: ${response.statusCode}');
       }
-      debugPrint('Backend: Perangkat $deviceId berhasil didaftarkan.');
     } catch (e) {
-      debugPrint('Backend Error registerDevice: $e');
+      debugPrint('SuarBackendService Error registerDevice: $e');
       rethrow;
     }
   }
@@ -49,6 +50,7 @@ class SuarBackendService {
     required double longitude,
   }) async {
     try {
+      debugPrint('SuarBackendService: Mengirim permintaan updateLocation untuk perangkat: $deviceId ke koordinat: ($latitude, $longitude)');
       final response = await _dio.post(
         '$_baseUrl/users/update-location',
         data: {
@@ -57,12 +59,12 @@ class SuarBackendService {
           'longitude': longitude,
         },
       );
+      debugPrint('SuarBackendService: Respons updateLocation status: ${response.statusCode}');
       if (response.statusCode != 201 && response.statusCode != 200) {
         throw Exception('Gagal memperbarui lokasi: ${response.statusCode}');
       }
-      debugPrint('Backend: Lokasi perangkat $deviceId diperbarui ke ($latitude, $longitude).');
     } catch (e) {
-      debugPrint('Backend Error updateLocation: $e');
+      debugPrint('SuarBackendService Error updateLocation: $e');
       rethrow;
     }
   }
@@ -74,6 +76,7 @@ class SuarBackendService {
     required double latitude,
     required double longitude,
   }) async {
+    debugPrint('SuarBackendService: Memulai pengecekan pembaruan lokasi teroptimasi.');
     final lastLat = _prefs.getDouble('last_sent_latitude');
     final lastLng = _prefs.getDouble('last_sent_longitude');
     final lastTimeString = _prefs.getString('last_sent_time');
@@ -81,6 +84,7 @@ class SuarBackendService {
     bool shouldUpdate = false;
 
     if (lastLat == null || lastLng == null || lastTimeString == null) {
+      debugPrint('SuarBackendService: Cache lokasi kosong. Perlu dikirim.');
       shouldUpdate = true;
     } else {
       // Hitung pergeseran jarak spasial menggunakan geolocator
@@ -95,11 +99,17 @@ class SuarBackendService {
       final lastTime = DateTime.tryParse(lastTimeString) ?? DateTime.fromMillisecondsSinceEpoch(0);
       final minutesElapsed = DateTime.now().difference(lastTime).inMinutes;
 
+      debugPrint('SuarBackendService: Info Optimasi:');
+      debugPrint('  - Jarak Pergeseran: ${distanceMeters.toStringAsFixed(2)}m (Threshold: 1000m)');
+      debugPrint('  - Selisih Waktu: ${minutesElapsed}menit (Threshold: 30menit)');
+
       // Threshold: Bergerak >= 1000m (1 km) ATAU Waktu >= 30 menit
       if (distanceMeters >= 1000 || minutesElapsed >= 30) {
         shouldUpdate = true;
       }
     }
+
+    debugPrint('SuarBackendService: Keputusan Pembaruan -> shouldUpdate = $shouldUpdate');
 
     if (shouldUpdate) {
       await updateLocation(
@@ -113,9 +123,9 @@ class SuarBackendService {
       await _prefs.setDouble('last_sent_longitude', longitude);
       await _prefs.setString('last_sent_time', DateTime.now().toIso8601String());
 
-      debugPrint('Backend: Sinkronisasi lokasi teroptimasi berhasil terkirim.');
+      debugPrint('SuarBackendService: Cache koordinat dan waktu terbaru diperbarui.');
     } else {
-      debugPrint('Backend: Sinkronisasi lokasi dilewati (jarak < 1km & jeda < 30 mnt).');
+      debugPrint('SuarBackendService: Pengiriman dilewati untuk efisiensi daya & jaringan.');
     }
   }
 }
@@ -126,3 +136,4 @@ final suarBackendServiceProvider = Provider<SuarBackendService>((ref) {
     ref.watch(sharedPreferencesProvider),
   );
 });
+

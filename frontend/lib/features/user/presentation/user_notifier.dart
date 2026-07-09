@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../main.dart';
@@ -14,8 +15,10 @@ class UserNotifier extends Notifier<UserModel?> {
 
     if (userJson != null) {
       final user = UserModel.fromMap(jsonDecode(userJson));
+      debugPrint('UserNotifier: Profil pengguna ditemukan di cache: ${user.fullName} (${user.deviceId})');
       
       // Sinkronisasi status perangkat ke backend secara asynchronous di background
+      debugPrint('UserNotifier: Memulai sinkronisasi latar belakang ke cloud backend...');
       Future.microtask(() async {
         try {
           final backendService = ref.read(suarBackendServiceProvider);
@@ -26,13 +29,15 @@ class UserNotifier extends Notifier<UserModel?> {
             homeLatitude: user.homeLatitude,
             homeLongitude: user.homeLongitude,
           );
+          debugPrint('UserNotifier: Sinkronisasi latar belakang ke backend berhasil.');
         } catch (e) {
-          // Gagal koneksi backend diabaikan agar offline-first tetap berjalan mulus
+          debugPrint('UserNotifier: Sinkronisasi latar belakang gagal (offline mode tetap berjalan): $e');
         }
       });
       
       return user;
     }
+    debugPrint('UserNotifier: Tidak ada profil pengguna ter-cache.');
     return null;
   }
 
@@ -42,6 +47,7 @@ class UserNotifier extends Notifier<UserModel?> {
     required double? homeLat,
     required double? homeLng,
   }) async {
+    debugPrint('UserNotifier: Membuat profil pengguna baru: $name');
     final String generatedDeviceId = const Uuid().v4();
     final user = UserModel(
       fullName: name,
@@ -55,6 +61,7 @@ class UserNotifier extends Notifier<UserModel?> {
     state = user;
 
     // Registrasi perangkat baru ke cloud backend
+    debugPrint('UserNotifier: Mendaftarkan perangkat baru $generatedDeviceId ke cloud backend...');
     try {
       final backendService = ref.read(suarBackendServiceProvider);
       await backendService.registerDevice(
@@ -64,8 +71,9 @@ class UserNotifier extends Notifier<UserModel?> {
         homeLatitude: homeLat,
         homeLongitude: homeLng,
       );
+      debugPrint('UserNotifier: Pendaftaran perangkat baru ke backend sukses.');
     } catch (e) {
-      // Gagal koneksi backend diabaikan agar offline-first tetap berjalan mulus
+      debugPrint('UserNotifier: Pendaftaran perangkat baru ke backend gagal (offline mode tetap berjalan): $e');
     }
   }
 }
