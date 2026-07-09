@@ -271,6 +271,9 @@ class EwsTestingScreen extends ConsumerWidget {
             color: Colors.teal,
             onTap: () async {
               final messenger = ScaffoldMessenger.of(context);
+              final dio = ref.read(dioProvider);
+              final baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';
+
               messenger.showSnackBar(
                 const SnackBar(
                   content: Text('Mengirim sinyal pemicu polling ke backend...'),
@@ -280,8 +283,6 @@ class EwsTestingScreen extends ConsumerWidget {
               context.pop();
 
               try {
-                final dio = ref.read(dioProvider);
-                final baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';
                 final response = await dio.post('$baseUrl/alerts/trigger-poll');
                 if (response.statusCode == 201 || response.statusCode == 200) {
                   messenger.showSnackBar(
@@ -314,6 +315,9 @@ class EwsTestingScreen extends ConsumerWidget {
             onTap: () async {
               final messenger = ScaffoldMessenger.of(context);
               final user = ref.read(userProvider);
+              final locService = ref.read(locationServiceProvider);
+              final backendService = ref.read(suarBackendServiceProvider);
+
               if (user == null) {
                 messenger.showSnackBar(
                   const SnackBar(
@@ -334,10 +338,7 @@ class EwsTestingScreen extends ConsumerWidget {
               context.pop();
 
               try {
-                final locService = ref.read(locationServiceProvider);
                 final position = await locService.getCurrentPosition();
-
-                final backendService = ref.read(suarBackendServiceProvider);
                 await backendService.updateLocation(
                   deviceId: user.deviceId,
                   latitude: position.latitude,
