@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "286527451589",
+    "project_id": "suar-ba315",
+    "storage_bucket": "suar-ba315.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286527451589:android:0d4bbd729e0a06370f5bac",
+        "android_client_info": {
+          "package_name": "com.example.suar_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACF_-zO7VqT4n4ymFshENTuyd6BUPn2Hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

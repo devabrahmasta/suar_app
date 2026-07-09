@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AlertsModule } from './alerts/alerts.module';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AlertsModule } from './alerts/alerts.module';
     ScheduleModule.forRoot(),
     UsersModule,
     AlertsModule,
+    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

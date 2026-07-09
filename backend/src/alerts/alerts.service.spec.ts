@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { AlertsService } from './alerts.service';
 import { EarthquakeAlert } from './entities/earthquake-alert.entity';
 import { UserDevice } from '../users/entities/user-device.entity';
+import { FirebaseService } from '../firebase/firebase.service';
 
 describe('AlertsService', () => {
   let service: AlertsService;
@@ -50,6 +51,12 @@ describe('AlertsService', () => {
         {
           provide: getRepositoryToken(UserDevice),
           useValue: mockDeviceRepository,
+        },
+        {
+          provide: FirebaseService,
+          useValue: {
+            sendPushNotification: jest.fn().mockResolvedValue(undefined),
+          },
         },
       ],
     }).compile();

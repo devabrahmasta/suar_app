@@ -6,8 +6,32 @@ import '../../../main.dart';
 import '../domain/user_model.dart';
 import '../data/user_local_service.dart';
 import '../../../core/services/suar_backend_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class UserNotifier extends Notifier<UserModel?> {
+  Future<String> _getRealOrMockFcmToken(String deviceId) async {
+    if (isFirebaseInitialized) {
+      try {
+        final messaging = FirebaseMessaging.instance;
+        await messaging.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+        final token = await messaging.getToken();
+        if (token != null) {
+          debugPrint('UserNotifier: Berhasil mendapatkan token FCM asli: $token');
+          return token;
+        }
+      } catch (e) {
+        debugPrint('UserNotifier: Gagal mendapatkan token asli ($e). Fallback ke mock.');
+      }
+    }
+    final fallbackToken = 'mock_token_${deviceId.substring(0, 8)}';
+    debugPrint('UserNotifier: Menggunakan fallback token FCM: $fallbackToken');
+    return fallbackToken;
+  }
+
   @override
   UserModel? build() {
     final prefs = ref.watch(sharedPreferencesProvider);
@@ -21,10 +45,11 @@ class UserNotifier extends Notifier<UserModel?> {
       debugPrint('UserNotifier: Memulai sinkronisasi latar belakang ke cloud backend...');
       Future.microtask(() async {
         try {
+          final fcmToken = await _getRealOrMockFcmToken(user.deviceId);
           final backendService = ref.read(suarBackendServiceProvider);
           await backendService.registerDevice(
             deviceId: user.deviceId,
-            fcmToken: 'mock_token_${user.deviceId.substring(0, 8)}',
+            fcmToken: fcmToken,
             homeType: user.homeType,
             homeLatitude: user.homeLatitude,
             homeLongitude: user.homeLongitude,
@@ -63,10 +88,11 @@ class UserNotifier extends Notifier<UserModel?> {
     // Registrasi perangkat baru ke cloud backend
     debugPrint('UserNotifier: Mendaftarkan perangkat baru $generatedDeviceId ke cloud backend...');
     try {
+      final fcmToken = await _getRealOrMockFcmToken(generatedDeviceId);
       final backendService = ref.read(suarBackendServiceProvider);
       await backendService.registerDevice(
         deviceId: generatedDeviceId,
-        fcmToken: 'mock_token_${generatedDeviceId.substring(0, 8)}',
+        fcmToken: fcmToken,
         homeType: homeType,
         homeLatitude: homeLat,
         homeLongitude: homeLng,

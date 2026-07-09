@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Interval } from '@nestjs/schedule';
 import { EarthquakeAlert } from './entities/earthquake-alert.entity';
 import { UserDevice } from '../users/entities/user-device.entity';
+import { FirebaseService } from '../firebase/firebase.service';
 import * as GeoJSON from 'geojson';
 import * as crypto from 'crypto';
 
@@ -35,6 +36,7 @@ export class AlertsService implements OnModuleInit {
     private readonly alertRepository: Repository<EarthquakeAlert>,
     @InjectRepository(UserDevice)
     private readonly deviceRepository: Repository<UserDevice>,
+    private readonly firebaseService: FirebaseService,
   ) {}
 
   onModuleInit() {
@@ -145,14 +147,35 @@ export class AlertsService implements OnModuleInit {
           `Found ${impactedDevices.length} devices in the impact zone.`,
         );
 
-        // Broadcast simulation
-        for (const device of impactedDevices) {
+        if (impactedDevices.length > 0) {
           const isTsunami =
             potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
           const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
 
-          this.logger.warn(
-            `[FCM BROADCAST] Sending Alert to Device ${device.deviceId} (Token: ${device.fcmToken}) - Action Status: ${statusTindakan} | MMI: ${dirasakan}`,
+          const title = isTsunami
+            ? '🚨 PERINGATAN TSUNAMI (SUAR)'
+            : '⚠️ PERINGATAN GEMPA BUMI (SUAR)';
+          const body = `Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: ${statusTindakan}.`;
+
+          const tokens = impactedDevices.map((d) => d.fcmToken);
+
+          const payloadData = {
+            type: 'EARTHQUAKE_ALERT',
+            magnitude: magnitude.toString(),
+            depth: `${depth} km`,
+            wilayah,
+            potensi,
+            statusTindakan,
+            coordinates: `${latitude},${longitude}`,
+            dateTime: date.toISOString(),
+          };
+
+          // Kirim notifikasi nyata ke Firebase Admin SDK
+          await this.firebaseService.sendPushNotification(
+            tokens,
+            title,
+            body,
+            payloadData,
           );
         }
       } else {
