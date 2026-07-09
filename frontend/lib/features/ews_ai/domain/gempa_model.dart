@@ -41,4 +41,41 @@ class GempaModel {
           : '',
     );
   }
+
+  factory GempaModel.fromBackendJson(Map<String, dynamic> json) {
+    final alertTimeStr = json['alertTime'] ?? '';
+    DateTime? alertDateTime;
+    try {
+      alertDateTime = DateTime.tryParse(alertTimeStr);
+    } catch (_) {}
+
+    String tanggal = '';
+    String jam = '';
+    if (alertDateTime != null) {
+      tanggal = "${alertDateTime.day}-${alertDateTime.month}-${alertDateTime.year}";
+      jam = "${alertDateTime.hour}:${alertDateTime.minute}:${alertDateTime.second} WIB";
+    }
+
+    final epicenter = json['epicenter'] as Map<String, dynamic>?;
+    final coords = epicenter?['coordinates'] as List<dynamic>?;
+    String coordinatesStr = '0.0,0.0';
+    if (coords != null && coords.length >= 2) {
+      final double lng = (coords[0] as num).toDouble();
+      final double lat = (coords[1] as num).toDouble();
+      coordinatesStr = '$lat,$lng';
+    }
+
+    return GempaModel(
+      tanggal: tanggal,
+      jam: jam,
+      dateTime: alertTimeStr,
+      coordinates: coordinatesStr,
+      magnitude: (json['magnitude'] ?? 0.0).toString(),
+      kedalaman: json['depth'] ?? '',
+      wilayah: json['wilayah'] ?? '',
+      potensi: json['potensi'] ?? '',
+      dirasakan: 'Tidak ada data',
+      shakemapUrl: '',
+    );
+  }
 }
