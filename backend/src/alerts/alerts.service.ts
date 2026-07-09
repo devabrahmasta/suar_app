@@ -168,7 +168,7 @@ export class AlertsService implements OnModuleInit {
       );
 
       // Determine dynamic radius
-      radiusInKm = this.calculateDynamicRadius(magnitude, potensi);
+      radiusInKm = this.calculateDynamicRadius(magnitude, depth, potensi);
       this.logger.log(
         `Calculated dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
       );
@@ -241,16 +241,31 @@ export class AlertsService implements OnModuleInit {
     return crypto.createHash('sha256').update(rawString).digest('hex');
   }
 
-  private calculateDynamicRadius(magnitude: number, potensi: string): number {
+  private calculateDynamicRadius(
+    magnitude: number,
+    depth: number,
+    potensi: string,
+  ): number {
     const isTsunami =
       potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
+
+    let baseRadius = 50;
     if (isTsunami) {
-      return 250; // Tsunami potential or large earthquakes impact up to 250 km radius (especially coastlines)
+      baseRadius = 250;
+    } else if (magnitude >= 6.0) {
+      baseRadius = 150;
+    } else if (magnitude >= 5.5) {
+      baseRadius = 100;
     }
 
-    if (magnitude >= 6.0) return 150;
-    if (magnitude >= 5.5) return 100;
-    return 50; // For magnitude 5.0 - 5.4
+    // Koreksi kedalaman (Depth Attenuation Factor):
+    // Semakin dalam pusat gempa, semakin kecil jangkauan rambat energi getaran di permukaan.
+    if (depth >= 70) {
+      return Math.round(baseRadius * 0.5); // Reduksi 50% untuk gempa dalam (>= 70 km)
+    } else if (depth >= 30) {
+      return Math.round(baseRadius * 0.75); // Reduksi 25% untuk gempa menengah (30 - 69 km)
+    }
+    return baseRadius; // Gempa dangkal (<30 km) memiliki radius dampak maksimal
   }
 
   private async findDevicesInImpactZone(

@@ -72,10 +72,25 @@ class _EwsInteractiveSimulatorScreenState
   double _calculateLocalRadiusInMeters() {
     final isTsunami =
         _potensi.toLowerCase().contains('tsunami') || _magnitude >= 6.5;
-    if (isTsunami) return 250000.0; // 250 KM
-    if (_magnitude >= 6.0) return 150000.0; // 150 KM
-    if (_magnitude >= 5.5) return 100000.0; // 100 KM
-    return 50000.0; // 50 KM
+    
+    double baseRadius = 50000.0;
+    if (isTsunami) {
+      baseRadius = 250000.0;
+    } else if (_magnitude >= 6.0) {
+      baseRadius = 150000.0;
+    } else if (_magnitude >= 5.5) {
+      baseRadius = 100000.0;
+    }
+
+    // Parsing kedalaman (menghapus " km" jika ada)
+    final depthVal = double.tryParse(_depth.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 10.0;
+
+    if (depthVal >= 70.0) {
+      return baseRadius * 0.5; // Reduksi 50% untuk gempa dalam (>= 70 km)
+    } else if (depthVal >= 30.0) {
+      return baseRadius * 0.75; // Reduksi 25% untuk gempa menengah (30 - 69 km)
+    }
+    return baseRadius; // Gempa dangkal (<30 km) memiliki radius dampak maksimal
   }
 
   double _calculateDistanceInKm() {
