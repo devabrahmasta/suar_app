@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AlertsModule } from './alerts/alerts.module';
+import { SheltersModule } from './shelters/shelters.module';
 import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
@@ -13,6 +15,7 @@ import { FirebaseModule } from './firebase/firebase.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -30,6 +33,7 @@ import { FirebaseModule } from './firebase/firebase.module';
     ScheduleModule.forRoot(),
     UsersModule,
     AlertsModule,
+    SheltersModule,
     FirebaseModule,
   ],
   controllers: [AppController],
