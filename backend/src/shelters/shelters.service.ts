@@ -5,7 +5,7 @@ import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Shelter } from './entities/shelter.entity';
 import * as GeoJSON from 'geojson';
 
-export interface CreateShelterDto {
+export class CreateShelterDto {
   name: string;
   latitude: number;
   longitude: number;
