@@ -1,7 +1,8 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Interval } from '@nestjs/schedule';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EarthquakeAlert } from './entities/earthquake-alert.entity';
 import { UserDevice } from '../users/entities/user-device.entity';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -37,6 +38,7 @@ export class AlertsService implements OnModuleInit {
     @InjectRepository(UserDevice)
     private readonly deviceRepository: Repository<UserDevice>,
     private readonly firebaseService: FirebaseService,
+    @Optional() private readonly eventEmitter?: EventEmitter2,
   ) {}
 
   onModuleInit() {
@@ -158,6 +160,17 @@ export class AlertsService implements OnModuleInit {
     });
 
     await this.alertRepository.save(newAlert);
+
+    if (this.eventEmitter) {
+      this.eventEmitter.emit('earthquake.alertCreated', {
+        alertId: newAlert.id,
+        magnitude: newAlert.magnitude,
+        depth: newAlert.depth,
+        wilayah: newAlert.wilayah,
+        potensi: newAlert.potensi,
+        isBroadcasted: newAlert.isBroadcasted,
+      });
+    }
 
     let impactedCount = 0;
     let radiusInKm = 0;

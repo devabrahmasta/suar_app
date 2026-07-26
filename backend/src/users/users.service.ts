@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UserDevice } from './entities/user-device.entity';
 import * as GeoJSON from 'geojson';
 
@@ -9,6 +10,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UserDevice)
     private readonly userDeviceRepository: Repository<UserDevice>,
+    @Optional() private readonly eventEmitter?: EventEmitter2,
   ) {}
 
   async registerDevice(
@@ -69,6 +71,17 @@ export class UsersService {
     };
     device.lastActive = new Date();
 
-    return this.userDeviceRepository.save(device);
+    const saved = await this.userDeviceRepository.save(device);
+
+    if (this.eventEmitter) {
+      this.eventEmitter.emit('user.locationUpdated', {
+        deviceId: saved.deviceId,
+        latitude,
+        longitude,
+        lastActive: saved.lastActive,
+      });
+    }
+
+    return saved;
   }
 }
