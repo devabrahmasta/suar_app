@@ -191,5 +191,34 @@ describe('AlertsService', () => {
       );
       expect(deviceRepository.createQueryBuilder).not.toHaveBeenCalled();
     });
+
+    it('should handle invalid or missing data from BMKG API gracefully', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({ Infogempa: {} }),
+      });
+
+      await service.pollBmkg();
+
+      expect(alertRepository.findOne).not.toHaveBeenCalled();
+      expect(alertRepository.create).not.toHaveBeenCalled();
+    });
+
+    it('should handle network error during fetch without throwing unhandled exception', async () => {
+      global.fetch = jest.fn().mockRejectedValue(new Error('Network connection timeout'));
+
+      await expect(service.pollBmkg()).resolves.not.toThrow();
+      expect(alertRepository.findOne).not.toHaveBeenCalled();
+    });
+
+    it('should handle HTTP error status from BMKG API gracefully', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: false,
+        status: 503,
+      });
+
+      await expect(service.pollBmkg()).resolves.not.toThrow();
+      expect(alertRepository.findOne).not.toHaveBeenCalled();
+    });
   });
 });
