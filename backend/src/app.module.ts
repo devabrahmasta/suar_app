@@ -19,16 +19,33 @@ import { FirebaseModule } from './firebase/firebase.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST', 'localhost'),
-        port: configService.get<number>('DB_PORT', 5432),
-        username: configService.get<string>('DB_USERNAME', 'suar_user'),
-        password: configService.get<string>('DB_PASSWORD', 'suar_password'),
-        database: configService.get<string>('DB_DATABASE', 'suar_db'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        const dbSsl = configService.get<string>('DB_SSL');
+        const useSsl = dbSsl === 'true' || (databaseUrl && !databaseUrl.includes('localhost'));
+
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            autoLoadEntities: true,
+            synchronize: true,
+            ssl: useSsl ? { rejectUnauthorized: false } : false,
+          };
+        }
+
+        return {
+          type: 'postgres',
+          host: configService.get<string>('DB_HOST', 'localhost'),
+          port: configService.get<number>('DB_PORT', 5432),
+          username: configService.get<string>('DB_USERNAME', 'suar_user'),
+          password: configService.get<string>('DB_PASSWORD', 'suar_password'),
+          database: configService.get<string>('DB_DATABASE', 'suar_db'),
+          autoLoadEntities: true,
+          synchronize: true,
+          ssl: useSsl ? { rejectUnauthorized: false } : false,
+        };
+      },
     }),
     ScheduleModule.forRoot(),
     UsersModule,
