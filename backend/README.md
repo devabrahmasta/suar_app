@@ -43,6 +43,37 @@ Backend ini terintegrasi langsung dengan **Python OpenQuake Hazard Microservice*
 
 ---
 
+## 🗺️ Spesifikasi Kueri Spasial PostGIS (Supabase Integration)
+
+Sistem menggunakan kueri spasial PostGIS `ST_Value` berbasis data raster GeoTIFF yang telah diunggah ke database PostgreSQL (Supabase / Local Docker PostGIS):
+
+### 1. Kueri Lookup Amplifikasi $V_{s30}$ (`users.service.ts`)
+Mengambil nilai kecepatan gelombang geser 30m teratas ($V_{s30}$) berdasarkan lokasi perangkat:
+```sql
+SELECT ST_Value(rast, ST_SetSRID(ST_Point($1, $2), 4326)) AS vs30
+FROM vs30_soil_raster
+WHERE ST_Intersects(rast, ST_SetSRID(ST_Point($1, $2), 4326))
+LIMIT 1;
+```
+* **Parameter:** `$1 = longitude`, `$2 = latitude` (Urutan standar PostGIS).
+* **Fallback:** Mengembalikan `270.0` m/s (SNI 1726:2019 kelas tanah SD) jika koordinat di luar cakupan raster.
+
+### 2. Kueri Lookup Geometri Subduksi Slab2 (`alerts.service.ts`)
+Mengambil kedalaman (*depth*) dan ketidakpastian (*uncertainty*) geometri subduksi Slab2 secara parallel di titik episenter gempa:
+```sql
+SELECT
+  (SELECT ST_Value(rast, ST_SetSRID(ST_Point($1, $2), 4326)) FROM slab2_depth_raster
+   WHERE ST_Intersects(rast, ST_SetSRID(ST_Point($1, $2), 4326))) AS slab_depth,
+  (SELECT ST_Value(rast, ST_SetSRID(ST_Point($1, $2), 4326)) FROM slab2_unc_raster
+   WHERE ST_Intersects(rast, ST_SetSRID(ST_Point($1, $2), 4326))) AS slab_unc;
+```
+* **Penggunaan Klasifikasi Tektonik:** Menghitung selisih kedalaman gempa dengan geometri subduksi (`diff = eqDepth - Math.abs(slabDepth)`), mengklasifikasikan wilayah tektonik berbasis buffer dinamis `slabUnc`:
+  - `diff < -buffer` $\rightarrow$ `'shallow_crustal'` (`BooreEtAl2014`)
+  - `Math.abs(diff) <= buffer` $\rightarrow$ `'subduction_interface'` (`AbrahamsonEtAl2015SInter`)
+  - `diff > buffer` $\rightarrow$ `'subduction_intraslab'` (`AbrahamsonEtAl2015SSlab`)
+
+---
+
 ## 🛠️ Teknologi yang Digunakan
 
 - **Framework:** NestJS 10.x (Node.js 18+)
