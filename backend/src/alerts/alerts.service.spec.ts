@@ -12,6 +12,7 @@ describe('AlertsService', () => {
   let service: AlertsService;
   let alertRepository: Repository<EarthquakeAlert>;
   let deviceRepository: Repository<UserDevice>;
+  let firebaseService: FirebaseService;
 
   const mockQueryBuilder = {
     where: jest.fn().mockReturnThis(),
@@ -27,9 +28,9 @@ describe('AlertsService', () => {
 
   const mockDeviceRepository = {
     createQueryBuilder: jest.fn(() => mockQueryBuilder),
+    query: jest.fn().mockResolvedValue([{ slab_depth: 35.0, slab_unc: 15.0 }]),
   };
 
-  // Mock global fetch
   let originalFetch: typeof global.fetch;
 
   beforeAll(() => {
@@ -68,6 +69,7 @@ describe('AlertsService', () => {
     deviceRepository = module.get<Repository<UserDevice>>(
       getRepositoryToken(UserDevice),
     );
+    firebaseService = module.get<FirebaseService>(FirebaseService);
 
     jest.clearAllMocks();
   });
@@ -93,9 +95,14 @@ describe('AlertsService', () => {
         },
       };
 
-      global.fetch = jest.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockJson),
+      global.fetch = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('health')) {
+          return Promise.resolve({ ok: true });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockJson),
+        });
       });
 
       mockAlertRepository.findOne.mockResolvedValue({ id: 'existing-alert' });
@@ -107,7 +114,7 @@ describe('AlertsService', () => {
       expect(alertRepository.create).not.toHaveBeenCalled();
     });
 
-    it('should process, save, and trigger EWS broadcast if alert passes threshold', async () => {
+    it('should process OpenQuake hazard calculation and send FCM for devices with MMI >= V', async () => {
       const mockJson = {
         Infogempa: {
           gempa: {
@@ -119,14 +126,43 @@ describe('AlertsService', () => {
             Kedalaman: '15 km',
             Wilayah: 'Selatan Jawa',
             Potensi: 'Berpotensi tsunami',
-            Dirasakan: 'III MMI Jogja',
           },
         },
       };
 
-      global.fetch = jest.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockJson),
+      const mockDevices = [
+        {
+          deviceId: 'device-1',
+          fcmToken: 'token-1',
+          lastLocation: { coordinates: [110.36, -7.79] },
+          vs30: 270.0,
+        },
+        {
+          deviceId: 'device-2',
+          fcmToken: 'token-2',
+          lastLocation: { coordinates: [112.0, -8.0] },
+          vs30: 400.0,
+        },
+      ];
+
+      global.fetch = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('health')) {
+          return Promise.resolve({ ok: true });
+        }
+        if (url.includes('calculate-hazard')) {
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve([
+                { deviceId: 'device-1', pga: 0.25, mmi: 6.5 }, // MMI >= V
+                { deviceId: 'device-2', pga: 0.02, mmi: 3.5 }, // MMI < V
+              ]),
+          });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockJson),
+        });
       });
 
       mockAlertRepository.findOne.mockResolvedValue(null);
@@ -134,27 +170,72 @@ describe('AlertsService', () => {
       mockAlertRepository.save.mockImplementation((dto) =>
         Promise.resolve({ id: 'new-id', ...dto }),
       );
-
-      const mockDevices = [
-        { deviceId: 'device-1', fcmToken: 'token-1' },
-        { deviceId: 'device-2', fcmToken: 'token-2' },
-      ];
       mockQueryBuilder.getMany.mockResolvedValue(mockDevices);
 
       await service.pollBmkg();
 
-      expect(global.fetch).toHaveBeenCalled();
-      expect(alertRepository.findOne).toHaveBeenCalled();
-      expect(alertRepository.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          magnitude: 6.6,
-          isBroadcasted: true,
-          potensi: 'Berpotensi tsunami',
-        }),
-      );
       expect(alertRepository.save).toHaveBeenCalled();
-      expect(deviceRepository.createQueryBuilder).toHaveBeenCalled();
-      expect(mockQueryBuilder.getMany).toHaveBeenCalled();
+      expect(firebaseService.sendPushNotification).toHaveBeenCalledWith(
+        ['token-1'], // Only device-1 (MMI >= 5) receives FCM notification
+        expect.stringContaining('PERINGATAN TSUNAMI'),
+        expect.stringContaining('Gempa M 6.6'),
+        expect.objectContaining({ type: 'EARTHQUAKE_ALERT' }),
+      );
+    });
+
+    it('should fallback to Phase 2 dynamic radius if OpenQuake microservice fails', async () => {
+      const mockJson = {
+        Infogempa: {
+          gempa: {
+            Tanggal: '05 Jul 2026',
+            Jam: '10:00:00 WIB',
+            DateTime: '2026-07-05T03:00:00+00:00',
+            Coordinates: '-7.79,110.36',
+            Magnitude: '6.0',
+            Kedalaman: '15 km',
+            Wilayah: 'Yogyakarta',
+            Potensi: 'Tidak berpotensi tsunami',
+          },
+        },
+      };
+
+      const mockDevices = [
+        {
+          deviceId: 'device-fallback',
+          fcmToken: 'token-fallback',
+          lastLocation: { coordinates: [110.36, -7.79] },
+          vs30: 270.0,
+        },
+      ];
+
+      global.fetch = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('calculate-hazard')) {
+          return Promise.resolve({
+            ok: false,
+            status: 500,
+          });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockJson),
+        });
+      });
+
+      mockAlertRepository.findOne.mockResolvedValue(null);
+      mockAlertRepository.create.mockImplementation((dto) => dto);
+      mockAlertRepository.save.mockImplementation((dto) =>
+        Promise.resolve({ id: 'new-id', ...dto }),
+      );
+      mockQueryBuilder.getMany.mockResolvedValue(mockDevices);
+
+      await service.pollBmkg();
+
+      expect(firebaseService.sendPushNotification).toHaveBeenCalledWith(
+        ['token-fallback'],
+        expect.stringContaining('PERINGATAN GEMPA BUMI'),
+        expect.stringContaining('Gempa M 6 Mw'),
+        expect.objectContaining({ type: 'EARTHQUAKE_ALERT' }),
+      );
     });
 
     it('should save but NOT broadcast if below threshold (Magnitude < 5.0)', async () => {
@@ -173,9 +254,11 @@ describe('AlertsService', () => {
         },
       };
 
-      global.fetch = jest.fn().mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(mockJson),
+      global.fetch = jest.fn().mockImplementation((url: string) => {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockJson),
+        });
       });
 
       mockAlertRepository.findOne.mockResolvedValue(null);
@@ -205,7 +288,9 @@ describe('AlertsService', () => {
     });
 
     it('should handle network error during fetch without throwing unhandled exception', async () => {
-      global.fetch = jest.fn().mockRejectedValue(new Error('Network connection timeout'));
+      global.fetch = jest
+        .fn()
+        .mockRejectedValue(new Error('Network connection timeout'));
 
       await expect(service.pollBmkg()).resolves.not.toThrow();
       expect(alertRepository.findOne).not.toHaveBeenCalled();

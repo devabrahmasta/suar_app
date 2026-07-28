@@ -63,7 +63,8 @@ Aplikasi ini dikembangkan untuk ajang **IDCamp Dicoding Challenge 2026** di bawa
   * **Active Shallow Crustal:** Menggunakan GMPE `BooreEtAl2014`.
   * **Subduction Interface:** Menggunakan GMPE `AbrahamsonEtAl2015SInter`.
   * **Subduction Intraslab:** Menggunakan GMPE `AbrahamsonEtAl2015SSlab`.
-* **Kalkulasi Amplifikasi Tanah Situs ($V_{s30}$):** Memperhitungkan efek jenis tanah lokal berbasis data kecepatan gelombang geser 30m teratas ($V_{s30}$) dari raster spasial PostGIS `vs30_soil_raster`.
+* **Kalkulasi Amplifikasi Tanah Situs ($V_{s30}$):** Memperhitungkan efek jenis tanah lokal berbasis data kecepatan gelombang geser 30m teratas ($V_{s30}$) dari raster spasial PostGIS `vs30_soil_raster` (`SELECT ST_Value(rast, ST_SetSRID(ST_Point(lon, lat), 4326))`).
+* **Kueri Spasial Subduksi Slab2:** Mengambil kedalaman subduksi (`slab2_depth_raster`) dan ketidakpastian (`slab2_unc_raster`) di titik episenter secara langsung dari Supabase PostGIS untuk menentukan geometri lempeng subduksi.
 * **Konversi MMI (Wald et al. 1999):** Mengonversi PGA ($g$) ke Gal ($cm/s^2$) lalu menghitung MMI dengan rumus:
   $$\text{MMI} = 3.66 \log_{10}(\text{PGA}_{\text{gal}}) - 1.66$$
 * **Penyaringan Alarm Darurat & Fallback:** Mengirim notifikasi darurat FCM hanya jika $\text{MMI} \ge \text{V}$, serta menyediakan mekanisme *Phase 2 Dynamic Radius Fallback* jika microservice tidak terjangkau.
