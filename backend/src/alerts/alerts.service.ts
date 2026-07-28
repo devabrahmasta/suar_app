@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Interval } from '@nestjs/schedule';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ConfigService } from '@nestjs/config';
 import { EarthquakeAlert } from './entities/earthquake-alert.entity';
 import { UserDevice } from '../users/entities/user-device.entity';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -27,6 +28,22 @@ interface BmkgEarthquakeResponse {
   };
 }
 
+export interface Slab2Data {
+  slabDepth: number | null;
+  slabUnc: number | null;
+}
+
+export type TectonicRegion =
+  | 'shallow_crustal'
+  | 'subduction_interface'
+  | 'subduction_intraslab';
+
+export interface HazardResult {
+  deviceId: string;
+  pga: number;
+  mmi: number;
+}
+
 @Injectable()
 export class AlertsService implements OnModuleInit {
   private readonly logger = new Logger(AlertsService.name);
@@ -39,6 +56,7 @@ export class AlertsService implements OnModuleInit {
     private readonly deviceRepository: Repository<UserDevice>,
     private readonly firebaseService: FirebaseService,
     @Optional() private readonly eventEmitter?: EventEmitter2,
+    @Optional() private readonly configService?: ConfigService,
   ) {}
 
   onModuleInit() {
@@ -60,6 +78,9 @@ export class AlertsService implements OnModuleInit {
 
     this.isPolling = true;
     try {
+      // Keep OpenQuake microservice awake in the background
+      void this.pingMicroservice();
+
       this.logger.log('Starting polling BMKG EWS API...');
       const response = await fetch(
         'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json',
@@ -105,6 +126,136 @@ export class AlertsService implements OnModuleInit {
     };
 
     return this.processEarthquake(simulatedGempa, true);
+  }
+
+  private async pingMicroservice(): Promise<void> {
+    const baseUrl =
+      this.configService?.get<string>('OPENQUAKE_SERVICE_URL') ||
+      process.env.OPENQUAKE_MICROSERVICE_URL ||
+      process.env.OPENQUAKE_SERVICE_URL ||
+      'http://localhost:8000';
+    try {
+      const res = await fetch(`${baseUrl}/health`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (res.ok) {
+        this.logger.debug('OpenQuake microservice health ping successful');
+      }
+    } catch (err) {
+      // Ignore ping failure silently in background
+    }
+  }
+
+  private async lookupSlab2(
+    latitude: number,
+    longitude: number,
+  ): Promise<Slab2Data> {
+    try {
+      const result = await this.deviceRepository.query(
+        `SELECT
+           (SELECT ST_Value(rast, ST_SetSRID(ST_Point($1, $2), 4326)) FROM slab2_depth_raster
+            WHERE ST_Intersects(rast, ST_SetSRID(ST_Point($1, $2), 4326))) AS slab_depth,
+           (SELECT ST_Value(rast, ST_SetSRID(ST_Point($1, $2), 4326)) FROM slab2_unc_raster
+            WHERE ST_Intersects(rast, ST_SetSRID(ST_Point($1, $2), 4326))) AS slab_unc`,
+        [longitude, latitude], // PENTING: ST_Point(lon, lat)
+      );
+
+      const row = result?.[0];
+      return {
+        slabDepth:
+          row?.slab_depth !== undefined && row?.slab_depth !== null
+            ? Number(row.slab_depth)
+            : null,
+        slabUnc:
+          row?.slab_unc !== undefined && row?.slab_unc !== null
+            ? Number(row.slab_unc)
+            : null,
+      };
+    } catch (error) {
+      this.logger.error(
+        'Gagal lookup Slab2, fallback ke heuristik kedalaman statis:',
+        error,
+      );
+      return { slabDepth: null, slabUnc: null };
+    }
+  }
+
+  private classifyTectonicRegion(
+    eqDepth: number,
+    slab2: Slab2Data,
+  ): { region: TectonicRegion; method: 'slab2' | 'static_fallback' } {
+    // Metode utama: pakai geometri Slab2 riil kalau datanya tersedia
+    if (slab2.slabDepth !== null && slab2.slabUnc !== null) {
+      const buffer = slab2.slabUnc; // buffer dinamis dari slabUnc
+      const dSlab = Math.abs(slab2.slabDepth); // Handle raster negative values
+      const diff = eqDepth - dSlab;
+
+      if (diff < -buffer) {
+        return { region: 'shallow_crustal', method: 'slab2' };
+      } else if (Math.abs(diff) <= buffer) {
+        return { region: 'subduction_interface', method: 'slab2' };
+      } else {
+        return { region: 'subduction_intraslab', method: 'slab2' };
+      }
+    }
+
+    // [working assumption] Fallback kedalaman statis nasional
+    this.logger.warn(
+      `Slab2 tidak ditemukan di episenter, pakai fallback statis untuk depth=${eqDepth}km`,
+    );
+    if (eqDepth < 30)
+      return { region: 'shallow_crustal', method: 'static_fallback' };
+    if (eqDepth <= 60)
+      return { region: 'subduction_interface', method: 'static_fallback' };
+    return { region: 'subduction_intraslab', method: 'static_fallback' };
+  }
+
+  private async calculateHazard(
+    earthquake: {
+      magnitude: number;
+      depth: number;
+      latitude: number;
+      longitude: number;
+      region: TectonicRegion;
+    },
+    devices: {
+      deviceId: string;
+      latitude: number;
+      longitude: number;
+      vs30: number;
+    }[],
+  ): Promise<HazardResult[]> {
+    const baseUrl =
+      this.configService?.get<string>('OPENQUAKE_SERVICE_URL') ||
+      process.env.OPENQUAKE_MICROSERVICE_URL ||
+      process.env.OPENQUAKE_SERVICE_URL ||
+      'http://localhost:8000';
+    const apiKey =
+      this.configService?.get<string>('OPENQUAKE_API_KEY') ||
+      process.env.OPENQUAKE_API_KEY ||
+      'suar_secret_key_123';
+    const url = `${baseUrl}/calculate-hazard`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': apiKey,
+        },
+        body: JSON.stringify({ earthquake, devices }),
+        signal: AbortSignal.timeout(15000), // 15 detik timeout
+      });
+
+      if (!response.ok) {
+        throw new Error(`Microservice merespons status ${response.status}`);
+      }
+
+      return (await response.json()) as HazardResult[];
+    } catch (error) {
+      this.logger.error('Gagal memanggil OpenQuake microservice:', error);
+      return []; // fail-safe: mengembalikan array kosong daripada crash
+    }
   }
 
   private async processEarthquake(
@@ -180,57 +331,105 @@ export class AlertsService implements OnModuleInit {
         `[EWS TRIGGERED${isSimulation ? ' - SIMULATION' : ''}] New Earthquake Alert: M ${magnitude} Mw, Depth ${depth} km. Epicenter: ${wilayah}.`,
       );
 
-      // Determine dynamic radius
-      radiusInKm = this.calculateDynamicRadius(magnitude, depth, potensi);
-      this.logger.log(
-        `Calculated dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
-      );
-
-      // Query impacted devices
-      const impactedDevices = await this.findDevicesInImpactZone(
+      // 1. Coarse Bounding Box Filter (500 KM radius)
+      const candidateDevices = await this.findDevicesInImpactZone(
         longitude,
         latitude,
-        radiusInKm,
+        500,
       );
 
-      impactedCount = impactedDevices.length;
+      let microserviceProcessed = false;
 
-      this.logger.warn(
-        `Found ${impactedDevices.length} devices in the impact zone for ${isSimulation ? 'simulated' : 'real'} earthquake.`,
-      );
+      if (candidateDevices.length > 0) {
+        // Prepare devices array with vs30 and location coordinates
+        const preparedDevices = candidateDevices
+          .filter((d) => d.lastLocation && d.lastLocation.coordinates)
+          .map((d) => ({
+            deviceId: d.deviceId,
+            latitude: d.lastLocation.coordinates[1],
+            longitude: d.lastLocation.coordinates[0],
+            vs30: d.vs30 ?? 270.0,
+          }));
 
-      if (impactedDevices.length > 0) {
-        const isTsunami =
-          potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
-        const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
+        if (preparedDevices.length > 0) {
+          // 2. Lookup Slab2 & Classify Tectonic Region
+          const slab2 = await this.lookupSlab2(latitude, longitude);
+          const { region, method } = this.classifyTectonicRegion(depth, slab2);
+          this.logger.log(`Tectonic region: ${region} (metode: ${method})`);
 
-        const prefix = isSimulation ? '[SIMULASI] ' : '';
-        const title = isTsunami
-          ? `🚨 ${prefix}PERINGATAN TSUNAMI (SUAR)`
-          : `⚠️ ${prefix}PERINGATAN GEMPA BUMI (SUAR)`;
-        const body = `${prefix}Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: ${statusTindakan}.`;
+          // 3. Compute PGA & MMI via OpenQuake microservice
+          const hazardResults = await this.calculateHazard(
+            { magnitude, depth, latitude, longitude, region },
+            preparedDevices,
+          );
 
-        const tokens = impactedDevices.map((d) => d.fcmToken);
+          if (hazardResults.length > 0) {
+            // Map deviceId -> mmi
+            const mmiMap = new Map<string, number>();
+            hazardResults.forEach((h) => mmiMap.set(h.deviceId, h.mmi));
 
-        const payloadData = {
-          type: 'EARTHQUAKE_ALERT',
-          magnitude: magnitude.toString(),
-          depth: `${depth} km`,
-          wilayah: isSimulation ? `${wilayah} (Simulasi)` : wilayah,
-          potensi,
-          statusTindakan,
-          coordinates: `${latitude},${longitude}`,
-          dateTime: date.toISOString(),
-          isSimulation: isSimulation ? 'true' : 'false',
-        };
+            // 4. Filter devices with MMI >= 5.0 (Intensity V)
+            const devicesToAlert = candidateDevices.filter((d) => {
+              const mmi = mmiMap.get(d.deviceId);
+              return mmi !== undefined && mmi >= 5.0;
+            });
 
-        // Kirim notifikasi nyata ke Firebase Admin SDK
-        await this.firebaseService.sendPushNotification(
-          tokens,
-          title,
-          body,
-          payloadData,
+            impactedCount = devicesToAlert.length;
+            radiusInKm = 500;
+            microserviceProcessed = true;
+
+            this.logger.warn(
+              `OpenQuake hazard calculated for ${candidateDevices.length} devices. Impacted (MMI >= V): ${impactedCount}`,
+            );
+
+            if (devicesToAlert.length > 0) {
+              await this.sendFcmAlerts(
+                devicesToAlert,
+                magnitude,
+                depth,
+                wilayah,
+                potensi,
+                date,
+                isSimulation,
+                latitude,
+                longitude,
+              );
+            }
+          }
+        }
+      }
+
+      // Secondary Fail-Safe: Fallback to Phase 2 Dynamic Radius if Microservice failed/down or returned empty
+      if (!microserviceProcessed) {
+        radiusInKm = this.calculateDynamicRadius(magnitude, depth, potensi);
+        this.logger.log(
+          `Fallback dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
         );
+
+        const impactedDevices = await this.findDevicesInImpactZone(
+          longitude,
+          latitude,
+          radiusInKm,
+        );
+
+        impactedCount = impactedDevices.length;
+        this.logger.warn(
+          `Fallback Phase 2: Found ${impactedCount} devices in impact zone.`,
+        );
+
+        if (impactedDevices.length > 0) {
+          await this.sendFcmAlerts(
+            impactedDevices,
+            magnitude,
+            depth,
+            wilayah,
+            potensi,
+            date,
+            isSimulation,
+            latitude,
+            longitude,
+          );
+        }
       }
     } else {
       this.logger.log(
@@ -244,6 +443,54 @@ export class AlertsService implements OnModuleInit {
       impactedCount,
       radiusInKm,
     };
+  }
+
+  private async sendFcmAlerts(
+    devices: UserDevice[],
+    magnitude: number,
+    depth: number,
+    wilayah: string,
+    potensi: string,
+    date: Date,
+    isSimulation: boolean,
+    latitude: number,
+    longitude: number,
+  ): Promise<void> {
+    const isTsunami =
+      !potensi.toLowerCase().includes('tidak berpotensi') &&
+      (potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5);
+    const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
+
+    const prefix = isSimulation ? '[SIMULASI] ' : '';
+    const title = isTsunami
+      ? `🚨 ${prefix}PERINGATAN TSUNAMI (SUAR)`
+      : `⚠️ ${prefix}PERINGATAN GEMPA BUMI (SUAR)`;
+    const body = `${prefix}Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: ${statusTindakan}.`;
+
+    const tokens = devices
+      .map((d) => d.fcmToken)
+      .filter((t): t is string => Boolean(t));
+
+    if (tokens.length === 0) return;
+
+    const payloadData = {
+      type: 'EARTHQUAKE_ALERT',
+      magnitude: magnitude.toString(),
+      depth: `${depth} km`,
+      wilayah: isSimulation ? `${wilayah} (Simulasi)` : wilayah,
+      potensi,
+      statusTindakan,
+      coordinates: `${latitude},${longitude}`,
+      dateTime: date.toISOString(),
+      isSimulation: isSimulation ? 'true' : 'false',
+    };
+
+    await this.firebaseService.sendPushNotification(
+      tokens,
+      title,
+      body,
+      payloadData,
+    );
   }
 
   private generateUniqueBmkgId(
@@ -260,7 +507,8 @@ export class AlertsService implements OnModuleInit {
     potensi: string,
   ): number {
     const isTsunami =
-      potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5;
+      !potensi.toLowerCase().includes('tidak berpotensi') &&
+      (potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5);
 
     let baseRadius = 50;
     if (isTsunami) {
@@ -271,14 +519,12 @@ export class AlertsService implements OnModuleInit {
       baseRadius = 100;
     }
 
-    // Koreksi kedalaman (Depth Attenuation Factor):
-    // Semakin dalam pusat gempa, semakin kecil jangkauan rambat energi getaran di permukaan.
     if (depth >= 70) {
-      return Math.round(baseRadius * 0.5); // Reduksi 50% untuk gempa dalam (>= 70 km)
+      return Math.round(baseRadius * 0.5);
     } else if (depth >= 30) {
-      return Math.round(baseRadius * 0.75); // Reduksi 25% untuk gempa menengah (30 - 69 km)
+      return Math.round(baseRadius * 0.75);
     }
-    return baseRadius; // Gempa dangkal (<30 km) memiliki radius dampak maksimal
+    return baseRadius;
   }
 
   private async findDevicesInImpactZone(

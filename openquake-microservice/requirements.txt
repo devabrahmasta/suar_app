@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+numpy
+openquake.engine
+fiona
+rasterio
+affine
+psycopg2-binary

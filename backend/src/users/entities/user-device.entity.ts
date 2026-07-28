@@ -40,6 +40,9 @@ export class UserDevice {
   @Column({ name: 'home_type', nullable: true })
   homeType: string;
 
+  @Column({ type: 'float', default: 270.0 })
+  vs30: number;
+
   @Column({ name: 'last_active', default: () => 'CURRENT_TIMESTAMP' })
   lastActive: Date;
 
