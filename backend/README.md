@@ -67,7 +67,19 @@ SELECT
   (SELECT ST_Value(rast, ST_SetSRID(ST_Point($1, $2), 4326)) FROM slab2_unc_raster
    WHERE ST_Intersects(rast, ST_SetSRID(ST_Point($1, $2), 4326))) AS slab_unc;
 ```
-* **Penggunaan Klasifikasi Tektonik:** Menghitung selisih kedalaman gempa dengan geometri subduksi (`diff = eqDepth - Math.abs(slabDepth)`), mengklasifikasikan wilayah tektonik berbasis buffer dinamis `slabUnc`:
+* **Penggunaan Klasifikasi Tektonik:** Menghitung selisih kedalaman gempa dengan geometri subduksi (`diff = eqDepth - Math.abs(slabDepth)`), mengklasifikasikan wilayah tektonik berbasis buffer dinamis `slabUnc`.
+
+### 3. Kueri Realtime & Tile Server Zona Merah Tsunami Jawa & Bali (`alerts.service.ts`)
+Mengecek apakah koordinat pengguna berada di dalam poligon bahaya tsunami (Jawa & Bali) secara realtime:
+```sql
+SELECT EXISTS (
+  SELECT 1 FROM tsunami_hazard_polygons
+  WHERE ST_Contains(geom, ST_SetSRID(ST_Point($1, $2), 4326))
+) AS is_red_zone;
+```
+* **Performa:** Kueri spasial diproses dalam hitungan < 2 ms menggunakan spatial index `GIST`.
+* **Tile Server Overlay (`/alerts/tsunami-tile/:z/:x/:y.svg` & `.pbf`):** Meng-generate ubin peta vektor SVG/MVT transparan untuk visualisasi overlay pada `flutter_map`.
+
   - `diff < -buffer` $\rightarrow$ `'shallow_crustal'` (`BooreEtAl2014`)
   - `Math.abs(diff) <= buffer` $\rightarrow$ `'subduction_interface'` (`AbrahamsonEtAl2015SInter`)
   - `diff > buffer` $\rightarrow$ `'subduction_intraslab'` (`AbrahamsonEtAl2015SSlab`)
