@@ -504,7 +504,7 @@ class HomeScreen extends ConsumerWidget {
     final result = alertData.triageResult;
     final gempa = alertData.gempa;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
-    final themeColor = isEvakuasi ? AppColors.danger : AppColors.warning;
+    final themeColor = isEvakuasi ? AppColors.primary : AppColors.warning;
     final themeLightColor = isEvakuasi
         ? AppColors.dangerLight
         : AppColors.background;

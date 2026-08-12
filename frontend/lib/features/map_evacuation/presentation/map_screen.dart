@@ -6,6 +6,8 @@ import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart';
 import '../data/smart_evacuation_service.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+import '../../ews_ai/presentation/ews_provider.dart';
+import 'risk_map_screen.dart' show RippleMarker;
 
 class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
@@ -18,10 +20,44 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   final MapController _mapController = MapController();
   bool _isMapReady = false;
 
+  /// Mem-parsing string koordinat "lat,lng" milik gempa aktif menjadi
+  /// [LatLng]. Mengembalikan null jika format tidak valid atau hasilnya
+  /// (0.0, 0.0) — supaya marker tidak pernah muncul di titik kosong.
+  LatLng? _parseGempaPoint(String coordinates) {
+    final coords = coordinates.split(',');
+    if (coords.length < 2) return null;
+
+    final lat = double.tryParse(coords[0].trim());
+    final lng = double.tryParse(coords[1].trim());
+    if (lat == null || lng == null) return null;
+    if (lat == 0.0 && lng == 0.0) return null;
+
+    return LatLng(lat, lng);
+  }
+
+  /// Warna marker mengikuti ambang magnitude yang sama dengan yang dipakai
+  /// untuk "TITIK GEMPA LIVE" di risk_map_screen.dart, supaya style-nya
+  /// konsisten di kedua peta.
+  Color _gempaColorForMagnitude(String magnitudeStr) {
+    final magnitude = double.tryParse(magnitudeStr) ?? 0.0;
+    if (magnitude >= 5.0) return AppColors.danger;
+    if (magnitude >= 3.0) return AppColors.warning;
+    return AppColors.info;
+  }
+
   @override
   Widget build(BuildContext context) {
     final locationAsync = ref.watch(userLocationStreamProvider);
     final routeAsync = ref.watch(evacuationRouteProvider);
+    final ewsState = ref.watch(ewsProvider);
+
+    LatLng? activeGempaPoint;
+    Color activeGempaColor = AppColors.danger;
+    final alertData = ewsState.value;
+    if (alertData != null) {
+      activeGempaPoint = _parseGempaPoint(alertData.gempa.coordinates);
+      activeGempaColor = _gempaColorForMagnitude(alertData.gempa.magnitude);
+    }
 
     ref.listen<AsyncValue<LatLng>>(userLocationStreamProvider, (prev, next) {
       if (_isMapReady && next.hasValue && next.value != null) {
@@ -109,6 +145,22 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       ),
                     ],
                   ),
+
+                  // titik episentrum gempa yang sedang memicu alert aktif
+                  // (hanya 1 titik statis, style sama seperti "TITIK GEMPA
+                  // LIVE" di risk_map_screen.dart — tidak ada toggle/opsi
+                  // tambahan)
+                  if (activeGempaPoint != null)
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: activeGempaPoint,
+                          width: 60,
+                          height: 60,
+                          child: RippleMarker(color: activeGempaColor),
+                        ),
+                      ],
+                    ),
                 ],
               ),
 
