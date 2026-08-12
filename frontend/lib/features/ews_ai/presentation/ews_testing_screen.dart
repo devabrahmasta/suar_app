@@ -13,11 +13,26 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:suar_app/core/services/suar_backend_service.dart';
 import 'package:suar_app/features/user/presentation/user_notifier.dart';
 
-class EwsTestingScreen extends ConsumerWidget {
+class EwsTestingScreen extends ConsumerStatefulWidget {
   const EwsTestingScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EwsTestingScreen> createState() => _EwsTestingScreenState();
+}
+
+class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
+  final TextEditingController _kedalamanController = TextEditingController();
+  final TextEditingController _jarakController = TextEditingController();
+
+  @override
+  void dispose() {
+    _kedalamanController.dispose();
+    _jarakController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Developer: EWS Simulator'),
@@ -222,23 +237,77 @@ class EwsTestingScreen extends ConsumerWidget {
           _ScenarioCard(
             title: 'Skenario 4: Push Notification Darurat',
             description:
-                'Klik ini lalu minimize/tutup aplikasi. Dalam 15 detik, HP Anda akan menerima peringatan darurat. (Ekspektasi: Saat notif diklik, aplikasi terbuka, pop-up Tsunami muncul, dan peta terunduh otomatis)',
+                'Dalam 5 detik, HP Anda akan menerima peringatan darurat. Setelah itu otomatis berpindah ke halaman utama (Home) dengan peringatan bahaya Tsunami ter-render.',
             icon: Icons.notification_important,
             color: AppColors.primary,
+            additionalContent: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _kedalamanController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Kedalaman (km)',
+                      hintText: '10',
+                      isDense: true,
+                      filled: true,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _jarakController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Jarak (km)',
+                      hintText: '150',
+                      isDense: true,
+                      filled: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                    'Peringatan disetel! Silakan minimize aplikasi atau matikan layar HP Anda sekarang.',
+                    'Peringatan disetel! Tunggu 5 detik untuk simulasi...',
                   ),
                   backgroundColor: AppColors.info,
-                  duration: Duration(seconds: 5),
+                  duration: Duration(seconds: 4),
                 ),
               );
 
-              context.pop();
+              final kedalamanStr = _kedalamanController.text.trim().isNotEmpty
+                  ? _kedalamanController.text.trim()
+                  : '10';
+              final jarakStr = _jarakController.text.trim().isNotEmpty
+                  ? _jarakController.text.trim()
+                  : '150';
 
-              Future.delayed(const Duration(seconds: 15), () {
+              final dummyGempa = GempaModel(
+                tanggal: '17 Mar 2026',
+                jam: '20:30:00 WIB',
+                dateTime: DateTime.now().toIso8601String(),
+                coordinates: '-8.50, 109.00',
+                magnitude: '8.5',
+                kedalaman: '$kedalamanStr km',
+                wilayah: '$jarakStr km Barat Daya KAB-PANGANDARAN',
+                potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
+                dirasakan: 'V-VI Pangandaran, IV Cilacap',
+                shakemapUrl: '',
+              );
+
+              Future.delayed(const Duration(seconds: 5), () {
+                ref
+                    .read(ewsProvider.notifier)
+                    .triggerMockThreat(
+                      dummyGempa: dummyGempa,
+                      dummyIsDiZonaMerah: true,
+                    );
+
                 NotificationService.showNotification(
                   id: 999,
                   title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
@@ -246,6 +315,10 @@ class EwsTestingScreen extends ConsumerWidget {
                       'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Tekan untuk instruksi evakuasi segera.',
                   payload: 'MOCK_TSUNAMI',
                 );
+
+                if (context.mounted) {
+                  context.go('/');
+                }
               });
             },
           ),
@@ -386,6 +459,7 @@ class _ScenarioCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
+  final Widget? additionalContent;
 
   const _ScenarioCard({
     required this.title,
@@ -393,6 +467,7 @@ class _ScenarioCard extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
+    this.additionalContent,
   });
 
   @override
@@ -408,6 +483,9 @@ class _ScenarioCard extends StatelessWidget {
           border: Border.all(color: color.withValues(alpha: 0.5)),
         ),
         child: Row(
+          crossAxisAlignment: additionalContent != null
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.center,
           children: [
             CircleAvatar(
               backgroundColor: color,
@@ -428,9 +506,14 @@ class _ScenarioCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(description, style: const TextStyle(fontSize: 13)),
+                  if (additionalContent != null) ...[
+                    const SizedBox(height: 12),
+                    additionalContent!,
+                  ],
                 ],
               ),
             ),
+            const SizedBox(width: 8),
             const Icon(Icons.play_arrow, color: AppColors.textSecondary),
           ],
         ),
