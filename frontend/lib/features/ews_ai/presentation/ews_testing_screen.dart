@@ -13,26 +13,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:suar_app/core/services/suar_backend_service.dart';
 import 'package:suar_app/features/user/presentation/user_notifier.dart';
 
-class EwsTestingScreen extends ConsumerStatefulWidget {
+class EwsTestingScreen extends ConsumerWidget {
   const EwsTestingScreen({super.key});
 
   @override
-  ConsumerState<EwsTestingScreen> createState() => _EwsTestingScreenState();
-}
-
-class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
-  final TextEditingController _kedalamanController = TextEditingController();
-  final TextEditingController _jarakController = TextEditingController();
-
-  @override
-  void dispose() {
-    _kedalamanController.dispose();
-    _jarakController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Developer: EWS Simulator'),
@@ -59,6 +44,16 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
             icon: Icons.waves,
             color: AppColors.danger,
             onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Peringatan disetel! Tunggu 5 detik untuk simulasi...',
+                  ),
+                  backgroundColor: AppColors.info,
+                  duration: Duration(seconds: 4),
+                ),
+              );
+
               final dummyGempa = GempaModel(
                 tanggal: '17 Mar 2026',
                 jam: '20:30:00 WIB',
@@ -72,24 +67,30 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
                 shakemapUrl: '',
               );
 
-              ref
-                  .read(ewsProvider.notifier)
-                  .triggerMockThreat(
-                    dummyGempa: dummyGempa,
-                    dummyIsDiZonaMerah: true,
-                  );
+              Future.delayed(const Duration(seconds: 5), () {
+                ref
+                    .read(ewsProvider.notifier)
+                    .triggerMockThreat(
+                      dummyGempa: dummyGempa,
+                      dummyIsDiZonaMerah: true,
+                    );
 
-              ref.read(evacuationRouteProvider.notifier).findRouteManual();
+                ref
+                    .read(evacuationRouteProvider.notifier)
+                    .findRouteManual();
 
-              NotificationService.showNotification(
-                id: 1,
-                title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
-                body:
-                    'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Segera evakuasi.',
-                payload: 'DUMMY_NO_ACTION',
-              );
+                NotificationService.showNotification(
+                  id: 1,
+                  title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
+                  body:
+                      'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Segera evakuasi.',
+                  payload: 'DUMMY_NO_ACTION',
+                );
 
-              context.pop();
+                if (context.mounted) {
+                  context.go('/');
+                }
+              });
             },
           ),
           const SizedBox(height: 16),
@@ -101,6 +102,16 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
             icon: Icons.dashboard_customize,
             color: AppColors.warning,
             onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Peringatan disetel! Tunggu 5 detik untuk simulasi...',
+                  ),
+                  backgroundColor: AppColors.info,
+                  duration: Duration(seconds: 4),
+                ),
+              );
+
               final dummyGempa = GempaModel(
                 tanggal: '17 Mar 2026',
                 jam: '10:15:00 WIB',
@@ -114,22 +125,26 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
                 shakemapUrl: '',
               );
 
-              ref
-                  .read(ewsProvider.notifier)
-                  .triggerMockThreat(
-                    dummyGempa: dummyGempa,
-                    dummyIsDiZonaMerah: false,
-                  );
+              Future.delayed(const Duration(seconds: 5), () {
+                ref
+                    .read(ewsProvider.notifier)
+                    .triggerMockThreat(
+                      dummyGempa: dummyGempa,
+                      dummyIsDiZonaMerah: false,
+                    );
 
-              NotificationService.showNotification(
-                id: 2,
-                title: '⚠️ PERINGATAN GEMPA BUMI',
-                body:
-                    'Gempa M5.2 terdeteksi. Segera berlindung di tempat aman.',
-                payload: 'DUMMY_NO_ACTION',
-              );
+                NotificationService.showNotification(
+                  id: 2,
+                  title: '⚠️ PERINGATAN GEMPA BUMI',
+                  body:
+                      'Gempa M5.2 terdeteksi. Segera berlindung di tempat aman.',
+                  payload: 'DUMMY_NO_ACTION',
+                );
 
-              context.pop();
+                if (context.mounted) {
+                  context.go('/');
+                }
+              });
             },
           ),
           const SizedBox(height: 16),
@@ -169,7 +184,7 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
                 ),
               );
 
-              context.pop();
+              context.go('/');
 
               try {
                 final locService = container.read(locationServiceProvider);
@@ -240,35 +255,6 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
                 'Dalam 5 detik, HP Anda akan menerima peringatan darurat. Setelah itu otomatis berpindah ke halaman utama (Home) dengan peringatan bahaya Tsunami ter-render.',
             icon: Icons.notification_important,
             color: AppColors.primary,
-            additionalContent: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _kedalamanController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Kedalaman (km)',
-                      hintText: '10',
-                      isDense: true,
-                      filled: true,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    controller: _jarakController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Jarak (km)',
-                      hintText: '150',
-                      isDense: true,
-                      filled: true,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -280,21 +266,14 @@ class _EwsTestingScreenState extends ConsumerState<EwsTestingScreen> {
                 ),
               );
 
-              final kedalamanStr = _kedalamanController.text.trim().isNotEmpty
-                  ? _kedalamanController.text.trim()
-                  : '10';
-              final jarakStr = _jarakController.text.trim().isNotEmpty
-                  ? _jarakController.text.trim()
-                  : '150';
-
               final dummyGempa = GempaModel(
                 tanggal: '17 Mar 2026',
                 jam: '20:30:00 WIB',
                 dateTime: DateTime.now().toIso8601String(),
                 coordinates: '-8.50, 109.00',
                 magnitude: '8.5',
-                kedalaman: '$kedalamanStr km',
-                wilayah: '$jarakStr km Barat Daya KAB-PANGANDARAN',
+                kedalaman: '10 km',
+                wilayah: '150 km Barat Daya KAB-PANGANDARAN',
                 potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
                 dirasakan: 'V-VI Pangandaran, IV Cilacap',
                 shakemapUrl: '',
@@ -459,7 +438,6 @@ class _ScenarioCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
-  final Widget? additionalContent;
 
   const _ScenarioCard({
     required this.title,
@@ -467,7 +445,6 @@ class _ScenarioCard extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
-    this.additionalContent,
   });
 
   @override
@@ -483,9 +460,6 @@ class _ScenarioCard extends StatelessWidget {
           border: Border.all(color: color.withValues(alpha: 0.5)),
         ),
         child: Row(
-          crossAxisAlignment: additionalContent != null
-              ? CrossAxisAlignment.start
-              : CrossAxisAlignment.center,
           children: [
             CircleAvatar(
               backgroundColor: color,
@@ -506,10 +480,6 @@ class _ScenarioCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(description, style: const TextStyle(fontSize: 13)),
-                  if (additionalContent != null) ...[
-                    const SizedBox(height: 12),
-                    additionalContent!,
-                  ],
                 ],
               ),
             ),
