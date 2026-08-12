@@ -271,7 +271,7 @@ class _EwsInteractiveSimulatorScreenState
                       ],
                     ),
                     child: Text(
-                      'Ketuk Peta untuk Memindah Episentrum 📍',
+                      'Ketuk Peta untuk Memindah Titik Gempa 📍',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -409,7 +409,7 @@ class _EwsInteractiveSimulatorScreenState
                         child: TextField(
                           controller: _wilayahController,
                           decoration: const InputDecoration(
-                            labelText: 'Wilayah / Episentrum',
+                            labelText: 'Wilayah / Titik Gempa',
                             border: OutlineInputBorder(),
                           ),
                         ),
