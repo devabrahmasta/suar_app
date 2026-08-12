@@ -565,7 +565,7 @@ class HomeScreen extends ConsumerWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 260,
+                        height: 295,
                         child: Stack(
                           alignment: Alignment.topCenter,
                           children: [
@@ -653,7 +653,7 @@ class HomeScreen extends ConsumerWidget {
                                       radius: 24,
                                       backgroundColor: themeColor,
                                       child: const Icon(
-                                        Icons.warning,
+                                        Icons.sensors,
                                         size: 24,
                                         color: AppColors.white,
                                       ),
@@ -677,6 +677,49 @@ class HomeScreen extends ConsumerWidget {
                                         color: themeColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Card(
+                                      elevation: 0,
+                                      color: themeColor.withValues(alpha: 0.08),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        side: BorderSide(
+                                          color: themeColor.withValues(
+                                            alpha: 0.25,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 10,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              Icons.location_on_rounded,
+                                              size: 18,
+                                              color: themeColor,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Flexible(
+                                              child: Text(
+                                                gempa.wilayah.isNotEmpty
+                                                    ? 'Titik Gempa: ${gempa.wilayah}'
+                                                    : 'Titik Gempa: Lokasi belum tersedia dari BMKG',
+                                                style: TextStyle(
+                                                  color: themeColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -740,7 +783,7 @@ class HomeScreen extends ConsumerWidget {
                                     icon: Icons.sensors,
                                     label: 'MAGNITUDE',
                                     value: '${gempa.magnitude} SR',
-                                    subValue: 'Update',
+                                    subValue: '*tingkat kekuatan gempa bumi',
                                     isRed: isEvakuasi,
                                     themeColor: themeColor,
                                   ),
@@ -749,8 +792,8 @@ class HomeScreen extends ConsumerWidget {
                                     icon: Icons.waves,
                                     label: 'KEDALAMAN',
                                     value: gempa.kedalaman,
-                                    subValue: 'Data BMKG',
-                                    isRed: false,
+                                    subValue: '*kedalaman pusat titik gempa',
+                                    isRed: isEvakuasi,
                                     themeColor: themeColor,
                                   ),
                                   const Divider(),
@@ -759,7 +802,7 @@ class HomeScreen extends ConsumerWidget {
                                     label: 'JARAK EPISENTRUM',
                                     value:
                                         '${alertData.distanceKm.toStringAsFixed(1)} km',
-                                    subValue: 'Dari Anda',
+                                    subValue: '*jarak titik gempa dengan anda',
                                     isRed: isEvakuasi,
                                     themeColor: themeColor,
                                   ),
@@ -932,11 +975,13 @@ class HomeScreen extends ConsumerWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   subValue,
                   style: const TextStyle(
                     fontSize: 10,
                     color: AppColors.textSecondary,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ],
