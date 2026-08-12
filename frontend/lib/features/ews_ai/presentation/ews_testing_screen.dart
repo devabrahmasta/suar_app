@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_minimizer_plus/flutter_app_minimizer_plus.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -252,7 +253,7 @@ class EwsTestingScreen extends ConsumerWidget {
           _ScenarioCard(
             title: 'Skenario 4: Push Notification Darurat',
             description:
-                'Dalam 5 detik, HP Anda akan menerima peringatan darurat. Setelah itu otomatis berpindah ke halaman utama (Home) dengan peringatan bahaya Tsunami ter-render.',
+                'Klik ini — aplikasi akan otomatis minimize. Dalam 5 detik, notifikasi darurat akan muncul. Tap notifikasi tersebut untuk membuka aplikasi dan melihat alert.',
             icon: Icons.notification_important,
             color: AppColors.primary,
             onTap: () {
@@ -265,6 +266,8 @@ class EwsTestingScreen extends ConsumerWidget {
                   duration: Duration(seconds: 4),
                 ),
               );
+
+              FlutterAppMinimizerPlus.minimizeApp();
 
               final dummyGempa = GempaModel(
                 tanggal: '17 Mar 2026',
@@ -294,10 +297,6 @@ class EwsTestingScreen extends ConsumerWidget {
                       'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Tekan untuk instruksi evakuasi segera.',
                   payload: 'MOCK_TSUNAMI',
                 );
-
-                if (context.mounted) {
-                  context.go('/');
-                }
               });
             },
           ),
