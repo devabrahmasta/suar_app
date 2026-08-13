@@ -342,13 +342,83 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
 
+            const SizedBox(height: 24),
+
+            // SIMULATOR PERINGATAN EWS UNTUK DEMO
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.primaryDark,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.bolt, color: AppColors.warning, size: 24),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'SIMULASI INTERAKTIF (MODE DEMO)',
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Uji coba alur peringatan gempa & tsunami mandiri tanpa ketergantungan server cloud.',
+                    style: TextStyle(color: AppColors.surface, fontSize: 12),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 44,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.warning,
+                        foregroundColor: AppColors.textPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      onPressed: () => context.push('/interactive-simulator'),
+                      icon: const Icon(Icons.play_arrow_rounded),
+                      label: const Text(
+                        'MULAI SIMULASI ANCAMAN SEKARANG',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
             Text(
-              'SUMBER DAYA PASCA-EVAKUASI',
+              'SUMBER DAYA & KESIAPSIAGAAN',
               style: Theme.of(context).textTheme.labelSmall,
             ),
             const SizedBox(height: 12),
             Row(
               children: [
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(20),
+                    onTap: () => context.push('/mitigation-guide'),
+                    child: _buildResourceButton(
+                      Icons.backpack_rounded,
+                      'Panduan Mitigasi',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(20),
@@ -419,7 +489,7 @@ class HomeScreen extends ConsumerWidget {
 
   Widget _buildResourceButton(IconData icon, String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
@@ -431,7 +501,10 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
         ],
       ),

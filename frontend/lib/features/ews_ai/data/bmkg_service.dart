@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:suar_app/core/config/app_config.dart';
 import '../domain/gempa_model.dart';
 
 class BmkgService {
@@ -10,6 +11,22 @@ class BmkgService {
 
   Future<GempaModel> fetchLatestEarthquake() async {
     debugPrint('BmkgService: Memulai pengambilan data gempa bumi terbaru...');
+    
+    if (AppConfig.useMockBackend) {
+      debugPrint('BmkgService [MOCK]: Mengembalikan data gempa bumi simulasi Megathrust Selat Sunda.');
+      return GempaModel(
+        tanggal: '13 Agu 2026',
+        jam: '20:15:00 WIB',
+        dateTime: '2026-08-13T13:15:00Z',
+        coordinates: '-6.85,105.12',
+        magnitude: '6.8',
+        kedalaman: '15 km',
+        wilayah: 'Pesisir Barat Banten & Selat Sunda',
+        potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
+        dirasakan: 'MMI IV-V Pandeglang, MMI III-IV Serang, MMI III Jakarta',
+        shakemapUrl: '',
+      );
+    }
     // 1. Coba ambil dari NestJS backend kita terlebih dahulu (data ter-filter dan ter-evaluasi)
     try {
       final String baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';

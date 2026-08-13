@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:suar_app/core/config/app_config.dart';
 import '../domain/gempa_model.dart';
 import '../domain/triage_result_model.dart';
 import '../../user/domain/user_model.dart';
@@ -24,6 +25,35 @@ class GeminiTriageService {
     required double speedInMetersPerSecond,
     required DateTime currentTime,
   }) async {
+    if (AppConfig.useMockBackend) {
+      final bool daruratKritis = gempa.potensi.toLowerCase().contains('tsunami') && isDiZonaMerah;
+      return TriageResult(
+        statusTindakan: daruratKritis ? 'EVAKUASI' : 'BERLINDUNG',
+        tindakanSegera: daruratKritis
+            ? [
+                'TINGGALKAN BARANG BAWAAN. SEGERA EVAKUASI KE DATARAN TINGGI (TES / TEA).',
+                'Ikuti Jalur Evakuasi SUAR ke Tempat Evakuasi Sementara (TES) terdekat (>20m dpl).',
+                'DILARANG KERAS menggunakan kendaraan di zona kemacetan; berjalan kaki secara cepat.',
+                'Jauhi garis pantai, muara sungai, dan area datar di bawah 20m dpl.'
+              ]
+            : [
+                'Tetap tenang dan lakukan DROP, COVER, HOLD ON (Berlutut, Lindungi Kepala, Berpegangan).',
+                'Jauhi kaca, cermin, dan lemari tinggi.',
+                'Matikan kompor gas atau sumber listrik utama di rumah.'
+              ],
+        persiapan: daruratKritis
+            ? [
+                'Bawa Tas Siaga Bencana & obat-obatan khusus jika sempat.',
+                'Gunakan alas kaki tertutup untuk menghindari pecahan kaca/material.',
+                'Bantu lansia, anak-anak, dan penyandang disabilitas evakuasi terlebih dahulu.'
+              ]
+            : [
+                'Siapkan Tas Siaga Bencana di dekat pintu keluar.',
+                'Waspadai potensi gempa susulan.'
+              ],
+        aktifkanPeta: daruratKritis,
+      );
+    }
     try {
       final String timeFormat =
           "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}";

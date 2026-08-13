@@ -1,0 +1,4039 @@
+PEDOMAN 
+Bidang Lingkungan dan Keselamatan Jalan 
+PERENCANAAN JALUR EVAKUASI BENCANA 
+ALAM TSUNAMI 
+KEMENTERIAN PEKERJAAN UMUM DAN PERUMAHAN RAKYAT 
+D I R E K T O R A T  J E N D E R A L  B I N A  M A R G A 
+KEMENTERIAN PEKERJAAN UMUM DAN PERUMAHAN RAKYAT 
+DIREKTORAT JENDERAL BINA MARGA 
+Jl. Pattimura No.20 Kebayoran Baru Jakarta Selatan 12110, Telp. (021) 7203165, Fax (021) 7393938  
+Yth.  
+1. Sekretaris Direktorat Jenderal Bina Marga 
+2. Para Direktur di Direktorat Jenderal Bina Marga 
+3. Para Kepala Balai Besar/Balai Pelaksanaan Jalan Nasional di Direktorat 
+Jenderal Bina Marga  
+4. Para Kepala Satuan Kerja di Direktorat Jenderal Bina Marga 
+SURAT EDARAN  
+NOMOR:       /SE/Db/2023 
+TENTANG 
+PEDOMAN PERENCANAAN JALUR EVAKUASI BENCANA ALAM TSUNAMI 
+A. Umum 
+Indonesia memiliki kondisi geografis, geologis, hidrologis, dan demografis 
+yang menyebabkannya rentan terhadap bencana, baik yang disebabkan 
+oleh faktor alam maupun faktor manusia. Potensi kejadian bencana alam 
+semakin besar dengan letak wilayah Indonesia yang berada pada 
+pertemuan empat lempeng tektonik, yaitu Lempeng Eurasia, Lempeng 
+Indo-Australia, Lempeng Laut Filipina, dan Lempeng Pasifik pada sabuk 
+vulkanik mulai dari Pulau Sumatera hingga Sulawesi. Dengan lokasi 
+geografis demikian, tsunami merupakan ancaman bencana dengan 
+dampak kerugian yang memerlukan kewaspadaan. Kerugian dapat berupa 
+korban jiwa manusia, kehilangan harta benda, degradasi lingkungan, serta 
+gangguan psikis bagi yang mengalaminya.  
+Letak Indonesia tersebut menyebabkan setiap orang harus dapat 
+berdampingan dengan bencana tsunami dan perlu memiliki kemampuan 
+antisipasi dan mitigasi. Salah satu langkah mitigasi untuk mengurangi 
+dampak negatifnya adalah dengan membangun jalur evakuasi tsunami. 
+Jalur evakuasi tsunami adalah jalur evakuasi dari tempat bahaya ke 
+tempat aman pada saat terjadi tsunami. Dalam keadaan darurat, jalur 
+evakuasi yang dilengkapi dengan rambu dan papan informasi yang jelas 
+dan telah terpetakan sebelumnya menjadi sangat penting dan mutlak. Hasil 
+pengamatan menemukan bahwa jalur evakuasi belum sepenuhnya 
+memperhatikan kemampuan jalur tersebut untuk menampung jumlah 
+orang yang perlu dievakuasi dengan aman dalam waktu singkat segera 
+setelah terjadi tsunami. Perencanaan jalur evakuasi bencana alam tsunami 
+harus mempertimbangkan kapasitas dan kejelasan rambu untuk 
+memberikan kesiapan masyarakat menghadapi ancaman tsunami.  
+Perencanaan jalur evakuasi bencana alam tsunami ditentukan 
+berdasarkan prinsip penentuan kawasan dan tingkat risiko bencana, 
+prinsip perencanaan awal jalur evakuasi, dan prinsip perencanaan teknis 
+jalur evakuasi. Perencanaan jalur evakuasi bencana alam tsunami tidak 
+mencakup teknis perkuatan struktur jalan terhadap bencana. 
+Mempertimbangkan hal tersebut, perlu menetapkan Surat Edaran Direktur 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+- 2 - 
+Jenderal Bina Marga tentang Pedoman Perencanaan Jalur Evakuasi 
+Bencana Alam Tsunami untuk ditindaklanjuti. 
+B. Dasar Pembentukan 
+1. Undang-Undang Nomor 38 Tahun 2004 tentang Jalan (Lembaran 
+Negara Republik Indonesia Tahun 2004 Nomor 132, Tambahan 
+Lembaran Negara Nomor 4444) sebagaimana telah beberapa kali diubah 
+terakhir dengan Undang-Undang Nomor 2 Tahun 2022 tentang 
+Perubahan Kedua Atas Undang-Undang Nomor 38 Tahun 2004 tentang 
+Jalan (Lembaran Negara Republik Indonesia Tahun 2022 Nomor 12, 
+Tambahan Lembaran Negara Nomor 6760); 
+2. Undang-Undang Nomor 24 Tahun 2007 tentang Penanggulangan 
+Bencana (Lembaran Negara Republik Indonesia Tahun 2007 Nomor 66, 
+Tambahan Lembaran Negara Nomor 4723); 
+3. Peraturan Pemerintah Nomor 34 Tahun 2006 tentang Jalan (Lembaran 
+Negara Republik Indonesia Tahun 2006 Nomor 86, Tambahan 
+Lembaran Negara Nomor 4655); 
+4. Peraturan Pemerintah Nomor 21 Tahun 2008 tentang Penyelenggaraan 
+Penanggulangan Bencana (Lembaran Negara Republik Indonesia Tahun 
+2008 Nomor 42, Tambahan Lembaran Negara Nomor 4828); 
+5. Peraturan Pemerintah Nomor 21 Tahun 2021 tentang Penyelenggaraan 
+Penataan Ruang (Lembaran Negara Republik Indonesia Tahun 2021 
+Nomor 31, Tambahan Lembaran Negara Nomor 6633); 
+6. Peraturan Presiden Nomor 27 Tahun 2020 tentang Kementerian 
+Pekerjaan Umum dan Perumahan Rakyat (Lembaran Negara Republik 
+Indonesia Tahun 2020 Nomor 40); 
+7. Keputusan Presiden Nomor 52/TPA Tahun 2020 tentang 
+Pemberhentian dan Pengangkatan Dari dan Dalam Jabatan Pimpinan 
+Tinggi Madya di Lingkungan Kementerian Pekerjaan Umum dan 
+Perumahan Rakyat; 
+8. Peraturan Menteri Pekerjaan Umum dan Perumahan Rakyat Nomor 13 
+Tahun 2020 tentang Organisasi dan Tata Kerja Kementerian Pekerjaan 
+Umum dan Perumahan Rakyat (Berita Negara Republik Indonesia 
+Tahun 2020 Nomor 473) sebagaimana telah diubah dengan Peraturan 
+Menteri Pekerjaan Umum dan Perumahan Rakyat Nomor 11 Tahun 
+2020 tentang Perubahan Atas Peraturan Menteri Pekerjaan Umum dan 
+Perumahan Rakyat Nomor 13 Tahun 2020 tentang Organisasi dan Tata 
+Kerja Kementerian Pekerjaan Umum dan Perumahan Rakyat (Berita 
+Negara Republik Indonesia Tahun 2022 Nomor 1382); 
+C. Maksud dan Tujuan 
+Surat Edaran ini dimaksudkan sebagai acuan teknis dan informasi awal 
+untuk membentuk standar operasional prosedur di setiap daerah dalam hal 
+merencanakan mitigasi yang komprehensif dalam penanggulangan pra 
+bencana alam tsunami, sehingga dampak kebencanaan yang mungkin 
+terjadi di masa yang akan datang tidak menyebabkan kerugian harta benda 
+serta korban jiwa yang besar. 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+- 3 - 
+Surat Edaran ini bertujuan untuk mewujudkan peningkatan perencanaan 
+jalur evakuasi dalam daerah rawan bencana tsunami secara mandiri 
+sebagai upaya penanggulangan bencana tsunami di Indonesia.  
+D. Pengaturan mengenai Perencanaan Jalur Evakuasi Bencana Alam Tsunami 
+Pengaturan mengenai perencanaan jalur evakuasi bencana alam tsunami 
+meliputi: 
+1. Ketentuan Umum 
+Bagian ketentuan umum meliputi pengaturan mengenai: 
+a. prinsip penentuan kawasan dan tingkat risiko bencana, meliputi: 
+1) Penentuan jalur evakuasi dilakukan sebagai upaya peningkatan 
+kapasitas untuk mengurangi kerentanan (vulnerability) fisik, 
+lingkungan, sosial, dan ekonomi; 
+2) Jalur evakuasi pada rencana tata ruang wajib disediakan 
+apabila kawasan budidaya berada pada kawasan rawan bencana 
+yang tidak ditetapkan menjadi kawasan lindung; 
+3) Jalur evakuasi dapat ditempatkan pada kawasan lindung 
+dengan/tanpa menggunakan jalan khusus dengan izin yang 
+berwenang dan/atau penyelenggara jalan khusus; 
+4) Jalur evakuasi harus memperhatikan tingkat risiko bencana 
+yang terdapat pada hasil kajian dan peta risiko bencana yang 
+telah disusun oleh pemerintah daerah setempat; dan 
+5) Jalur evakuasi direncanakan pada kawasan rawan bencana 
+tsunami yang telah memiliki TES dan TEA. 
+b. prinsip perencanaan awal jalur evakuasi, meliputi: 
+1) Jalur evakuasi ditentukan berdasarkan prinsip rute terpendek, 
+tercepat, teraman, dan mudah diakses; 
+2) Jalur evakuasi diutamakan menggunakan badan jalan yang 
+sudah ada yang merupakan jalan umum dengan fungsi jalan 
+lingkungan, lokal, kolektor, dan arteri; 
+3) Penyediaan jalur evakuasi berada di bawah penyelenggara jalan 
+pada masing-masing lingkup kewenangannya atau dalam 
+kondisi tertentu dapat dilimpahkan pada pemerintah pusat; 
+4) Jalur evakuasi minimal harus dapat mengalirkan penduduk 
+terdampak yang berjalan kaki, termasuk kelompok 
+berkebutuhan yang dapat dimobilisasi dengan ambulans yang 
+melalui jalur lain di luar jalur evakuasi; 
+5) Jumlah jalur evakuasi ditentukan oleh proyeksi jumlah 
+penduduk terdampak, waktu peringatan, waktu evakuasi, dan 
+aliran evakuasi; 
+6) Untuk menghindari terjadinya penumpukan saat evakuasi, 
+dibuat beberapa jalur evakuasi sejajar dengan sistem blok yang 
+menjauhi zona rawan (garis pantai), muara sungai dan badan 
+aliran sungai, serta saluran air yang bermuara di pantai; 
+7) Jalur evakuasi sebaiknya menghindari jalan yang terdapat 
+pohon dan utilitas yang rentan roboh; dan 
+8) Apabila terpaksa jalur evakuasi harus melintasi jembatan, maka 
+diperlukan pertimbangan terkait dengan kondisi aliran sungai 
+dan kelaikan jembatan. 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+- 4 - 
+c. prinsip perencanaan teknis jalur evakuasi, meliputi: 
+1) Jalur evakuasi yang menggunakan jalan yang berfungsi hanya 
+pada saat bencana harus diperkeras minimal dengan 
+perkerasan tanpa penutup seperti jalan telford, jalan kerikil, dan 
+jalan tanah berbutir padat; 
+2) Jalur evakuasi yang berstatus sebagai jalan umum minimal 
+harus diperkeras dengan perkerasan aspal; 
+3) Jalur evakuasi harus dilengkapi dengan rambu dan papan 
+informasi bencana yang mengacu pada peraturan perundang
+undangan bidang penanggulangan bencana; dan 
+4) Jalur evakuasi perlu perencanaan rekayasa lalu lintas dalam hal 
+ini arah lalu lintas sehari-hari diatur searah dengan arah 
+evakuasi sehingga tidak membingungkan bilamana terjadi 
+bencana. 
+2. Ketentuan Teknis 
+Bagian ketentuan teknis meliputi pengaturan mengenai: 
+a. proyeksi jumlah penduduk terdampak; 
+Jumlah penduduk terdampak terdiri atas penduduk yang menetap 
+dan pengunjung/wisatawan di kawasan rawan bencana. Data 
+jumlah penduduk terdampak yang diperoleh dari pemerintah 
+setempat diproyeksikan menggunakan persamaan 1 (satu) sesuai 
+dengan laju pertumbuhan penduduk setempat atau dapat mengacu 
+pada Pedoman Perhitungan Proyeksi Jumlah Penduduk dan 
+Angkatan Kerja. 
+b. waktu evakuasi; 
+Pada bagian ini mengatur mengenai rumus perhitungan waktu 
+evakuasi (tE). 
+c. kapasitas jalur evakuasi ideal; 
+Kapasitas jalur evakuasi ideal (Q) untuk standar lebar badan jalan 
+3,5 meter adalah 70 orang/menit atau dapat dihitung sendiri untuk 
+menyesuaikan karakteristik pejalan kaki setempat. 
+d. jarak jangkauan; 
+Jarak dihitung dengan menggunakan rumus perhitungan jarak 
+jangkauan (S) untuk mencapai lokasi aman. 
+e. jumlah jalur evakuasi;  
+Jumlah dihitung dengan menggunakan rumus perhitungan jumlah 
+jalur evakuasi (Nr) yang diperlukan. 
+f. 
+jumlah kapasitas jalur eksisting; 
+Pada bagian ini mengatur mengenai rumus perhitungan jumlah 
+kapasitas jalur eksisting (K) untuk lebar badan jalan lebih dari 1,0 
+meter dan kurang dari 3,5 meter. 
+3. Prosedur Perencanaan Jalur Evakuasi 
+Bagian prosedur perencanaan jalur evakuasi meliputi pengaturan 
+mengenai: 
+a. alur perencanaan jalur evakuasi; 
+Bagan alir dari perencanaan jalur evakuasi ditampilkan untuk 
+dipedomani. 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+- 5 - 
+b. tahap a: pengumpulan data; 
+Aspek pengumpulan data ditentukan, yang mencakup kebutuhan 
+pengumpulan data seperti lokasi dan luasan terdampak, lokasi TES 
+dan TEA, jumlah penduduk terdampak, waktu evakuasi, kecepatan 
+orang berjalan, jalur evakuasi eksisting, dan karakteristik jalan di 
+sekitar area. 
+c. tahap b: penentuan proyeksi jumlah penduduk terdampak; 
+Proyeksi jumlah penduduk terdampak ditentukan melalui tahapan 
+analisis proyeksi. 
+d. tahap c: penentuan waktu evakuasi; 
+Waktu evakuasi ditentukan melalui tahapan analisis. 
+e. tahap d: jumlah jalur evakuasi; 
+Jumlah jalur evaluasi ditentukan melalui tahapan analisis. 
+f. 
+tahap e: penentuan jalur evakuasi; 
+Jalur evakuasi ditentukan melalui tahapan analisis. 
+g. tahap f: perhitungan kapasitas jalan; 
+Kapasitas jalan dihitung melalui tahapan analisis. 
+h. tahap g: perhitungan jarak jangkauan;  
+Jarak jangkauan dihitung melalui tahapan analisis. 
+i. 
+tahap h: pembuatan peta jalur evakuasi. 
+Peta jalur evakuasi dibuat dengan tahapan yang telah ditentukan. 
+Ketentuan mengenai perencanaan jalur evakuasi bencana alam tsunami 
+secara terperinci termuat dalam Lampiran yang merupakan bagian yang 
+tidak terpisahkan dari Surat Edaran Direktur Jenderal ini. 
+E. Penutup 
+Surat Edaran ini mulai berlaku pada tanggal ditetapkan.  
+Demikian atas perhatian Saudara disampaikan terima kasih. 
+Tembusan: 
+1. Menteri Pekerjaan Umum dan Perumahan Rakyat 
+2. Sekretaris Jenderal, Kementerian Pekerjaan Umum dan Perumahan Rakyat 
+3. Inspektur Jenderal, Kementerian Pekerjaan Umum dan Perumahan Rakyat 
+4. Direktur Jenderal Bina Konstruksi, Kementerian Pekerjaan Umum dan 
+Perumahan Rakyat 
+Ditetapkan di Jakarta 
+Pada tanggal :             Agustus 2023 
+DIREKTUR JENDERAL BINA 
+MARGA, 
+HEDY RAHADIAN 
+NIP 19640314 199003 1 002 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+PRAKATA 
+Pedoman perencanaan teknis jalur evakuasi bencana alam tsunami ini berisi ketentuan umum 
+dan ketentuan teknis mengenai tahapan dan prosedur penentuan jumlah dan kapasitas jalur 
+evakuasi. Pedoman ini disusun berdasarkan hasil penelitian dan kajian literatur mengenai 
+perencanaan teknis jalur evakuasi bencana alam tsunami yang terjadi baik di dalam maupun 
+di luar negeri yang telah diadaptasi sesuai dengan keadaan di Indonesia. Pedoman ini 
+dimaksudkan sebagai acuan teknis dan informasi awal untuk membentuk prosedur standar di 
+setiap daerah dalam hal melakukan tindakan evakuasi sebelum terjadi bencana alam tsunami, 
+sehingga dampak kebencanaan yang mungkin terjadi di masa yang akan datang tidak 
+menyebabkan kerugian harta benda serta korban jiwa yang besar.  
+Dengan adanya pedoman ini, diharapkan penyelenggara jalan, penyelenggara lalu lintas dan 
+angkutan jalan, termasuk instansi pemerintah pusat maupun pemerintah daerah lainnya, yang 
+wilayahnya tergolong dalam daerah rawan bencana tsunami dapat menggunakan pedoman 
+ini secara mandiri untuk merencanakan jalur evakuasi yang sesuai dengan daerah masing
+masing sebagai upaya penanggulangan bencana tsunami di Indonesia. 
+Acuan normatif yang digunakan pada pedoman ini mengacu pada ketentuan yang ada dalam 
+NSPK yang diterbitkan baik oleh kementerian Pekerjaan Umum dan Perumahan Rakyat 
+maupun Badan Nasional Penanggulangan Bencana dan Badan Pusat Statistik. 
+Pedoman ini telah dibahas dalam rapat legalisasi pada tanggal 25 Mei 2022 di Direktorat Bina 
+Teknik Jalan dan Jembatan yang dihadiri oleh para pemangku kepentingan (stakeholder) dari 
+Badan Meteorologi, Klimatologi, dan Geofisika, Badan Penanggulangan Bencana Daerah dan 
+Direktorat Jenderal Bina Marga. 
+Jakarta,     Agustus 2023 
+Direktur Jenderal Bina Marga, 
+Hedy Rahadian 
+ii  
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+iii  
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+DAFTAR ISI 
+ 
+ 
+ 
+Daftar Isi ................................................................................................................................ iii 
+Daftar Tabel ...........................................................................................................................iv 
+Daftar Gambar ....................................................................................................................... v 
+Pendahuluan .........................................................................................................................vi 
+1. Ruang Lingkup ............................................................................................................... 1 
+2. Acuan Normatif ............................................................................................................... 1 
+3. Istilah dan Definisi .......................................................................................................... 2 
+4. Ketentuan Umum ........................................................................................................... 7 
+4.1 Prinsip Penentuan Kawasan dan Tingkat Risiko Bencana ...................................... 7 
+4.2 Prinsip Perencanaan Awal Jalur Evakuasi .............................................................. 8 
+4.3 Prinsip Perencanaan Teknis Jalur Evakuasi ........................................................... 9 
+5. Ketentuan Teknis ........................................................................................................... 9 
+5.1 Proyeksi Jumlah Penduduk Terdampak (P) ............................................................ 9 
+5.2 Waktu Evakuasi (tE) ................................................................................................ 9 
+5.3 Kapasitas Jalur Evakuasi Ideal (Q) ....................................................................... 10 
+5.4 Jarak Jangkauan (S) ............................................................................................. 10 
+5.5 Jumlah Jalur Evakuasi (Nr) ................................................................................... 10 
+5.6 Jumlah Kapasitas Jalur Eksisting (K) .................................................................... 10 
+5.7 Rambu dan Papan Informasi Bencana .................................................................. 10 
+6. Prosedur Perencanaan Jalur Evakuasi......................................................................... 12 
+6.1 Alur Perencanaan Jalur Evakuasi ......................................................................... 12 
+6.2 Tahap A: Pengumpulan Data ................................................................................ 13 
+6.3 Tahap B: Penentuan Proyeksi Jumlah Penduduk Terdampak .............................. 14 
+6.4 Tahap C: Penentuan Waktu Evakuasi ................................................................... 14 
+6.5 Tahap D: Jumlah Jalur Evakuasi ........................................................................... 14 
+6.6 Tahap E: Penentuan Jalur Evakuasi ..................................................................... 14 
+6.7 Tahap F: Perhitungan Kapasitas Jalan ................................................................. 14 
+6.8 Tahap G: Perhitungan Jarak Jangkauan ............................................................... 15 
+6.9 Tahap H: Pembuatan Peta Jalur Evakuasi ............................................................ 15 
+Bibliografi ............................................................................................................................. 17 
+Daftar Penyusun dan Unit Kerja Pemrakarsa ...................................................................... 19 
+Lampiran A (Informatif) Karakteristik dan Penyebab Bencana Alam Gempa Bumi  
+dan Tsunami ................................................................................................................. 20 
+Lampiran B (Informatif) Prinsip Penentuan Tingkat Risiko Bencana dan  
+Kawasan Rawan Bencana ........................................................................................... 21 
+Lampiran C (Informatif) Contoh Perhitungan Jalur Evakuasi Bencana Alam Tsunami  
+(Studi Kasus: Kabupaten Sukabumi, Provinsi Jawa Barat)........................................... 22 
+Lampiran D (informatif) Tipikal Rambu Jalur Evakuasi dan Papan Informasi  
+Bencana Alam Tsunami ............................................................................................... 31 
+ 
+ 
+ 
+ 
+ 
+iv  
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+DAFTAR TABEL 
+ 
+ 
+ 
+Tabel 1 - Kebutuhan pengumpulan data dasar .................................................................... 13 
+Tabel A.1 - Karakteristik dan penyebab bencana alam gempa bumi dan tsunami ............... 20 
+Tabel C.1 - Jumlah penduduk Desa Jayanti ........................................................................ 24 
+Tabel C.2 - Proyeksi jumlah penduduk Desa Jayanti ........................................................... 24 
+  
+ 
+v  
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+DAFTAR GAMBAR 
+ 
+ 
+ 
+Gambar 1 - Jalur evakuasi direncanakan sejajar dengan sistem blok ................................... 8 
+Gambar 2 - Jarak aman pemasangan rambu ...................................................................... 12 
+Gambar 3 - Bagan alir perencanaan jalur evakuasi ............................................................. 12 
+Gambar C.1 - Peta desa rawan bencana alam tsunami di Kabupaten Sukabumi ................ 22 
+Gambar C.2 - Coastal proximity (kiri) dan topografi Daerah Palabuhanratu (kanan) ........... 23 
+Gambar C.3 - Ketinggian wilayah Desa Jayanti dalam satuan meter  
+di atas permukaan laut.................................................................................. 23 
+Gambar C.4 - Contoh luasan area rawan bencana di Desa Jayanti .................................... 24 
+Gambar C.5 - Jalan eksisting, rencana jalur evakuasi, dan lokasi TES ............................... 25 
+Gambar C.6 - Jalan alternatif jalur evakuasi nomor 1 .......................................................... 26 
+Gambar C.7 - Jalan alternatif jalur evakuasi nomor 2 .......................................................... 26 
+Gambar C.8 - Jalan alternatif jalur evakuasi nomor 3 .......................................................... 26 
+Gambar C.9 - Area yang terdampak yang akan dilayani ..................................................... 27 
+Gambar C.10 - Jalur evakuasi dan TES pada jalan nomor 3 ............................................... 27 
+Gambar C.11 - Panjang jalur evakuasi di Pasir Honje ......................................................... 28 
+Gambar C.12 - Plotting rencana jalur evakuasi ................................................................... 28 
+Gambar C.13 - Plotting letak rambu jalur evakuasi .............................................................. 29 
+Gambar C.14 - Tipikal penyederhanaan jalur evakuasi ....................................................... 30 
+Gambar C.15 - Koordinasi dengan BPBD setempat ............................................................ 30 
+Gambar D.1 - Tipikal rambu penunjuk arah jalur evakuasi .................................................. 31 
+Gambar D.2 - Tipikal rambu penunjuk ketinggian lokasi ...................................................... 31 
+Gambar D.3 - Tipikal rambu penunjuk ketinggian lokasi apabila sebagai  
+papan tambahan ........................................................................................... 31 
+Gambar D.4 - Tipikal papan informasi penanda tempat ....................................................... 32 
+Gambar D.5 - Tipikal papan informasi memasuki kawasan rawan bencana ........................ 32 
+Gambar D.6 - Tipikal rambu peringatan telah berada pada kawasan rawan  
+bencana tsunami .......................................................................................... 32 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+PENDAHULUAN 
+Indonesia memiliki kondisi geografis, geologis, hidrologis, dan demografis yang 
+memungkinkan terjadinya bencana, baik yang disebabkan oleh faktor alam maupun faktor 
+manusia yang menyebabkan timbulnya korban jiwa manusia, kerugian harta benda, 
+kerusakan lingkungan, dan dampak psikologis dan trauma. Secara geografis, letak Indonesia 
+pada pertemuan empat lempeng tektonik, yaitu Lempeng Eurasia, Lempeng Indo-Australia, 
+Lempeng Laut Filipina, dan Lempeng Pasifik. Indonesia juga memiliki sabuk vulkanik mulai 
+dari Pulau Sumatera hingga Sulawesi, yang berpotensi menimbulkan tsunami. 
+Hal tersebut menunjukkan bahwa setiap orang harus dapat hidup berdampingan dengan 
+bencana tsunami dan perlu memiliki langkah-langkah mitigasi untuk mengurangi dampak 
+negatifnya dengan membangun jalur evakuasi tsunami. Jalur evakuasi tsunami adalah jalur 
+evakuasi dari tempat bahaya ke tempat aman pada saat terjadi tsunami. Dalam keadaan 
+darurat, jalur evakuasi yang dilengkapi dengan rambu dan papan informasi yang jelas dan 
+telah terpetakan sebelumnya menjadi sangat penting dan mutlak. Namun, seringkali 
+ditemukan jalur evakuasi belum sepenuhnya memperhatikan kemampuan jalur tersebut untuk 
+menampung jumlah orang yang perlu dievakuasi dengan aman dalam waktu singkat saat 
+terjadi tsunami. Perencanaan jalur evakuasi bencana alam tsunami yang mempertimbangkan 
+kapasitas dan kejelasan rambu akan memberikan kesiapan masyarakat menghadapi 
+ancaman tsunami. 
+Perencanaan jalur evakuasi bencana alam tsunami dalam pedoman ini ditentukan 
+berdasarkan prinsip penentuan kawasan dan tingkat risiko bencana, prinsip perencanaan 
+awal jalur evakuasi, dan prinsip perencanaan teknis jalur evakuasi. Pedoman perencanaan 
+jalur evakuasi bencana alam tsunami tidak mencakup perkuatan struktur jalan terhadap 
+bencana. 
+vi  
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+Pedoman Perencanaan Jalur Evakuasi Bencana Alam Tsunami 
+1. Ruang Lingkup 
+Pedoman menentukan proyeksi jumlah penduduk terdampak, waktu peringatan, waktu 
+evakuasi, kapasitas jalur evakuasi ideal, jarak jangkauan, jumlah jalur evakuasi, dan jumlah 
+kapasitas jalur eksisting dalam rangka penyediaan jalur evakuasi bencana alam tsunami, serta 
+menetapkan prosedur perencanaan teknis jalur evakuasi. 
+2. Acuan Normatif 
+Undang-Undang Nomor 38 Tahun 2004 tentang Jalan (Lembaran Negara Republik Indonesia 
+Tahun 2004 Nomor 132, Tambahan Lembaran Negara Republik Indonesia Nomor 4444) 
+sebagaimana telah diubah dengan Undang-Undang Nomor 2 Tahun 2022 tentang Perubahan 
+Kedua atas Undang-Undang Nomor 38 Tahun 2004 tentang Jalan (Lembaran Negara 
+Republik Indonesia Tahun 2022 Nomor 12, Tambahan Lembaran Negara Republik Indonesia 
+6760) 
+Undang-Undang Nomor 24 Tahun 2007 tentang Penanggulangan Bencana (Lembaran 
+Negara Republik Indonesia Tahun 2007 Nomor 66, Tambahan Lembaran Negara Republik 
+Indonesia Nomor 4723) 
+Peraturan Pemerintah Nomor 34 Tahun 2006 tentang Jalan (Lembaran Negara Republik 
+Indonesia Tahun 2006 Nomor 86, Tambahan Lembaran Negara Republik Indonesia Nomor 
+4655) 
+Peraturan Pemerintah Nomor 21 Tahun 2008 tentang Penyelenggaraan Penanggulangan 
+Bencana (Lembaran Negara Republik Indonesia Tahun 2008 Nomor 42, Tambahan Lembaran 
+Negara Republik Indonesia Nomor 4828)  
+Peraturan Pemerintah Nomor 26 Tahun 2008 tentang Rencana Tata Ruang Wilayah Nasional 
+(Lembaran Negara Republik Indonesia Tahun 2008 Nomor 48, Tambahan Lembaran Negara 
+Republik Indonesia Nomor 4833) sebagaimana telah diubah dengan Peraturan Pemerintah 
+Nomor 13 Tahun 2017 tentang Perubahan Atas Peraturan Pemerintah Nomor 26 Tahun 2008 
+tentang Rencana Tata Ruang Wilayah Nasional (Lembaran Negara Republik Indonesia Tahun 
+2017 Nomor 77, Tambahan Lembaran Negara Republik Indonesia Nomor 6042) 
+Peraturan Pemerintah Nomor 62 Tahun 2010 tentang Pemanfaatan Pulau Pulau Kecil Terluar 
+(Lembaran Negara Republik Indonesia Tahun 2010 Nomor 101, Tambahan Lembaran Negara 
+Republik Indonesia Nomor 5151) sebagaimana telah diubah dengan Peraturan Pemerintah 
+Nomor 21 Tahun 2021 tentang Penyelenggaraan Penataan Ruang (Lembaran Negara 
+Republik Indonesia Tahun 2021 Nomor 31, Tambahan Lembaran Negara Republik Indonesia 
+Nomor 6633) 
+Peraturan Presiden Nomor 1 Tahun 2019 tentang Badan Nasional Penanggulangan Bencana 
+(Lembaran Negara Republik Indonesia Tahun 2019 Nomor 1) sebagaimana telah diubah 
+dengan Peraturan Presiden Nomor 29 Tahun 2021 tentang Perubahan atas Peraturan 
+Presiden Nomor 1 Tahun 2019 tentang Badan Nasional Penanggulangan Bencana (Lembaran 
+Negara Republik Indonesia Tahun 2021 Nomor 103) 
+1 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+Peraturan Menteri Pekerjaan Umum dan Perumahan Rakyat Nomor 11/PRT/M/2011 tentang 
+Pedoman Penyelenggaraan Jalan Khusus (Berita Negara Republik Indonesia Tahun 2011 
+Nomor 600) 
+Peraturan Kepala Badan Nasional Penanggulangan Bencana Nomor 02 Tahun 2012 tentang 
+Pedoman Umum Pengkajian Risiko Bencana 
+Peraturan Menteri Dalam Negeri Nomor 40 Tahun 2012 tentang Pedoman Penyusunan 
+Proyeksi Penduduk di Daerah (Berita Negara Republik Indonesia Tahun 2012 Nomor 562) 
+Peraturan Menteri Perhubungan Nomor PM 13 Tahun 2014 tentang Rambu Lalu Lintas (Berita 
+Negara Republik Indonesia Tahun 2014 Nomor 514) 
+Peraturan Kepala Badan Nasional Penanggulangan Bencana Nomor 07 Tahun 2015 tentang 
+Rambu dan Papan Informasi Bencana 
+Peraturan Menteri Perhubungan Nomor 96 Tahun 2015 tentang Pedoman Pelaksanaan 
+Kegiatan Manajemen dan Rekayasa Lalu Lintas (Berita Negara Republik Indonesia Tahun 
+2015 Nomor 834) 
+Peraturan Menteri Agraria dan Tata Ruang/Kepala Badan Pertahanan Nasional Nomor 11 
+Tahun 2021 tentang Tata Cara Penyusunan, Peninjauan Kembali, Revisi, dan Penerbitan 
+Persetujuan Substansi Rencana Tata Ruang Wilayah Provinsi, Kabupaten, Kota, dan 
+Rencana Detail Tata Ruang (Berita Negara Republik Indonesia Tahun 2021 Nomor 329) 
+Peraturan Menteri Pekerjaan Umum dan Perumahan Rakyat Nomor 5 Tahun 2023 tentang 
+Persyaratan Teknis Jalan dan Perencanaan Teknis Jalan (Berita Negara Republik Indonesia 
+Tahun 2023 Nomor 372) 
+3. Istilah dan Definisi 
+3.1  
+ancaman bencana (threatening disaster) 
+suatu kejadian atau peristiwa yang bisa menimbulkan bencana 
+3.2  
+bahaya (hazard) 
+situasi, kondisi atau karakteristik biologis, klimatologis, geografis, geologis, sosial, ekonomi, 
+politik, budaya, dan teknologi suatu masyarakat di suatu wilayah untuk jangka waktu tertentu, 
+yang berpotensi menimbulkan korban dan kerusakan 
+3.3  
+bencana (disaster) 
+suatu peristiwa yang disebabkan oleh alam, seperti gempa bumi, tsunami, gunung meletus, 
+banjir, kekeringan, angin topan, tanah longsor, epidemik, dan wabah penyakit atau ulah 
+manusia, seperti gagal teknologi/modernisasi, konflik sosial antar kelompok atau antar 
+komunitas, dan aksi teror, sehingga menyebabkan timbulnya korban jiwa, kerusakan 
+lingkungan, kerugian harta benda dan dampak psikologis 
+2 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+3.4  
+bencana alam (natural disaster) 
+jenis bencana yang diakibatkan oleh peristiwa atau serangkaian peristiwa yang disebabkan 
+oleh alam, antara lain berupa gempa bumi,tsunami, gunung meletus, banjir, kekeringan, 
+angin topan, dan tanah longsor 
+3.5  
+evakuasi 
+tindakan perpindahan, pemindahan, dan penyelamatan masyarakat dari tempat bahaya ke 
+tempat aman 
+3.6  
+evakuasi horizontal 
+evakuasi secara paralel menjauh dari tempat bahaya menuju ke tempat aman 
+3.7  
+evakuasi vertikal 
+evakuasi dari tempat bahaya ke tempat aman berupa gedung atau bangunan bertingkat/tinggi 
+atau bukit/bukit buatan terdekat dari tempat bahaya 
+3.8  
+jalan kerikil 
+jalan yang dibuat dari campuran antara agregat pecah atau kerikil, atau slag atau agregat 
+lainnya dengan material halus dari lempung (clay) atau kombinasi campuran agregat dengan 
+material halus dari lempung sehingga memenuhi gradasi yang diinginkan 
+3.9  
+jalan tanah berbutir padat 
+jalan yang dibuat dari bahan setempat yang baik, misalnya dari batuan (seperti karang, kerikil, 
+dan lain-lain) dengan ukuran maksimum 75 mm, puru/laterit, pasir, tanah kepasiran, dan tanah 
+berbutir kasar lainnya yang dihampar dan dipadatkan sehingga mencapai nilai CBR minimal 
+10% 
+3.10  
+jalan telford 
+jalan yang terbuat dari susunan batu pokok yang disusun secara manual yang diapit batu kunci 
+di tepi kiri dan kanannya dan disatukan dengan menggunakan agregat kunci dan dipadatkan. 
+Jalan ini umumnya dibuat untuk melayani lalu lintas dengan volume harian kurang dari 250 
+kendaraan perhari 
+3.11  
+jalur 
+lintasan atau jalan yang dapat dilalui dengan aman, baik oleh manusia maupun kendaraan  
+3.12  
+jalur evakuasi 
+jalan atau lintasan yang dirancang bersama untuk dilalui pada waktu evakuasi  
+3 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+3.13  
+jalur evakuasi tsunami 
+jalur evakuasi dari tempat bahaya ke tempat aman pada saat terjadi tsunami 
+3.14  
+jarak jangkauan 
+jarak maksimum yang dapat dicapai penduduk terdampak berdasarkan kecepatan berjalan 
+dan waktu evakuasi 
+3.15  
+kajian risiko bencana 
+mekanisme terpadu untuk memberikan gambaran menyeluruh terhadap risiko bencana suatu 
+daerah dengan menganalisis tingkat ancaman, tingkat kerugian, dan kapasitas daerah 
+3.16  
+kapasitas jalur evakuasi 
+kemampuan jalur evakuasi untuk mengalirkan penduduk terdampak menuju TES dan/atau 
+TEA berdasarkan waktu evakuasi 
+3.17  
+kawasan budi daya 
+wilayah yang ditetapkan dengan fungsi utama untuk dibudidayakan atas dasar kondisi dan 
+potensi sumber daya alam, sumber daya manusia, dan sumber daya buatan 
+3.18  
+kawasan lindung 
+3.19  
+kelompok berkebutuhan khusus 
+wilayah yang ditetapkan dengan fungsi utama melindungi kelestarian lingkungan hidup yang 
+mencakup sumber daya alam dan sumber daya buatan 
+bayi, anak usia di bawah lima tahun, anak-anak, ibu hamil atau menyusui, penyandang cacat, 
+dan orang lanjut usia 
+3.20  
+kemampuan (capacity) 
+penguasaan sumber daya, cara dan kekuatan yang dimiliki penduduk, yang memungkinkan 
+bagi mereka untuk mempersiapkan diri, mencegah, menjinakkan, menanggulangi, 
+mempertahankan diri serta dengan cepat memulihkan diri dari akibat bencana 
+3.21  
+kerentanan (vulnerability) 
+tingkat kekurangan kemampuan suatu masyarakat untuk mencegah, menjinakkan, mencapai 
+kesiapan, dan menanggapi dampak bahaya tertentu. Kerentanan dapat berupa kerentanan 
+fisik, ekonomi, sosial dan tabiat, yang dapat ditimbulkan oleh beragam penyebab 
+3.22  
+kesiapsiagaan (preparedness) 
+upaya yang dilakukan untuk mengantisipasi bencana, melalui pengorganisasian langkah
+4 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+langkah yang tepat guna dan berdaya guna 
+3.23  
+korban bencana (victims) 
+orang atau kelompok orang yang menderita atau meninggal dunia akibat bencana 
+3.24  
+lembaran peta 
+lembaran peta dan/atau peta digital berbentuk shapefile (shp), yaitu format data untuk 
+menyimpan data spasial nontopologis berbasis vektor. Shapefile digunakan untuk menyimpan 
+data peta digital pada sistem informasi geografis. 
+3.25  
+masyarakat (community) 
+perseorangan, kelompok orang, dan/atau badan hukum 
+3.26  
+mitigasi (mitigation) 
+serangkaian upaya untuk mengurangi risiko bencana, baik melalui pembangunan fisik maupun 
+penyadaran dan peningkatan kemampuan menghadapi ancaman bencana 
+3.27  
+penanggulangan bencana (disaster management) 
+upaya yang meliputi penetapan kebijakan pembangunan yang berisiko timbulnya bencana, 
+pencegahan bencana, mitigasi bencana, kesiapsiagaan bencana, rehabilitasi, dan 
+rekonstruksi 
+3.28  
+pencegahan (prevention) 
+upaya yang dilakukan untuk mencegah terjadinya sebagian atau seluruh bencana 
+3.29  
+pengurangan risiko bencana (disaster risk reduction) 
+segala tindakan yang dilakukan untuk mengurangi kerentanan dan meningkatkan kapasitas 
+terhadap jenis bahaya tertentu atau mengurangi potensi jenis bahaya tertentu 
+3.30  
+penyelenggaraan penanggulangan bencana (overcoming of disaster coordination) 
+serangkaian upaya yang meliputi penetapan kebijakan pembangunan yang berisiko timbulnya 
+bencana, kegiatan pencegahan bencana, tanggap darurat, dan rehabilitasi 
+3.31  
+peringatan dini (early warning) 
+upaya pemberian peringatan sesegera mungkin kepada masyarakat tentang kemungkinan 
+terjadinya bencana pada suatu tempat oleh lembaga yang berwenang 
+5 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+3.32  
+peta 
+media penggambaran dua dimensi yang mewakili simbol atau bentuk benda, berupa 
+kumpulan dari titik-titik, garis-garis, dan area-area dengan ukuran atau skala tertentu 
+3.33  
+peta genangan tsunami 
+peta yang menggambarkan batas genangan tsunami terjauh pada suatu daerah baik 
+berdasarkan informasi sejarah atau hasil pemodelan 
+3.34  
+peta risiko bencana 
+gambaran tingkat risiko bencana suatu daerah secara visual berdasarkan Kajian Risiko 
+Bencana suatu daerah 
+3.35  
+proyeksi penduduk 
+perhitungan ilmiah yang didasarkan pada asumsi dari komponen-komponen laju 
+pertumbuhan penduduk 
+3.36  
+rawan bencana (disaster vulnerability) 
+kondisi atau karakteristik geologis, biologis, hidrologis, klimatologis, geografis, sosial, budaya, 
+politik, ekonomi, dan teknologi pada suatu wilayah untuk jangka waktu tertentu, yang 
+mengurangi kemampuan mencegah, meredam, mencapai kesiapan, dan mengurangi 
+kemampuan untuk menanggapi dampak buruk bahaya tertentu 
+3.37  
+risiko (risk) 
+risiko adalah kemungkinan terjadinya sesuatu peristiwa yang membawa akibat yang tidak 
+diinginkan atas pencapaian tujuan dan sasaran organisasi 
+3.38  
+risiko bencana (disaster risk) 
+potensi kerugian yang ditimbulkan akibat bencana pada suatu wilayah dan kurun waktu 
+tertentu yang dapat berupa kematian, luka, sakit, jiwa terancam, hilangnya rasa aman, 
+mengungsi, kerusakan atau kehilangan harta, dan gangguan kegiatan masyarakat 
+3.39  
+shapefile (shp) 
+suatu format data untuk menyimpan data spasial nontopologis berbasis vektor yang digunakan 
+untuk menyimpan data peta digital pada sistem informasi geografis 
+3.40  
+tanggap darurat bencana (disaster emergency response) 
+upaya yang dilakukan dengan segera pada saat kejadian bencana, untuk menangani dampak 
+buruk yang ditimbulkan, yang meliputi kegiatan penyelamatan, evakuasi korban, dan harta 
+benda, pemenuhan kebutuhan dasar, perlindungan, pengurusan pengungsi, penyelamatan, 
+6 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+serta pemulihan prasarana dan sarana 
+3.41  
+tempat evakuasi akhir (TEA) 
+tempat tujuan akhir evakuasi dari penduduk terdampak untuk menetap pasca bencana 
+3.42  
+tempat evakuasi sementara (TES) 
+tempat yang dinyatakan aman untuk penduduk terdampak melakukan evakuasi sementara, 
+baik berbentuk horizontal maupun vertikal 
+3.43   
+topografi 
+gambaran dan keterangan menyangkut bentuk rupa atau permukaan bumi atau planet, bulan 
+maupun asteroid  
+3.44  
+tsunami 
+gelombang pasang yang menyapu kawasan dataran pesisir pantai yang dipicu oleh gempa 
+bumi dangkal di bawah laut, letusan gunung berapi bawah laut, longsor bawah laut, atau 
+hantaman meteor di laut  
+3.45  
+waktu evakuasi 
+3.46  
+waktu peringatan 
+3.47  
+waktu reaksi 
+waktu yang dibutuhkan untuk tindakan perpindahan, pemindahan, dan penyelamatan 
+masyarakat dari tempat bahaya ke tempat aman 
+waktu yang dibutuhkan sebuah lembaga yang berwenang untuk memperingatkan status 
+kejadian bencana dari terdeteksinya potensi bencana sampai peringatan tersampaikan 
+kepada masyarakat 
+waktu yang dibutuhkan masyarakat untuk melakukan pergerakan setelah mendengar 
+peringatan adanya tsunami 
+4. Ketentuan Umum 
+4.1 
+Prinsip Penentuan Kawasan dan Tingkat Risiko Bencana 
+a. Penentuan jalur evakuasi dilakukan sebagai upaya peningkatan kapasitas untuk 
+mengurangi kerentanan (vulnerability) fisik, lingkungan, sosial, dan ekonomi; 
+b. Jalur evakuasi pada rencana tata ruang wajib disediakan apabila kawasan peruntukan 
+budidaya berada pada kawasan rawan bencana yang tidak ditetapkan menjadi kawasan 
+peruntukan lindung; 
+7 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+8 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+c. Jalur evakuasi dapat ditempatkan pada kawasan peruntukan lindung dengan/tanpa 
+menggunakan jalan khusus dengan izin yang berwenang dan/atau penyelenggara jalan 
+khusus; 
+d. Jalur evakuasi harus memperhatikan tingkat risiko bencana yang terdapat pada hasil 
+kajian dan peta risiko bencana yang telah disusun oleh pemerintah daerah setempat; 
+e. Jalur evakuasi direncanakan pada kawasan rawan bencana tsunami yang telah memiliki 
+TES dan TEA. 
+ 
+4.2 Prinsip Perencanaan Awal Jalur Evakuasi 
+ 
+a. Jalur evakuasi ditentukan berdasarkan prinsip rute terpendek, tercepat, teraman, dan 
+mudah diakses; 
+b. Jalur evakuasi diutamakan menggunakan badan jalan yang ada seperti jalan lingkungan, 
+lokal, kolektor, dan arteri; 
+c. Penyediaan jalur evakuasi berada di bawah penyelenggara jalan pada masing-masing 
+lingkup kewenangannya atau dalam kondisi tertentu dapat dilimpahkan pada pemerintah 
+pusat; 
+d. Jalur evakuasi minimal harus dapat mengalirkan penduduk terdampak yang berjalan kaki. 
+Penduduk terdampak yang termasuk kelompok berkebutuhan khusus sebaiknya 
+dimobilisasi dengan ambulans yang melalui jalur lain di luar jalur evakuasi; 
+e. Jumlah jalur evakuasi ditentukan oleh proyeksi jumlah penduduk terdampak, waktu 
+peringatan, waktu evakuasi, dan aliran evakuasi; 
+f. Untuk menghindari terjadinya penumpukan saat evakuasi, dibuat beberapa jalur evakuasi 
+sejajar dengan sistem blok (Gambar 1) yang menjauhi zona rawan (garis pantai), muara 
+sungai, dan badan aliran sungai, serta saluran air yang bermuara di pantai; 
+g. Jalur evakuasi sebaiknya menghindari jalan yang terdapat pohon dan utilitas yang rentan 
+roboh; dan 
+h. Apabila terpaksa jalur evakuasi harus melintasi jembatan, maka diperlukan pertimbangan 
+terkait kondisi aliran sungai dan kelaikan jembatan. 
+ 
+ 
+Gambar 1 - Jalur evakuasi direncanakan sejajar dengan sistem blok 
+ 
+9 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+4.3 Prinsip Perencanaan Teknis Jalur Evakuasi 
+ 
+a. Jalur evakuasi yang menggunakan jalan yang berfungsi hanya pada saat bencana harus 
+diperkeras minimal dengan perkerasan tanpa penutup seperti jalan telford, jalan kerikil, 
+dan jalan tanah berbutir padat; 
+b. Jalur evakuasi yang berfungsi sebagai jalan umum minimal harus diperkeras dengan 
+perkerasan aspal; 
+c. Jalur evakuasi harus dilengkapi dengan Rambu dan Papan Informasi Bencana yang 
+mengacu pada Peraturan Kepala Badan Nasional Penanggulangan Bencana Nomor 07 
+Tahun 2015 atau peraturan yang berlaku; 
+d. Jalur evakuasi perlu perencanaan rekayasa lalu lintas. Arah lalu lintas sehari-hari diatur 
+searah dengan arah evakuasi sehingga tidak membingungkan bilamana terjadi bencana. 
+ 
+5. Ketentuan Teknis 
+ 
+5.1 Proyeksi Jumlah Penduduk Terdampak (P) 
+ 
+Jumlah penduduk terdampak terdiri dari penduduk yang menetap dan pengunjung/wisatawan 
+di kawasan rawan bencana. Data jumlah penduduk terdampak yang diperoleh dari pemerintah 
+setempat diproyeksikan menggunakan Persamaan 1 sesuai dengan laju pertumbuhan 
+penduduk setempat atau dapat mengacu pada Pedoman Perhitungan Proyeksi Jumlah 
+Penduduk dan Angkatan Kerja. 
+ 
+Pt = P0(1+rt)  .................................................................................................................. (1) 
+ 
+Keterangan: 
+Pt  =  jumlah penduduk pada tahun t  
+P0  =  jumlah penduduk pada tahun dasar  
+t   =  periode waktu antara tahun dasar dan tahun t (dalam tahun)  
+r   =  laju pertumbuhan penduduk 
+ 
+r=1
+t ( Pt
+P0
+−1)……..……………………………………………………………………………… (2) 
+ 
+5.2 Waktu Evakuasi (tE) 
+ 
+Waktu evakuasi (tE) dapat dihitung berdasarkan rumus: 
+ 
+tE = tB - tP - tR  ......................................................................................................................  (3) 
+ 
+Keterangan: 
+tB = waktu estimasi datangnya tsunami, menit 
+tP = waktu peringatan, menit 
+tR  = waktu reaksi masyarakat, menit 
+ 
+CATATAN waktu peringatan dapat ditentukan dengan mengacu pada standar penyampaian 
+informasi peringatan dini dari BMKG yaitu kurang dari 5 menit. Waktu reaksi masyarakat 
+dapat diasumsikan 1 menit, 
+5.3 
+Kapasitas Jalur Evakuasi Ideal (Q) 
+Kapasitas jalur evakuasi ideal untuk standar lebar jalan 3,5 m adalah 70 orang/menit atau 
+dapat dihitung sendiri untuk menyesuaikan karakteristik pejalan kaki setempat. 
+5.4 
+Jarak Jangkauan (S) 
+Jarak jangkauan untuk mencapai lokasi aman ditentukan berdasarkan rumus: 
+S = vE x tE  ........................................................................................................................... (4) 
+Keterangan: 
+vE = kecepatan orang bergerak, m/menit 
+tE = waktu evakuasi, menit 
+5.5 
+Jumlah Jalur Evakuasi (Nr) 
+Jumlah jalur evakuasi yang diperlukan dapat dihitung dengan menggunakan rumus: 
+�
+�𝑟 =  𝑃
+𝑄×𝑡𝐸
+....................................................................................................................... (5) 
+Keterangan: 
+P = proyeksi jumlah penduduk terdampak, orang 
+Q = kapasitas jalur evakuasi ideal, orang/menit 
+tE = waktu evakuasi, menit 
+5.6 
+Jumlah Kapasitas Jalur Eksisting (K) 
+Jumlah kapasitas jalur eksisting untuk lebar jalan lebih dari 1,0 m dan kurang dari 3,5 m 
+dihitung dengan rumus: 
+K = ∑Kn  ............................................................................................................................. (6) 
+Dimana  Kn = (Wn – 1,0) x 28  ............................................................................................. (7) 
+K = ∑ {(Wn – 1,0) x 28}  ....................................................................................................... (8) 
+Keterangan: 
+Kn = Kapasitas jalan eksisting ke-n (K1, K2,...,Kn), orang 
+Wn = Lebar jalan eksisting ke-n (W1, W2,...,Wn), m 
+CATATAN Lebar jalan 1,0 m atau dibawahnya dianggap tidak layak. 
+5.7 
+Rambu dan Papan Informasi Bencana 
+Pemasangan rambu dan papan informasi untuk jalur evakuasi pada daerah rawan bencana 
+harus memperhatikan kelancaran dan keselamatan lalu lintas. Rambu petunjuk jalur evakuasi 
+10 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+11 dari 32 
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+harus ditempatkan dengan jarak paling sedikit 60 cm diukur dari bagian terluar daun rambu ke 
+tepi paling luar bahu jalan. Papan informasi memasuki kawasan rawan bencana yang 
+ditempatkan di atas ruang manfaat jalan, harus memiliki ketinggian paling rendah 500 cm 
+diukur dari permukaan jalan tertinggi sampai dengan sisi daun rambu bagian bawah atau 
+papan tambahan bagian bawah (Gambar 2). Tipikal daun rambu untuk jalur evakuasi dan 
+penempatannya dapat dilihat pada Lampiran D. 
+ 
+ 
+Gambar 2 - Jarak aman pemasangan rambu 
+ 
+ 
+ 
+ 
+12 dari 32  
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+6. Prosedur Perencanaan Jalur Evakuasi 
+ 
+6.1 Alur Perencanaan Jalur Evakuasi 
+ 
+Bagan alir perencanaan jalur evakuasi disajikan pada Gambar 3. 
+ 
+ 
+ 
+Gambar 3 - Bagan alir perencanaan jalur evakuasi 
+ 
+ 13 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+6.2 Tahap A: Pengumpulan Data 
+ 
+Kegiatan pada tahap awal berupa pengumpulan data dasar seperti diuraikan pada Tabel 1. 
+  
+Tabel 1 - Kebutuhan pengumpulan data dasar 
+No. Kebutuhan Data Keterangan 
+1 Lokasi dan luasan terdampak • Lembaran peta dan/atau peta digital dalam 
+format shp dari batas administrasi, topografi, 
+jaringan jalan dan jembatan, jaringan 
+sungai, dan kawasan permukiman/tutupan 
+lahan, serta fasilitas umum dan fasilitas 
+sosial: pemerintahan, kesehatan, 
+pendidikan, sosial, peribadatan, rekreasi 
+dan budaya, dan lainnya yang diperlukan. 
+• Lembaran peta dan/atau peta digital dalam 
+format shp dari kawasan rawan bencana 
+alam tsunami, lebih baik berisikan potensi 
+gempa (jika terkait) dan daerah genangan 
+tsunami; termasuk sejarah kegempaan dan 
+tsunami.  
+• Citra satelit skala besar atau peta 
+penginderaan jauh bila memungkinkan 
+sebagai pilihan bilamana peta digital dalam 
+format shp tidak tersedia, bersumber dari 
+instansi berwenang. 
+• Untuk daerah yang sama sekali belum 
+mempunyai data lembaran peta/peta peta 
+digital, dapat menggunakan sketsa jalur 
+jalan dan jembatan, dan sungai serta 
+pemukiman di atas lembaran peta batas 
+administrasi. 
+2 Lokasi TES dan TEA Peta jalur dan ruang evakuasi RTRW skala 
+minimal 1:50.000 untuk Kabupaten dan 
+minimal skala 1:25.000 untuk Kota 
+3 Jumlah penduduk terdampak 
+ 
+Data jumlah penduduk potensi terdampak 
+bencana alam tsunami dari instansi berwenang 
+atau data penduduk time series minimal 5 
+(lima) tahun terakhir, dan data proyeksi 
+penduduk. 
+4 Waktu evakuasi Data waktu evakuasi dari BMKG. 
+5 Kecepatan orang bergerak Menggunakan kecepatan orang berjalan yang 
+terendah (orang yang paling rentan)                         
+53 m/menit. 
+6 Jalur evakuasi eksisting Peta jalur evakuasi menggunakan RDTR skala 
+minimal 1:5000 untuk Kabupaten/Kota 
+7 Karakteristik jalan di sekitar area Kebutuhan data lebar jalan, geometrik, 
+karakteristik lalu lintas (parkir), hambatan 
+samping, jenis perkerasan, utilitas    terutama 
+tiang, dan keberadaan penerangan jalan 
+umum. 
+ 
+6.3 
+Tahap B: Penentuan Proyeksi Jumlah Penduduk Terdampak 
+Proyeksi jumlah penduduk terdampak dilakukan dengan cara: 
+a. Hitunglah data jumlah penduduk menetap dan jumlah penduduk pengunjung dalam 
+periode 5 (lima) tahun terakhir untuk mendapatkan laju pertumbuhan penduduk 
+menggunakan Persamaan 2; 
+b. Perhatikan faktor kenaikan penduduk apabila terdapat rencana pengembangan wilayah; 
+c. Gunakan Persamaan 1 untuk memproyeksi jumlah penduduk terdampak 5 (lima) tahun 
+ke depan dan pengaruh faktor kenaikan penduduk yang lain; 
+d. Apabila menggunakan pedoman perhitungan proyeksi jumlah penduduk dan angkatan 
+kerja, maka pilih salah satu hasil perhitungan proyeksi (metode aritmatik, geometrik, dan 
+eksponensial) yang memiliki koefisien determinasi (R2) mendekati 1 (satu); 
+6.4 
+Tahap C: Penentuan Waktu Evakuasi 
+Perhitungan waktu evakuasi didapatkan dengan tahapan sebagai berikut: 
+a. Tentukan waktu evakuasi dengan mengacu pada Badan Nasional Penanggulangan 
+Bencana (BNPB)/Badan Penanggulangan Bencana Daerah (BPBD); 
+b. Jika data dari BNPB/BPBD tidak didapat, maka lakukan perhitungan waktu evakuasi 
+dengan mengurangi waktu estimasi datangnya bencana alam, waktu peringatan (dari 
+BMKG), dan waktu reaksi masyarakat (lihat Persamaan 3). 
+6.5 
+6.6 
+Tahap D: Jumlah Jalur Evakuasi 
+Tahap E: Penentuan Jalur Evakuasi 
+Tentukan jumlah jalur evakuasi yang diperlukan dengan cara membagi proyeksi jumlah 
+penduduk terdampak terhadap perkalian antara kapasitas jalur evakuasi ideal pada bagian 
+5.3 dan waktu evakuasi. 
+Penentuan jalur evakuasi adalah sebagai berikut: 
+a. Tentukan jalur evakuasi sebanyak jumlah yang diperoleh dari Tahap D dengan lebar jalan 
+minimal 3,5 m; 
+b. Apabila jumlah jalur sudah terpenuhi maka dapat dilanjutkan ke langkah selanjutnya 
+(Tahap G); 
+c. Apabila jumlah jalur belum terpenuhi maka dapat memanfaatkan jalan eksisting yang 
+dapat ditingkatkan lebarnya minimal 3,5 m. Apabila tidak ditemukan jalan yang dapat 
+ditingkatkan maka hitung kapasitas jalan eksisting dengan mengikuti Tahap F untuk 
+mengakomodir sisa jumlah penduduk terdampak. 
+6.7 
+Tahap F: Perhitungan Kapasitas Jalan 
+Perhitungan kapasitas jalan dilakukan dengan cara: 
+a. Tentukan jalan eksisting yang tersedia namun tidak dapat ditingkatkan lebarnya; 
+b. Hitung kapasitas jalan eksisting tersebut dengan Persamaan 6 sampai Persamaan 8; 
+c. Bandingkan hasil perhitungan kapasitas jalan eksisting terhadap sisa jumlah penduduk 
+terdampak yang belum diakomodasi. Apabila jumlah kapasitas jalan eksisting lebih besar 
+14 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+dari sisa jumlah penduduk terdampak maka lanjutkan ke langkah selanjutnya (Tahap G); 
+dan 
+d. Apabila kapasitas jalan eksisting tidak tercapai, maka diperlukan kebijakan pemerintah 
+misalnya membangun jalan baru, mengubah area menjadi kawasan lindung, atau 
+membatasi jumlah orang di area terdampak. 
+6.8 
+Tahap G: Perhitungan Jarak Jangkauan 
+Perhitungan jarak jangkauan sebagai berikut: 
+a. Tentukan kecepatan orang bergerak (Tabel 1); 
+b. Hitung jarak jangkauan dengan cara mengalikan kecepatan orang bergerak dengan waktu 
+evakuasi; 
+c. Gunakan nilai jarak jangkauan untuk menentukan jarak maksimum yang dapat dicapai 
+oleh penduduk yang terdampak dalam waktu evakuasi; 
+d. Apabila jarak jalur evakuasi kurang dari jarak maksimum tersebut dan telah mencapai 
+lokasi aman (bisa berupa lokasi yang aman dari tsunami ataupun TES) maka penetapan 
+jalur evakuasi selesai; 
+e. Namun apabila sejauh jarak maksimum tidak ditemukan lokasi aman yang mampu dicapai 
+oleh jalur evakuasi, maka perlu diusulkan tambahan TES ke BNBP/BPBD. 
+6.9 
+Tahap H: Pembuatan Peta Jalur Evakuasi 
+6.9.1 Langkah 1: Plotting Rencana Jalur Evakuasi 
+Langkah plotting rencana jalur evakuasi adalah sebagai berikut: 
+a. Siapkan lembaran peta/peta digital sesuai kebutuhan data untuk mendapatkan lokasi dan 
+luasan terdampak (Tahap A); 
+b. Plotting jalur dan ruang evakuasi untuk mengetahui lokasi baik TES maupun TEA 
+eksisting dan yang diusulkan; 
+c. Plotting penempatan rambu jalur evakuasi; 
+d. Overlay Butir (a), (b), dan (c) pada Subbab 6.9.1; dan 
+e. Layout dan cetak peta jalur evakuasi. 
+CATATAN: Plotting dan overlay dapat dilakukan menggunakan perangkat lunak ArcGIS. Dalam 
+penggunaan peta untuk perencanaan jalur evakuasi perlu koordinasi dengan 
+BNPB/BPBD terkait daerah terdampak dan lokasi TES/TEA. 
+6.9.2 Langkah 2: Penyederhanaan Gambar 
+Penyederhanaan gambar adalah sebagai berikut: 
+a. Gambarkan ulang peta jalur evakuasi dengan bantuan ahli komunikasi massa sehingga 
+gambar jalur evakuasi besifat sederhana informatif, menarik dan memudahkan bagi 
+pengguna atau masyarakat umum (Gambar C.14); 
+b. Cetak peta tersebut berdasarkan kepentingan yang dapat berbentuk selebaran atau 
+poster sesuai dengan kebutuhan. 
+15 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+6.9.3 Langkah 3: Koordinasi dengan BNPB/BPBD 
+Lakukan koordinasi peta jalur evakuasi dengan BNPB/BPBD untuk menyelaraskan tujuan 
+bersama dalam penanggulangan bencana tsunami. 
+16 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+Bibliografi 
+Badan Pusat Statistik Pedoman Penghitungan Proyeksi Penduduk dan Angkatan Kerja. 
+British Columbia. Disaster Response Transportation Primer. British Columbia. 2018a. 
+British Columbia. Disaster Response Transportation Planning Guide for Road Transportation. 
+British Columbia. 2018b. 
+Campos, V., Bandeira, R., dan Bandeira, A. A Method For Evacuation Route Planning in 
+Disaster Situations. Procedia - Social and Behavioral Sciences. vol. 54. hal. 503 – 512. 2012. 
+Emergency Management BC. Evacuation Operational Guide for First Nations and Local 
+Authorities in British Columbia (2nd ed). British Columbia. 2021. 
+Haghpanah, F. Transportation Emergency Planning Considering Uncertainty in Event Duration 
+and Drivers’ Behavior. ArXiv, abs/1802.01042. 2018. 
+HM Government, Evacuation and Shelter Guidance, Non-Statutory Guidance to Complement 
+Emergency Preparedness and Emergency Response and Recovery. Cabinet Office 70 
+Whitehall London SW1A 2WH. 2013. 
+Ikeda, Y., Inoue, M. An Evacuation Route Planning for Safety Route Guidance System after 
+Natural Disaster Using Multi-Objective Genetic Algorithm. Procedia Computer Science. vol. 
+96. hal. 1323-1331. 2016 
+Indradi, W. dan Murakami, K. Determining Evacuation Service Areas and Evacuation Route 
+Risk Level as Disaster Mitigation Plan using GIS – based Software in Hyuga, Japan. Prosiding 
+dari Aiwest DR-2008 International Workshop. 2008. 
+Keputusan Presiden Nomor 29/M Tahun 2008 tanggal 23 April 2008 tentang Pengangkatan 
+Kepala dan Pejabat Eselon 1 di Lingkungan Badan Nasional Penanggulangan Bencana 
+Li, G., Zhang, L., Wang, Z. Optimization and Planning of Emergency Evacuation Routes 
+Considering Traffic Control. The Scientific World Journal. vol. 2014.  
+Liu, Y., Okada, N. dan Takeuchi, Y. Dynamic Route Decision Model-based Multi-agent 
+Evacuation Simulation - Case Study of Nagata Ward, Kobe. Journal of Natural Disaster 
+Science. vol. 28(2). hal. 91-98. 2008. 
+Pedoman Nomor 02/P/BM/2014 tentang Pelaksanaan Tanggap Darurat Bencana Alam yang 
+Berdampak pada Jalan dan Jembatan 
+Saraksuk, J.H. Konsep Jaringan Jalan pada Kota yang Rawan Bencana Gempa dan Tsunami 
+(Studi Kasus Kota Sibolga). Thesis Program Pascasarjana Magister Teknik Pembangunan 
+Wilayah dan Kota. Semarang: Universitas Diponegoro. 2006. 
+17 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+Setyowati, S., Hadi, B.S., dan Ashari, A. Pengembangan Sistem Informasi Bahaya Erupsi 
+Untuk Pengelolaan Kebencanaan di Lereng Selatan Gunung Merapi. Majalah Geografi 
+Indonesia. vol. 27(2). hal. 138 – 148. 2013. 
+Spesifikasi Khusus Interim Nomor SKh-1.5.16 tentang Jalan Tanah Berbutir Padat, Direktorat 
+Jenderal Bina Marga. 
+Surat Edaran Direktur Jenderal Bina Marga Nomor 04/SE/Db/2016 tentang Pedoman 
+Perancangan dan Pelaksanaan Perkerasan Jalan Telford. 
+Surat Edaran Direktur Jenderal Bina Marga Nomor 04/SE/Db/2017 tentang Penyampaian 
+Manual Desain Perkerasan Jalan Revisi 2017 di Lingkungan Direktorat Jenderal Bina Marga 
+(Manual Nomor 02/M/BM/2017). 
+Surat Edaran Direktur Jenderal Bina Marga Nomor 20/SE/Db/2021 tentang Pedoman Desain 
+Geometrik Jalan (Pedoman Nomor 13/P/BM/2021). 
+SNI 7743:2011 tentang Rambu Evakuasi Tsunami.  
+SNI 7766:2012 tentang Jalur Evakuasi Tsunami. 
+Srinivas Peeta, Yu-Ting Hsu. Integrating Supply and Demand Aspects of Transportation for 
+Mass Evacuation under Disasters, USDOT Region V Regional University Transportation 
+Center Final Report. 2009.
+18 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 19 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+Daftar Penyusun dan Unit Kerja Pemrakarsa 
+ 
+ 
+ 
+No. Nama Unit Kerja 
+1. Pemrakarsa 
+Balai Perkerasan dan Lingkungan Jalan, Direktorat Bina Teknik 
+Jalan dan Jembatan, Direktorat Jenderal Bina Marga, Kementerian 
+Pekerjaan Umum dan Perumahan Rakyat 
+2. 
+Koordinator 
+Ir. Yudha Handita 
+Pandjiriawan, M.T., M.B.A. 
+Direktorat Bina Teknik Jalan dan 
+Jembatan  
+3. Neni Kusnianti, S.T., M.T. Balai Perkerasan dan Lingkungan 
+Jalan  
+4. 
+Penyusun 
+Asep Sunandar, S.T., M.T. Balai Geoteknik, Terowongan dan 
+Struktur 
+5. Anjang Nugroho, S.T., M.Sc. Balai Perkerasan dan Lingkungan 
+Jalan 
+6. Sri Yeni, S.T.P., M.P. Balai Geoteknik, Terowongan dan 
+Struktur 
+7. Irna Handayani, S.ST. 
+Subdirektorat Keselamatan dan 
+Keamanan Jalan dan Jembatan,  
+Direktorat Bina Teknik Jalan dan 
+Jembatan 
+8. Facia Puspa Hazita, S.P.W.K. Balai Perkerasan dan Lingkungan 
+Jalan 
+9. Indra Andika Prananda, S.ST. 
+Subdirektorat Teknologi dan 
+Peralatan Infrastuktur, Direktorat 
+Bina Teknik Jalan dan Jembatan 
+10. Tri Rahmawati, S.ST. 
+Subdirektorat Teknologi dan 
+Peralatan Infrastuktur Bina Marga, 
+Direktorat Bina Teknik Jalan dan 
+Jembatan 
+11. Editor Naskah 
+Penyunting 
+Subdirektorat Teknologi dan Peralatan Infrastruktur Bina Marga, 
+Direktorat Bina Teknik Jalan dan Jembatan 
+ 
+ 
+ 
+ 
+ 
+ 20 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+Lampiran A 
+(Informatif) 
+Karakteristik dan Penyebab Bencana Alam Gempa Bumi dan Tsunami 
+ 
+ 
+ 
+Tabel A.1 - Karakteristik dan penyebab bencana alam gempa bumi dan tsunami 
+Jenis Bencana Alam Karakteristik Penyebab 
+1. Gempa Bumi • Berlangsung dalam waktu yang 
+sangat singkat. 
+• Lokasi kejadian tertentu. 
+• Akibatnya dapat menimbulkan 
+bencana. 
+• Berpotensi terulang lagi di lokasi 
+yang sama. 
+• Belum dapat diprediksi 
+waktunya. 
+• Tidak dapat dicegah dampaknya, 
+tetapi dapat dikurangi. 
+Gempa bumi merupakan 
+gerakan goncangan atau 
+getaran tanah yang 
+ditimbulkan oleh adanya 
+sumber-sumber getaran 
+tanah akibat terjadinya 
+patahan atau sesar akibat 
+aktivitas tektonik, letusan 
+gunung api akibat aktivitas 
+vulkanik, hantaman benda 
+langit (misalnya meteor dan 
+asteroid), dan/atau ledakan 
+bom atau nuklir akibat ulah 
+manusia. 
+2. Tsunami • Terjadi di kawasan pesisir 
+terutama yang memiliki pantai 
+landai dan dekat dengan pusat 
+gempa. 
+• Terjadinya gempa atau getaran 
+yang berpusat dari bawah laut. 
+• Air laut tiba-tiba surut. 
+• Tanda-tanda alam yang tidak 
+biasa ini seperti gerakan angin 
+yang tidak biasa, perilaku hewan 
+yang aneh. 
+• Terdengar suara gemuruh. 
+Tsunami ini disebabkan 
+oleh: gempa bumi, letusan 
+gunung dan longsoran di 
+bawah laut serta hantaman 
+meteor. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Lampiran B 
+(Informatif) 
+Prinsip Penentuan Tingkat Risiko Bencana dan Kawasan Rawan Bencana 
+Penentuan tingkat risiko bencana berpedoman pada dokumen kajian dan peta risiko bencana 
+berdasarkan Pedoman Umum Pengkajian Risiko Bencana (Peraturan Kepala BNPB Nomor 02 
+Tahun 2012). Kajian risiko bencana tersebut menggunakan pendekatan dengan menentukan 
+tiga komponen risiko dan menyajikannya dalam bentuk spasial maupun non spasial. 
+Komponen-komponen risiko yang dimaksud adalah: 
+a. R (Disaster Risk): Risiko Bencana; 
+b. H (Hazard Threat): Frekuensi (kemungkinan) bencana tertentu cenderung terjadi dengan 
+intensitas tertentu pada lokasi tertentu; 
+c. V (Vulnerability): Kerugian yang diharapkan (dampak) di daerah tertentu dalam sebuah 
+kasus bencana tertentu terjadi dengan intensitas tertentu. Perhitungan variabel ini 
+biasanya didefinisikan sebagai pajanan (penduduk, aset, dan lain-lain) dikalikan 
+sensitivitas untuk intensitas spesifik bencana; dan 
+d. C (Adaptive Capacity): Kapasitas yang tersedia di daerah itu untuk pulih dari bencana 
+tertentu. 
+21 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 22 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+Lampiran C 
+(Informatif) 
+Contoh Perhitungan Jalur Evakuasi Bencana Alam Tsunami 
+(Studi Kasus: Kabupaten Sukabumi, Provinsi Jawa Barat) 
+ 
+ 
+ 
+1. Tahap A: Pengumpulan Data 
+Berdasarkan BPBD Kabupaten Sukabumi (2019), terdapat sedikitnya 22 desa yang tersebar 
+di 9 kecamatan di Kabupaten Sukabumi rawan berpotensi tsunami. Wilayah tersebut berada 
+di kawasan pesisir pantai selatan. 
+ 
+ 
+ 
+Gambar C.1 - Peta desa rawan bencana alam tsunami di Kabupaten Sukabumi 
+ 
+Setelah dilakukan survei awal dan koordinasi dengan BPBD setempat, terpilih 3 desa 
+sebagai prioritas penyusunan jalur evakuasi bencana alam tsunami yaitu Desa Cikakak di 
+Kecamatan Cikakak, serta Desa Palabuhanratu, dan Desa Jayanti di Kecamatan 
+Palabuhanratu ( 
+Gambar C.1). 
+ 
+Dalam contoh perhitungan ini digunakan Desa Jayanti yang sebagian besar wilayahnya 
+berada pada ketinggian di bawah 20 MDPL yang mengacu pada potensi tsunami akibat gempa 
+megathrust di selatan Pulau Jawa ( 
+Gambar C.2 dan  
+Gambar C.3). 
+ 
+ 
+ 23 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+ 
+ 
+Gambar C.2 - Coastal proximity (kiri) dan topografi Daerah Palabuhanratu (kanan) 
+ 
+ 
+Gambar C.3 - Ketinggian wilayah Desa Jayanti dalam satuan meter di atas permukaan 
+laut 
+ 
+ 
+2. Tahap B: Proyeksi Jumlah Penduduk Terdampak 
+Data jumlah penduduk setiap tahun dan data penduduk terdampak sebenarnya dapat 
+diperoleh melalui koordinasi dengan perangkat desa, akan tetapi terkadang 
+ketidaklengkapan data menjadi kendala di lapangan. Pada contoh perhitungan ini jumlah 
+penduduk terdampak dilakukan pendekatan melalui kepadatan penduduk sedangkan laju 
+pertumbuhan penduduk dihitung dan diproyeksi menggunakan data dari BPS setempat. 
+ 
+Proyeksi penduduk dihitung menggunakan data jumlah penduduk 5 (lima) tahun terakhir 
+2015-2019 dari BPS (Tabel C.1). Setelah dianalisis, proyeksi penduduk yang paling 
+ 
+ 24 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+mendekati pola pertumbuhan penduduk di daerah tersebut adalah proyeksi dengan 
+menggunakan metode geometrik (Tabel C.2). 
+ 
+Tabel C.1 - Jumlah penduduk Desa Jayanti 
+Tahun 2015 2016 2017 2018 2019 
+Jumlah Penduduk (jiwa) 8600 7444 7533 6441 6751 
+Sumber: Kecamatan Palabuhanratu dalam Angka 2016-2020 
+ 
+Tabel C.2 - Proyeksi jumlah penduduk Desa Jayanti 
+Desa Luas 
+(Ha) 
+Proyeksi Jumlah Penduduk (Jiwa) 
+2020 2021 2022 2023 2024 2025 
+Jayanti 555,7 8637 8674 8711 8748 8785 8823 
+ 
+CATATAN: Data time series jumlah penduduk dimaksudkan untuk mendapatkan tren laju 
+pertumbuhan penduduk. Apabila tersedia data yang lengkap, sebaiknya menggunakan 
+rentang waktu 5 (lima) tahun terakhir.  
+ 
+Kemudian, untuk mengetahui jumlah penduduk terdampak di Desa Jayanti, maka perlu 
+diketahui terlebih dahulu luasan area rawan bencana tsunami. Distribusi penduduk dengan 
+pola tersebar (radial) membuat penyediaan jalur evakuasi perlu direncanakan berdasarkan 
+pola tersebut. Namun dalam contoh perhitungan ini hanya diambil sebuah area kecil yang 
+diplot menggunakan aplikasi Google Earth untuk mengetahui luasannya (Gambar C.4). 
+Berdasarkan plotting area pada aplikasi tersebut, maka diperoleh luas area 50 Ha. 
+Kepadatan penduduk di Desa Jayanti pada tahun 2025 adalah 15,87 jiwa/Ha sehingga 
+jumlah penduduk terdampak pada area tersebut adalah 794 jiwa. 
+ 
+ 
+Gambar C.4 - Contoh luasan area rawan bencana di Desa Jayanti 
+ 
+ 
+ 
+ 
+ 25 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+3. Tahap C: Waktu Evakuasi 
+Skenario terburuk peringatan tsunami diinformasikan dini hari ketika penduduk tidur, maka 
+asumsi waktu reaksi masyarakat adalah 1 menit. Waktu evakuasi dihitung sebagai berikut: 
+tE = tB - tP - tR 
+ = 20 – 5 – 1 
+ = 14 menit 
+ 
+4. Tahap D: Jumlah Jalur Evakuasi 
+Jumlah jalur evakuasi yang dibutuhkan: 
+�
+�𝑟= 𝑃
+𝑄×𝑡𝐸
+ = 794
+70×14 
+  
+ = 0,81 ≈ 1 jalur evakuasi dengan lebar 3,5 m 
+ 
+5. Tahap E: Penentuan Jalur Evakuasi 
+ 
+ 
+Gambar C.5 - Jalan eksisting, rencana jalur evakuasi, dan lokasi TES 
+Dari hasil survei langsung di lapangan yang didampingi oleh tim dari BPBD, terdapat 
+beberapa alternatif jalan untuk jalur evakuasi (Gambar C.5). Namun yang memenuhi 
+kriteria lebar hanya jalan nomor 3 dengan lebar jalan 5 m. 
+ 
+CATATAN: 
+• Jalan nomor 1 memiliki lebar jalan 1,5 m dan sudah terdapat jalur evakuasi eksisting; 
+• Jalan nomor 2 memiliki lebar jalan 2 m tetapi belum terdapat jalur evakuasi; 
+• Jalan nomor 3 memiliki lebar jalan 5 m dan telah terdapat jalur evakuasi eksisting namun 
+dengan rambu terbatas pada jalan besar saja. 
+ 
+ 
+ 26 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+ 
+Gambar C.6 - Jalan alternatif jalur evakuasi nomor 1 
+ 
+Gambar C.7 - Jalan alternatif jalur evakuasi nomor 2 
+   
+Gambar C.8 - Jalan alternatif jalur evakuasi nomor 3  
+ 
+ 
+ 
+ 
+ 27 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded 
+ 
+ 
+ 
+Gambar C.9 - Area yang terdampak yang akan dilayani 
+Rencana jalur evakuasi di ruas jalan nomor 3 dibagi menjadi dua untuk mengurangi 
+penumpukan dengan pembagian area yang akan dilayani (Gambar C.9). Kedua jalur 
+evakuasi tersebut dapat dilihat pada (Gambar C.10). 
+ 
+ 
+Gambar C.10 - Jalur evakuasi dan TES pada jalan nomor 3 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 28 dari 32   
+Dokumen ini tidak dikendalikan jika di unduh/Uncontrolled when downloaded
+
+Siaga Gempabumi & Tsunami 
+Untuk Masyarakat Penyandang Disabilitas 
+2024
+Buku ini merupakan hasil kerjasama
+BMKG dan JICA dalam proyek
+kerjasama “Technical Cooperation
+Project for Capacity Development on 
+Operation of Earthquake and
+Tsunami Analysis and Warning
+Dissemination” dan dukungan,
+rekomendasi dan arahan dari pihak
+terkait. Buku ini disusun oleh Tim
+Penulis, Penyunting, Peninjau,
+Penelaah, dan Penerjemah yang
+beranggotakan nama –nama di
+halaman belakang.
+Informasi lebih lanjut, silahkan hubungi:
+Pusat Gempabumi dan Tsunami
+Kedeputian Geofisika
+Badan Meteorologi Klimatologi dan Geofisika
+Jl. Angkasa I No.2 Kemayoran
+Jakarta Pusat, DKI Jakarta 10610
+PO Box 3540 Jkt.
+Call Center (021) 196
+Fax (021) 4246703
+Situs web: https://www.bmkg.go.id/
+Tentang buku
+Pembuatan buku saku "Siaga Gempabumi dan Tsunami
+Untuk Masyarakat Penyandang Disabilitas 2024"
+dilatarbelakangi oleh kebutuhan mendesak akan
+informasi yang dapat diakses oleh semua kalangan,
+termasuk masyarakat penyandang disabilitas. Indonesia
+terletak di daerah cincin api Pasifik, menjadikannya rawan
+terhadap bencana alam seperti gempa bumi dan tsunami.
+Sayangnya, banyak masyarakat penyandang disabilitas
+yang belum memperoleh informasi yang memadai
+mengenai langkah-langkah yang harus diambil saat terjadi
+gempabumi & tsunami. Hal ini disebabkan kurangnya
+sumber daya yang dirancang khusus untuk memenuhi
+kebutuhan mereka.
+Latar belakang pembuatan buku saku ini adalah untuk
+mengatasi kesenjangan informasi tersebut. Buku saku ini
+dirancang dengan mempertimbangkan berbagai jenis
+disabilitas, baik fisik, sensorik, maupun intelektual. Konten
+disusun dengan bahasa yang mudah dipahami dan
+disertai dengan ilustrasi yang jelas untuk memastikan
+informasi dapat diakses dengan mudah oleh semua
+kalangan.
+Dalam proses penyusunannya, berbagai pihak terkait
+dilibatkan, termasuk kerjasama BMKG – JICA dalam
+proyek “Technical Cooperation Project for Capacity
+Development on Operation of Earthquake and Tsunami
+Analysis and Warning Dissemination”, dan organisasi
+penyandang disabilitas.
+Kolaborasi ini bertujuan untuk memastikan bahwa setiap
+aspek yang penting bagi penyandang disabilitas tercakup
+dengan baik, mulai dari rencana evakuasi, titik kumpul
+yang ramah disabilitas, hingga cara memberikan
+pertolongan pertama.
+Selain itu, pembuatan buku saku ini juga bertujuan untuk
+meningkatkan kesadaran masyarakat luas akan
+pentingnya inklusivitas dalam bersiaga menghadapi
+gempabumi & tsunami. Diharapkan, dengan adanya buku
+saku ini, masyarakat penyandang disabilitas dapat lebih
+siap dan sigap dalam menghadapi kemungkinan
+terjadinya gempa bumi dan tsunami, sehingga resiko yang
+mereka hadapi dapat diminimalkan.
+Keberadaan buku saku "Siaga Gempabumi dan Tsunami
+Untuk Masyarakat Penyandang Disabilitas 2024" ini
+merupakan langkah kecil namun penting dalam upaya
+menciptakan masyarakat yang lebih inklusif dan siap
+menghadapi bencana. Dengan tersedianya informasi yang
+tepat dan dapat diakses oleh semua kalangan,
+diharapkan tingkat keselamatan dan kesejahteraan
+masyarakat penyandang disabilitas dapat lebih terjamin.
+Pendahuluan
+Buku saku "Siaga Gempabumi dan Tsunami Untuk
+Masyarakat Penyandang Disabilitas 2024" dibuat
+dengan 
+tujuan 
+meningkatkan 
+kesadaran 
+dan
+kesiapsiagaan masyarakat penyandang disabilitas
+terhadap ancaman gempabumi dan tsunami. Merujuk
+pada Undang-Undang Nomor 8 Tahun 2016 tentang
+Penyandang Disabilitas, kelompok disabilitas memiliki hak
+yang sama dengan masyarakat lainnya, termasuk dalam
+menerima informasi dan perlindungan dari bencana alam.
+Buku ini juga sejalan dengan Agenda Dunia 2030 "No One
+Left Behind", yang menekankan pentingnya inklusi dan
+kesetaraan bagi semua individu tanpa terkecuali.
+Kebutuhan penyandang disabilitas seringkali sangat
+spesifik, tergantung pada ragam disabilitas, aksesibilitas
+yang tersedia, pemahaman masyarakat sekitar, serta alat
+bantu yang digunakan. Dalam konteks bencana alam,
+informasi yang disampaikan harus dapat diakses dan
+dipahami oleh seluruh lapisan masyarakat, termasuk
+mereka yang memiliki keterbatasan fisik, sensorik,
+intelektual, atau mental. Buku ini dirancang untuk menjadi
+panduan praktis yang dapat digunakan oleh penyandang
+disabilitas 
+dan orang-orang di sekitarnya untuk
+meningkatkan kesiapsiagaan mereka terhadap ancaman
+gempabumi dan tsunami.
+Penyusun berharap buku saku ini menjadi langkah awal
+yang baik dalam mengenalkan lebih luas pentingnya
+diseminasi informasi tentang gempabumi dan peringatan
+dini tsunami kepada masyarakat penyandang disabilitas,
+sejalan dengan kerjasama antara BMKG – JICA dalam
+proyek “Technical Cooperation Project for Capacity
+Development on Operation of Earthquake and Tsunami
+Analysis and Warning Dissemination”. 
+Diharapkan buku ini dapat memberikan pemahaman yang
+lebih baik tentang bagaimana menghadapi dan
+merespons ancaman gempabumi dan tsunami, sehingga
+tidak ada individu yang tertinggal dalam upaya
+penyelamatan. Dengan demikian, kita dapat bersama
+sama menciptakan masyarakat yang lebih tangguh dan
+inklusif dalam menghadapi ancaman gempabumi dan
+tsunami.
+Tim Penyusun
+
+
+Buku ini hadir sebagai wujud komitmen kami
+untuk memberikan manfaat langsung kepada
+masyarakat, terutama bagi penyandang
+disabilitas. Kami percaya bahwa setiap individu
+memiliki hak yang sama untuk menerima
+informasi dan perlindungan dari ancaman
+bencana alam. Buku ini dirancang untuk
+memenuhi kebutuhan spesifik penyandang
+disabilitas, dengan harapan dapat meningkatkan
+kesiapsiagaan mereka dalam menghadapi
+ancaman gempabumi dan tsunami.
+Kata Sambutan
+Dengan penuh rasa syukur, kami
+mempersembahkan buku saku "Siaga
+Gempabumi dan Tsunami Untuk Masyarakat
+Penyandang Disabilitas 2024." Buku ini adalah
+hasil kolaborasi antara BMKG dan JICA melalui
+proyek “Technical Cooperation Project for
+Capacity Development on Operation of
+Earthquake and Tsunami Analysis and Warning
+Dissemination.”
+Terima kasih kepada semua pihak yang telah
+berkontribusi dalam pembuatan buku ini. Semoga
+buku ini menjadi panduan yang berguna dan
+dapat membantu menciptakan masyarakat yang
+lebih tangguh dan inklusif dalam menghadapi
+bencana.
+Jakarta, November 2024
+Kepala Pusat Gempabumi dan Tsunami
+Badan Meteorologi, Klimatologi, 
+dan Geofisika
+Dr. Daryono, S.Si., M.Si.
+Kata Pengantar
+Dengan bangga kami persembahkan buku
+saku "Siaga Gempabumi dan Tsunami Untuk
+Masyarakat Penyandang Disabilitas 2024."
+Publikasi ini merupakan hasil kerjasama erat
+antara BMKG dan JICA melalui " Technical
+Cooperation Project for Capacity
+Development on Operation of Earthquake
+and Tsunami Analysis and Warning
+Dissemination" Tujuan utama kami adalah
+memberikan dukungan penting bagi
+masyarakat, khususnya bagi penyandang
+disabilitas, yang sering kali memerlukan
+pertimbangan khusus saat menghadapi
+ancaman bencana alam.
+Di Jepang, langkah-langkah efektif untuk
+mitigasi gempa bumi dan tsunami telah
+memberikan manfaat yang signifikan bagi
+masyarakat. Kami berharap agar pengetahuan
+dan praktik serupa dapat diadopsi di
+Indonesia, yang memungkinkan penyandang
+disabilitas meningkatkan kesiapsiagaan
+mereka terhadap gempa bumi dan tsunami.
+Buku saku ini berisi panduan praktis yang
+mudah diakses dan dipahami, yang bertujuan
+untuk meningkatkan kesadaran dan kesiapan
+di kalangan penyandang disabilitas terkait
+risiko gempa bumi dan tsunami.
+Kami menyampaikan rasa terima
+kasih 
+yang sebesar-besarnya
+kepada semua pihak yang
+berkontribusi dalam penyusunan
+buku ini. Kami berharap ini
+berfungsi 
+sebagai 
+mendasar 
+dalam 
+langkah
+upaya
+membangun masyarakat yang
+lebih inklusif dan tangguh dalam
+menghadapi 
+bencana 
+alam
+seperti gempabumi dan tsunami.
+Jakarta, November 2024
+JICA Expert Team Leader
+Akihiro Furuta
+Daftar Isi
+Tentang Buku
+Pendahuluan
+Kata Sambutan
+Kata Pengantar
+Prolog
+01
+24
+48
+Yang Perlu Dilakukan 
+Sebelum Bencana 
+Kunci Utama
+Saat Terjadi Gempa Bumi 
+Tips Keamanan
+Sesaat Setelah
+Guncangan berhenti
+62 Potensi Gempabumi dan
+Tsunami Indonesia
+64
+67
+68
+Proses Terjadinya
+Gempabumi
+Intensitas Seismik dan 
+Magnitudo Gempa
+Status Tingkat
+Ancaman Tsunami
+70
+71
+Likuifaksi
+Gempabumi berpotensi
+Tsunami
+Sekilas Tentang Sistem Informasi
+73 Gempa Bumi dan
+Peringatan Dini Tsunami
+74
+76
+Status Tingkat Ancaman Tsunami
+Bagaimana Mengkases Informasi Resmi
+BMKG Tentang Informasi Gempabumi
+dan Peringatan Dini Tsunami
+77
+78
+79
+Aplikasi Mobile
+Sosial Media
+Official Channel
+80 Referensi
+82 Kontributor
+83 Tim Penyusun
+Prolog
+Masyarakat yang memiliki kebutuhan khusus, seperti
+penyandang disabilitas,  pada umumnya kurang mampu
+bergerak cepat atau mengambil keputusan dengan
+cepat, membuat persiapan yang baik akan membantu
+kehidupan yang lebih lancar setelah bencana.
+Dalam perencanaan tanggap darurat, penting untuk selalu
+memperhatikan penyandang disabilitas. Buatlah daftar
+sukarela penyandang disabilitas di sekitar Anda,
+termasuk keluarga, karyawan, murid, atau tetangga. 
+Saling membantu dalam menyusun daftar kebutuhan
+darurat bersama. Meskipun mereka mungkin tidak
+menganggap diri mereka disabilitas, penyandang
+disabilitas tetap harus dilibatkan jika membutuhkan
+bantuan saat darurat. Perbarui daftar kebutuhan darurat
+kelompok secara berkala, termasuk orang dengan
+hambatan mobilitas sementara seperti penyandang
+disabilitas fisik. 
+Wawancarai setiap penyandang disabilitas yang terdaftar
+untuk memahami cara terbaik membantu sesama saat
+darurat. 
+Misalnya, orang dengan kesulitan
+belajar mungkin bingung dan
+butuh petunjuk arah, sementara
+disabilitas Netra membutuhkan
+pendamping 
+dalam 
+darurat, 
+terutama saat ada
+kerumunan.
+situasi
+
+I
+Yang Perlu Dilakukan 
+Sebelum
+Bencana 
+I
+1.
+Yang Perlu Dilakukan 
+Sebelum Bencana
+Pelajari informasi kebencanaan.
+Mengerti definisi, ciri, bahaya, dan
+respons terhadap gempa dan
+tsunami esensial untuk kesiapan
+bencana. Pengetahuan ini
+membantu mengenali tanda awal,
+memungkinkan tindakan cepat, dan
+mengurangi dampak. Edukasi dan
+latihan respons bencana
+melindungi diri dan komunitas,
+memastikan keselamatan saat
+bencana terjadi.
+2
+TANGGA
+DARURAT
+a. Dapatkan informasi lebih lanjut melalui petugas
+RT/RW, pemerintah setempat atau BPBD daerah
+b.
+Jika anda pengguna alat bantu jalan, seperti kursi
+roda atau tongkat jalan, pastikan orang terdekat anda
+mampu membantu anda untuk melalui jalur evakuasi
+menuju titik kumpul evakuasi
+Cari informasi mengenai
+lokasi rumah tinggal atau
+tempat anda bekerja
+apakah berada di zona
+rawan bencana atau
+tidak.
+Hafalkan jalan menuju pintu keluar, jendela, tangga
+darurat atau jalur evakuasi dalam bangunan.
+c. Hafalkan tempat berlindung darurat, titik kumpul,
+dan tempat evakuasi sementara.
+2. Kenali lingkungan tempat tinggal dan bekerja
+3
+d.
+Pastikan struktur
+bangunan tempat anda
+berada tidak rentan
+runtuh. Sedapat
+mungkin konsultasikan
+pembangunan dengan
+tenaga sipil profesional.
+Gunakan kaidah dan
+material yang baik agar
+bangunan tahan
+terhadap gempa. 
+Perhatikan juga lokasi pembangunan rumah atau
+bangunan tempat kerja anda tidak berada dalam zona
+merah atau kuning rawan bencana, khususnya
+gempabumi, tsunami, dan likuifaksi
+e.
+Pastikan semua perabot
+dan barang lainnya,
+tidak mudah terjatuh dan
+menimpa kepala jika
+terjadi gempabumi.
+Usahakan gunakan pengaman yang terpaku ke
+dinding. Jiaka memiliki pajangan hias yang mudah
+pecah, upayakan gunakan perekat agar tidak mudah
+terlempar saat terguncang, atau terhentak
+4
+f.
+g.
+h.
+Hindari menggunakan
+lampu gantung di
+area yang aktif
+digunakan sebagai
+ruang beraktifitas
+atau berkumpul
+terbuat dari bahan
+yang mudah terlepas
+atau kaca  
+Hindari menyimpan barang
+dekat dengan sumber api.
+Pastikan menyimpan barang
+yang mudah terbakar pada
+tempat yang tidak mudah
+pecah atau memicu api yang
+lebih besar.
+Jika terjadi guncangan hebat,
+barang yang diletakkan di
+tempat tinggi berpotensi
+terjatuh. Jika barangtersebut
+memiliki bobot yang berat,
+maka dapat berpotensi
+menipa orang yang sedang
+berlindung di bawahnya.
+Untuk perabotan yang
+menggantung, seperti
+lampu gantung, pastikan
+telah terpasang dengan
+aman dan kuat.
+5
+Your paragraph text Your paragraph text
+Jangan meletakkan apa
+pun di meja makan. Anda
+juga dapat menghindari
+bahaya melalui tata letak
+furnitur. 
+Arah
+Pintu
+Keluar
+Hindari meletakkan benda-benda besar di sekitar pintu
+sehingga Anda dapat dengan mudah bergerak ke
+lorong. 
+Sebisa mungkin, simpan
+furnitur besar di satu
+tempat, dan pastikan
+area ruang tamu Anda
+merupakan area yang
+aman agar furnitur tidak
+jatuh.
+Ada berbagai cara untuk mencegah perabot
+dan peralatan terjatuh. 
+3.
+6
+Kurangi jumlah barang
+kecil, dan juga jumlah
+furnitur. 
+Untuk penyimpanan,
+lupayakan gunakan
+gudang, lemari, dan
+furnitur built-in. 
+Pastikan peralatan rumah
+tangga dan furnitur tidak
+menghalangi pintu atau
+jalur keluar jika terjatuh
+atau bergerak. Berhati
+hatilah juga terhadap laci
+yang bergeser keluar.
+Setelah Anda
+merencanakan tata letak
+furnitur Anda, sekarang
+saatnya untuk
+mengamankannya di
+tempatnya dengan
+menggunakan berbagai
+perangkat penstabil. 
+Barang-barang yang tidak
+tersimpan baik pada
+tempatnya dapat
+menghambat proses
+evakuasi dan berpotensi
+menimbulkan luka jika
+tidak sengaja terinjak atau
+terbentur
+7
+Perabot dan peralatan
+tersebut dapat dipasang
+ke dinding dengan braket
+berbentuk L, dipasang ke
+langit-langit dengan tiang
+yang dapat dipanjangkan,
+atau dipasangi sumbat di
+antara perabot dan lantai. 
+Ada berbagai cara untuk mencegah perabot dan
+Perlengkapan lampu yang dipasang ke langit-langit
+dengan rantai aman untuk digunakan.
+8
+Setelah Anda
+merencanakan tata
+letak furnitur Anda,
+sekarang saatnya
+untuk
+mengamankannya di
+tempatnya dengan
+menggunakan
+berbagai perangkat
+penstabil. 
+Memasang braket menghadap ke bawah akan
+memberikan dukungan terkuat. Sejajarkan braket L ke
+substrat dinding, dan kencangkan bagian atas furnitur ke
+braket, dan sisi braket ke substrat dinding, menggunakan
+sekrup di setiap sisi.
+Untuk perabotan yang Anda pindahkan setiap hari, kunci
+roda saat Anda tidak memindahkannya. Jika perabot
+memiliki lokasi tetap, pasangkan ke dinding atau lantai
+menggunakan tali pengaman yang dapat dilepas atau
+cara lain. Untuk perabotan yang biasanya Anda
+pindahkan, pasang karet pengaman agar tidak mudah
+bergerak
+Untuk perabotan
+yang biasanya Anda
+pindahkan, pasang
+karet pengaman
+agar tidak mudah
+bergerak
+9
+ Pelajari informasi dan cara evakuasi saat bencana
+Kartu Penyandang 
+Disabilitas
+KPD 
+NIK 
+No Reg. Disabilitas
+Nama Lengkap
+Alamat 
+Kode Ragam Disabilitas
+:
+:
+:
+:
+:
+KARTU PENYANDANG
+DISABILITAS
+0270032400410001
+00001201
+Yohana Pikal
+Jl. Kurano No. 15 Remu,
+Distrik Sorong, Kota Sorong
+98416
+D
+a.
+d.
+Rencanakan
+evakuasi
+mandiri.
+b. Buatlah rencana atau
+kesepakatan bersama
+dalam keluarga dalam
+menentukan tempat
+evakuasi sementara
+dan siapa yang akan
+membantu evakuasi
+anggota keluarga
+dengan disabilitas
+c. Buat kesepakatan Bersama dalam keluarga terkait
+tempat evakuasi sementara dan siapa yang akan
+membantu mengevakuasi anggota keluarga
+dengan disabilitas.
+Cari tahu lokasi tempat
+pengungsian sementara
+yang memiliki aksesibilitas  
+penyandang disabilitas,
+seperti ramp, toilet
+aksesibilitas, dan ruang
+yang cukup luas. 
+4.
+10
+e.
+f.
+g.
+h.
+i.
+Cari tahu lokasi tempat pengungsian sementara
+yang memiliki aksesibilitas bagi penyandang
+disabilitas, seperti ramp, toilet aksesibilitas,
+dan ruang yang cukup luas. 
+Pastikan anda telah melaporkan diri pada
+DISDUKCAPIL atau Kelurahan setempat untuk
+mendapatkan Kartu Penyandang Disabilitas (KPD) 
+Pastikan jalur evakuasi yang akan anda lalui aman
+dari potensi reruntuhan, tanah longsor, pohon
+tumbang, sengatan listrik, jembatan putus, dan
+bahaya lainnya yang mengancam nyawa.
+Cari tahu lokasi tempat pengungsian sementara
+yang memiliki aksesibilitas bagi penyandang
+disabilitas, seperti ramp, toilet aksesibilitas, dan
+ruang yang cukup luas. 
+Dapatkan informasi lokasi
+zona bahaya, titik kumpul,
+jalur evakuasi yang
+ditetapkan, atau rute tercepat
+dan teraman untuk mencapai
+tempat yang lebih tinggi
+melalui orang tedekat, rekan
+kerja, tetangga, atau ketua
+RT/RW yang mengakses
+informasi dari Badan
+Penanggulangan Bencana
+Daerah atau lembaga terkait
+setempat.
+11
+5.
+Jalin komunikasi yang baik dengan 
+lingkungan sekitar.
+a. Memberi tahu anggota keluarga yang tinggal
+bersama, rekan kerja, atau tetangga melalui
+interaksi rutin, bahwa anda adalah orang yang
+membutuhkan bantuan khusus jika terjadi bencana.
+Kerjasama dengan tetangga sangat diperlukan saat
+terjadi bencana. Perluas jaringan Anda di dalam
+masyarakat melalui berbagai kegiatan seperti
+bertegur sapa dengan tetangga secara rutin dan
+mengikuti latihan siaga bencana yang
+diselenggarakan oleh paguyuban, sehingga
+kehidupan Anda di rumah atau di tempat
+pengungsian pascabencana juga berjalan lancar.
+b. Buat kesepakatan Bersama
+dalam keluarga terkait
+tempat evakuasi sementara
+dan siapa yang akan
+membantu mengevakuasi
+anggota keluarga dengan
+disabilitas
+12
+c. Pastikan tahu jalur evakuasi yang aman, pastikan
+jalan tidak berlubang dan pencahayaan yang
+baik untuk membantu orang dengan low vision
+melakukan evakuasi.
+d. Aktif berpartisipasi dalam kegiatan latihan evakuasi
+di lingkungan tempat tinggal atau tempat kerja.
+Pastikan semua anggota keluarga, termasuk
+penyandang disabilitas, paham prosedur evakuasi
+dan dapat bertindak cepat saat terjadi gempa.
+f.
+Aktif melibatkan diri, sebagai penyandang
+disabilitas, dalam membuat rencana evakuasi
+keluarga atau komunitas. Pastikan rencana ini
+mencakup jalur evakuasi yang aman dan mudah
+diakses, serta titik pertemuan yang jelas.
+13
+Orang-orang yang
+membutuhkan dukungan
+seperti ibu hamil, anak
+anak, lansia, warga
+negara asing, dan
+mereka yang memiliki
+penyakit serius atau
+penyandang disabilitas
+mungkin tidak dapat
+segera memperoleh
+informasi atau
+melakukan evakuasi.
+Selain selalu waspada terhadap anggota masyarakat
+yang membutuhkan dukungan, bekerja samalah dengan
+relawan kesejahteraan yang ditugaskan dan orang lain
+untuk membantu mereka saat terjadi bencana.
+14
+a.
+b.
+Belajar P3K sangat penting
+untuk kita semua. Ketika
+bencana terjadi, pertolongan
+pertama bisa jadi penentu
+hidup atau mati. Dengan ilmu
+P3K, kita dapat memberikan
+pertolongan pada diri sendiri
+dan orang terdekat sebelum
+bantuan medis tiba. Kita bisa
+mencegah kondisi korban
+memburuk, mengurangi risiko
+kematian, dan meningkatkan
+peluang kesembuhan. P3K
+adalah bekal berharga untuk
+menghadapi situasi darurat dan
+menyelamatkan nyawa.
+Kebakaran bisa terjadi kapan
+saja. Dengan menguasai cara
+menggunakan alat pemadam
+kebakaran, 
+kita bisa mencegah kebakaran
+meluas dan menyelamatkan
+nyawa serta harta benda saat
+terjadi kebakaran kecil. Penting
+untuk kita pelajari sebagai
+bentuk kesiapsiagaan.
+Kuasai penganan darurat untuk diri sendiri, seperti: 6.
+Jalin komunikasi yang baik dengan
+lingkungan sekitar.
+Memadamkan api menggunakan
+alat sederhana bagi yang mampu.
+15
+c.
+Polisi
+NOMOR DARURAT
+Panggilan Darurat 
+Ambulans
+SAR/Basarnas
+112
+118/119
+110
+115
+Pemadam Kebakaran 113
+(BPOM) Info
+Keracunan
+Posko Bencana Alam
+Posko Kewaspadaan
+Nasional
+PMI
+129
+122
+1500-533
+0217992325
+Asap dan debu berbahaya untuk paru
+paru. Dengan menutup mulut dan
+hidung menggunakan kain basah, kita
+dapat mengurangi paparan asap
+beracun dan memudahkan bernapas
+saat mencari jalan keluar dari ruangan
+yang terbakar. Ini adalah keterampilan
+vital untuk bertahan hidup dalam situasi
+darurat.
+Catat nomor-nomor darurat dan penting seperti
+keluarga dekat, pemadam kebakaran, kepolisian,
+bantuan darurat, dan lain sebagainya.
+Menggunakan alat sederhana
+untuk bernafas jika terjebak api
+15
+7.
+Hal khusus yang perlu diperhatikan bagi :
+a.
+b.
+c.
+d.
+Penyandang Disabilitas Netra
+Periksa secara berkala dan pastikan alat bantu lihat dan
+tongkat cadangan selalu siap digunakan.
+Pelajari dengan baik lingkungan sekitar rumah dan jalur
+evakuasi agar dapat bergerak dengan aman
+Penyandang Disabilitas Tuli
+Periksa fungsi alat bantu dengar
+secara berkala. 
+Upayakan memiliki lampu berkedip
+atau vibrator sebagai sistem alarm
+untuk memberikan peringatan dini
+tentang gempabumi di rumah anda.
+Penyandang Disabilitas Intelektual dan 
+Mental-Psikososial
+Pastikan selalu mengantongi kartu identitas diri
+beserta nomor kontak darurat.
+Pastikan mengantongi obat-obatan khusus untuk
+keadaan darurat
+Pastikan pendamping evakuasi saat keadaan darurat
+Penyandang Disabilitas Fisik
+Periksa secara berkala dan pastikan tongkat cadangan
+atau alat bantu jalan lainnya selalu siap digunakan.
+Pelajari dengan baik lingkungan sekitar rumah dan jalur
+evakuasi agar dapat bergerak dengan aman
+16
+8.
+Siapkan tas siaga bencana yang berisi: 
+UMUM
+Dokumen dan surat berharga 
+Foto Keluarga 
+Kotak P3K
+Masker
+Air minum
+Makanan tahan lama
+Uang cash
+Handphone & charger
+Senter
+Pakaian ganti untuk 3 hari
+Radio Portable
+Baterai cadangan
+Pelengkapan mandi pribadi
+Tissue basah
+Jas hujan
+Peluit yang digantung pada zipper tas 
+Daftar kontak darurat
+Powerbank
+17
+a.
+Peralatan tambahan bagi penyandang
+Disabilitas Netra: 
+i.
+Kartu
+Penyandang
+Disabilitas
+(KPD)
+KARTU PENYANDANG
+DISABILITAS
+NIK 
+No Reg. Disabilitas
+Nama Lengkap
+Alamat 
+Kode Ragam Disabilitas
+:
+:
+:
+:
+:
+0270032400410001
+00001201
+Yohana Pikal
+Jl. Kurano No. 15 Remu,
+Distrik Sorong, Kota Sorong
+98416
+A
+Pastikan membawa KPD ada sebagai identitas jika harus
+menetap di tempat evakuasi
+ii.
+Alat bantu lihat
+cadangan & Tongkat
+lipat cadangan,
+Periksa secara berkala kondisi alat bantu cadangan dalam
+keadaan baik dan dapat digunakan saat darurat
+iii.
+Tali pengaman,
+Makanan dan
+kebutuhan untuk anjing
+penolong (jika punya). 
+18
+Kartu
+Penyandang
+Disabilitas
+(KPD) , 
+Alat bantu dengar
+cadangan dan
+baterai cadangan, 
+HELP !
+Alat penanda
+disabilitas tuli,
+seperti pin
+atau name
+tag
+iii. Alat bantu
+komunikasi
+seperti buku
+dan pulpen, 
+ii.
+i.
+iv.
+KARTU PENYANDANG
+DISABILITAS
+NIK 
+No Reg. Disabilitas
+Nama Lengkap
+Alamat 
+Kode Ragam Disabilitas
+:
+:
+:
+:
+:
+0270032400410003
+00001203
+Bejo Sumarwoto 
+Jl. Bengawan Solo No.42 RT
+06 RW 08 Mojo Pasar
+Kliwon Surakarta, Jawa
+Tengah 66803
+B
+Peralatan tambahan bagi penyandang
+Disabilitas Tuli: 
+b.
+19
+Kartu
+Penyandang
+Disabilitas
+(KPD)
+NIK 
+No Reg. Disabilitas
+Nama Lengkap
+Alamat 
+Kode Ragam Disabilitas
+:
+:
+:
+:
+:
+KARTU PENYANDANG
+DISABILITAS
+0270032400410004
+00001204
+I Made Kenanga
+Jl. Gopala Jl. Nusa Dua
+No.6a, Benoa, Kec. Kuta
+Sel., Kabupaten Badung,
+Bali 80361
+F
+iv. Alat penanda
+disabilitas
+seperti pin
+atau nametag
+iii.
+i.
+ii.
+Bahan makanan
+khusus yang tidak
+memicu gangguan 
+iv.
+Buku yang berisi
+keterangan alergi,
+waktu rutin minum
+obat, makanan atau
+minuman pemicu
+gangguan, 
+Peralatan tambahan bagi penyandang Disabilitas
+Intelektual dan Mental-Psikososial: 
+c.
+Obat rutin khusus
+20
+Kartu
+Penyandang
+Disabilitas
+(KPD)
+NIK 
+No Reg. Disabilitas
+Nama Lengkap
+Alamat 
+Kode Ragam Disabilitas
+:
+:
+:
+:
+:
+KARTU PENYANDANG
+DISABILITAS
+0270032400410002
+00001202
+Yaya Mulyana
+JL. Kp Sukahaji Selatan
+Desa Singasari Kecamatan
+Singaparna
+D
+Kain penutup atau
+sarung untuk berganti
+pakaian darurat
+Obat rutin 
+khusus
+Popok sekali pakai
+Kain panjang untuk alat
+bantu gendong yang
+dapat digunakan oleh
+pendamping atau
+penolong
+iii.
+i.
+v.
+ii.
+Peralatan Tambahan Bagi Penyandang
+Disabilitas Fisik: 
+d.
+iv.
+21
+Jika Anda merasakan
+guncangan, periksa
+sekeliling Anda dan segera
+pindah ke tempat yang tidak
+ada benda berpotensi
+terjatuh atau rubuh.
+Prioritaskan melindungi
+hidup Anda sendiri terlebih
+dahulu saat bertindak.
+Untuk meminimalkan
+kerusakan jika terjadi
+bencana, penting bagi
+setiap warga di daerah
+tersebut untuk mempelajari
+tentang kesiapsiagaan
+bencana. Selain
+berpartisipasi dalam BPBD
+setempat, pemerintahan
+setempat, atau lembaga
+PRB lainnya. Mengikuti
+kamp kesiapsiagaan
+bencana di rumah juga
+merupakan latihan yang
+bagus.
+22
+
+II
+Kunci Utama
+Saat Terjadi
+Gempa Bumi 
+II
+Kunci Utama Saat Terjadi Gempa Bumi
+1 2 3
+Jangan
+Panik!
+Lindungi diri Anda!
+Temukan tempat berlindung
+yang kuat (seperti di bawah
+meja), jauhi reruntuhan, dan
+lakukan.
+DROP (berlutut, berjongkok,
+atau menunduk), 
+COVER (lindungi kepala)
+menggunakan tas atau
+dibawah barang yang kuat
+seperti meja, dan 
+HOLD ON (bertahan sambil
+berpegangan).
+Langkah 1
+Berlutut
+Segera
+keluar
+bangunan
+, jika anda
+berada
+sangat
+dekat
+dengan
+pintu
+keluar.
+Langkah 2
+Lindungi
+Kepala
+Langkah 3
+Bertahan
+25
+1.
+a.
+b.
+Yang perlu diperhatikan agar tidak panik
+Tetap tenang dan ikuti rencana evakuasi yang telah
+dibuat sebelumnya. 
+Saat keluar ruangan (jika saat gempa terjadi dalam
+ruangan) jangan berisik, jangan berlari dan jangan
+saling mendorong saat keluar dari ruangan.
+Utamakan membantu anggota keluarga penyandang
+disabilitas, ibu hamil, anak kecil, dan lansia untuk
+keluar terlebih dahulu
+c.
+Jangan kembali kedalam ruangan sebelum ada
+informasi yang dapat dipercaya sumbernya bahwa
+keadaan sudah betul-betul aman.
+Tanyakan pada petugas
+evakuasi, atau berita dari
+sumber terpercaya
+bahwa ancaman gempa
+susulan yang dapat
+mengakibatkan
+bangunan runtuh, longsir,
+atau ancaman likuifaksi
+sudah berkurang.
+INFO
+Official
+Disaster
+Information
+26
+2.
+Saat berada di Rumah
+a.
+Jika berada di dapur, matikan api yang sedang
+menyala, menjauhlah dari tempat penyimpanan
+barang yang mudah jatuh.
+Untuk anda yang
+menggunakan kompor
+listrik,  tetap matikan
+kompor untuk
+menghindari korslet
+yang dapat memicu
+kebakaran atau
+menyebabkan  bahan
+makanan yang
+terbakar menimbulkan
+asap yang dapat
+mengganggu
+pernafasan.
+b.
+Matikan listrik terdekat dengan posisi anda
+berlindung.
+Akan lebih baiklagi jika
+anda memiliki pengaman
+stop kontak. Setelah
+mencabut listrik, tutuplah
+stop kontak dengan
+pengaman.
+27
+c.
+Jika berada di tangga, berpeganganlah pada sesuatu
+yang kokoh, jangan turuni tangga hingga guncangan
+berhenti.
+TANGGA DARURAT
+EXIT
+Di kebanyakan bangunan tua, lantai terbawah rentan
+runtuh dan menimpa Anda, jadi jangan terburu-buru turun
+ke bawah. Jika Anda berada di gedung yang tidak
+memenuhi standar ketahanan gempa, pastikan apakah
+Anda dapat keluar dengan selamat.
+28
+d.
+Jika berada di toilet, segera keluar dari kamar mandi
+untuk menghindari pecahan kaca atau terjebak di
+dalam. 
+Setelah keluar dari
+toilet, segera pergi
+ke tempat yang lebih
+aman seperti lorong
+atau pintu depan,
+sehingga Anda
+dapat segera keluar
+untuk evakuasi.
+29
+Anda akan sangat kesulitan karena Anda sedang tidak
+menggunakan pakaian sama sekali. Jika Anda
+merasakan guncangan, segera kenakan handuk, tutupi
+kepala Anda dengan baskom atau sesuatu untuk
+melindungi diri dari pecahan kaca. Segera keluar dari
+kamar mandi dan lindungi diri Anda di tempat yang
+aman untuk menghindari pintu melengkung dan
+menjebak Anda.
+30
+3. 
+Jika berada jauh dari keluarga, Jangan Ragu untuk
+menghubungi orang terdekat, petugas penyelamat,
+atau relawan: 
+a. 
+b. 
+c. 
+4. 
+Beri tahu keluarga, teman,
+pendamping, atau rekan kerja
+mengenai kondisi dan lokasi
+Anda untuk meminta bantuan
+jika diperlukan. 
+Jangan ragu untuk mencari
+bantuan 
+dari 
+petugas
+penyelamat atau relawan jika
+Anda membutuhkannya.
+Berkumpulah di Titik Pertemuan yang sudah
+disepakati
+Berkumpullah bersama anggota keluarga,
+pendamping, atau rekanan di titik pertemuan yang
+telah disepakati bersama. 
+Pahami perbedaan Tempat Evakuasi Sementara (TES)
+dengan Tempat Evakuasi Akhir (TEA)
+Tempat Evakuasi Sementara (TES)
+Sebuah lokasi berupa lapangan, aula,
+tempat-tempat yang biasa ditandai
+dengan “titik kumpul” dapat disebut
+dengan TES. Lokasi ini digunakan untuk
+melakukan penyelamatan diri terdekat
+yang paling mudah untuk dijangkau. 
+31
+Tempat Evakuasi Akhir (TEA)
+TEA merupakan posko pengungsian
+yang dibangun oleh pemerintah atau
+organisasi tertentu untuk korban
+bencana memiliki tempat tinggal
+sementara akibat rumah hunian
+pribadi yang telah rusak parah.
+5.
+Saat berada di kantor
+a.
+b.
+Jika ruangan kerja anda dipenuhi barang yang
+mudah terjatuh atau banyak terdapat kaca, segera
+menjauh, cari tempat yang aman untuk berlindung.
+Dekati pintu keluar ruangan, buka pintu jika
+memungkinkan agar tidak terjebak. 
+Penting untuk
+menghafal tata
+letak  kantor anda
+untuk
+mempermudah
+evakuasi. 
+Bersama-sama melakukan kebiasaan baik dengan
+tidak sembarangan meletakkan barang bawaan di
+lantai tempat orang berlalu lalang juga sangat
+membantu proses kelancaran evakuasi bersama
+32
+b.
+d.
+a.
+Saat Berada Dalam Lift
+Tekan semua tombol di setiap lantai
+Segera keluar saat lift terbuka.
+c. Jika terjebak, gunakan tombol darurat untuk
+mengubungi petugas menggunakan intercom.
+Posisikan diri anda dengan berjongkok
+atau merebah serendah mungkin sampai
+bantuan datang.
+33
+6.
+7.
+Saat berada di gedung tinggi
+a.
+b.
+Segera pergi menuju ruang bersama,
+ruangan disekitar lift, atau kolom struktur
+bangunan/pilar bangunan.
+Segera lindungi kepala dan posisikan tubuh anda
+serendah mungkin.
+c. Jangan turun ke lantai yang lebih rendah sampai
+guncangan berhenti.
+34
+Saat berada di pusat perbelanjaan, gudang
+penyimpanan, pabrik, dan ruangan sejenis
+a.
+b.
+Waspadalah terhadap barang yang terlempar,
+runtuh, dan berjatuhan.
+Segera pergi menuju ruang bersama, ruangan
+disekitar lift, atau kolom struktur bangunan/pilar
+bangunan
+c. Gunakan barang solid di sekitar anda untuk
+melindungi kepala dan berjongkoklah.
+35
+8.
+9.
+Saat berada di fasilitas umum yang terdapat sangat
+banyak orang seperti, stadion, gedung teater, atau
+tempat konser.
+a.
+b.
+Jangan panik! Terburu-buru menuju pintu keluar
+AKAN LEBIH MEMBAHAYAKAN! Berpotensi
+tehimpit, terinjak, dan tidak dapat bernafas.
+Segera berlindung dan waspadalah
+terhadap barang yang berjatuhan!
+c. Ikuti instruksi petugas untuk meninggalkan area
+setelah guncangan berakhir secara tertib. 
+tinggal
+diisi
+36
+10.
+a.
+Saat berada di luar ruangan
+Jangan Panik! Segera cari tempat berlindung
+dengan menjauhi potensi reruntuhan, tanah
+longsor, pohon tumbang, sengatan listrik,
+jembatan putus, dan bahaya lainnya yang
+mengancam nyawa.
+b.
+Hindari arus kerumunan yang panik agar terhindar
+dari terinjak, terhimpit, dan sulit bernafas, 
+c. Segera berlindung dan waspadalah terhadap barang
+yang berjatuhan!
+37
+11.
+Saat berada di sekolah
+a.
+Segera berlindung di bawah meja dan waspadalah
+terhadap barang yang berjatuhan, jauhi jendela
+berkaca yang berpotensi pecah.
+b.
+Jika berada di aula, menjauhlah dari jendela
+berkaca yang berpotensi pecah, berlindung dan
+carilah pegangan yang kokoh.
+c. Jangan berlarian sampai guncangan berhenti
+d. Jika guncangan berhenti, ikutilah petunjuk dari
+perugas sekolah untuk evakuasi secara tertib.
+38
+12.
+Saat berada di parkiran bawah tanah gedung
+a. Jangan Panik! Terburu
+buru menuju pintu
+keluar AKAN LEBIH
+MEMBAHAYAKAN!
+Berpotensi tehimpit,
+terinjak, dan tidak
+dapat bernafas.
+b.
+Segera berlindung
+dibalik kolom atau
+struktur bangunan
+terkuat dan
+waspadalah
+terhadap barang
+yang berjatuhan!
+c. Segera keluar dengan tertib ketika guncangan telah
+berhenti.
+39
+13.
+a.
+Saat berada di Bandar Udara
+Jangan Panik! Jauhi berlindung di dekat kaca.
+b.
+Segera lindungi kepala dan berjongkok.
+c. Setelah guncangan berakhir, ikuti arahan petugas
+jika harus evakuasi secara tertib.
+40
+b.
+d.
+a.
+Saat berada di Stasiun Kereta, Kereta Bawah
+Tanah, atau Terminal Bus.
+Jangan Panik! Terburu-buru menuju pintu keluar
+AKAN LEBIH MEMBAHAYAKAN! Berpotensi
+tehimpit, terinjak, dan tidak dapat bernafas.
+JANGAN MENDORONG PENUMPANG LAIN!!
+c. Jauhi tepian peron agar tidak terdorong 
+dan terjatuh
+Segera berlindung mendekati tembok atau struktur
+bangunan terkuat dan waspadalah terhadap barang
+yang berjatuhan!
+e. Jika guncangan berhenti, ikutilah petunjuk dari
+perugas untuk evakuasi secara tertib.
+41
+14.
+b.
+f. Jika dalam keadaan berdiri dan memungkinkan
+anda untuk berjongkok, jongkok dan lindungi
+kepala anda.
+a.
+Saat berada dalam kereta
+Saat ada guncangan, waspada kemungkinan
+Kereta akan berhenti darurat.
+Jangan Panik! JANGAN MENDORONG 
+PENUMPANG LAIN UNTUK KELUAR !
+c. Jika dalam keadaan duduk, menunduk dan lindungi
+kepala anda menggunakan barang bawaan anda.
+d. Jika terlalu padat,
+berbeganglah
+dengan kuat.
+e. JANGAN
+MEMAKSA
+KELUAR SAMPAI 
+GUNCANGAN
+BERHENTI !
+42
+15.
+b.
+a.
+Saat berada di dalam Mobil atau Bus
+Jika anda merasakan guncangan saat sedang
+berkendara di jalan raya atau jalan tol, nyalakan
+lampu bahaya, kurangi kecepatan dan menepi
+Saat kendaraan sudah berhenti sempurna, segera
+keluar dan berlindung.
+c. JANGAN HENTIKAN & TINGGALKAN KENDARAAN
+ANDA DI TENGAH JALAN.
+d. Saat kendaraan sudah berhenti sempurna, segera
+keluar dan berlindung
+43
+16.
+e.
+Jika anda adalah penumpang, tunggu kendaraan
+berhenti sempurna untuk keluar. JANGAN
+MEMAKSA ATAU MELOMPAT KELUAR SAMPAI
+KENDARAAN BERHENTI.
+44
+17.
+Saat Berada di Daerah Pegunungan
+a. Segera cari bantuan orang terdekat untuk
+menghindari berada di daerah dekat tebing,
+gunungan batu, atau struktur tanah lainnya yang
+berpotensi longsor.
+18.
+Saat berada di sekitar sungai atau pantai
+a. Waspada akan
+kemungkinan
+terjadi tsunami
+b.
+Jauhi pesisir
+dan sisi sungai. 
+Khususnya pada wilayah sungai dekat muara,  
+kemungkinan air laut mendesak ke sungai saat terjadi
+tsunami sangat besar. Berada di sekitar sungai dapat
+berpotensi terseret arus seperti berada di daerah
+pesisir saat terjadi tsunami
+45
+19.
+Bagi orang sekitar, tetangga, pendamping,
+keluarga, atau rekan penyandang disabilitas, perlu
+memperhatikan bantuan evakuasi:
+a. Bantu penyandang disabilitas untuk evakuasi ke
+tempat yang aman, dengan memperhatikan
+kebutuhan khusus mereka.
+b.
+Pastikan alat bantu penyandang disabilitas tidak
+tertinggal saat evakuasi
+c. Perhatikan kondisi kesehatan fisik dan mental,
+terutama bagi penyandang disabilitas yang mungkin
+mengalami trauma.
+46
+
+III
+Tips Keamanan
+Sesaat
+Setelah 
+Guncangan berhenti
+III
+Tips Keamanan Sesaat Setelah
+Guncangan Berhenti
+49
+Jika Anda panik, Anda mungkin terluka akibat pecahan
+kaca atau pecahan lainnya. Jika Anda terluka, Anda akan
+kesulitan untuk menuju tempat evakuasi atau area yang
+lebih aman. Tetaplah tenang dan perhatikan sekeliling
+Anda.
+1.
+a.
+b.
+Saat gempa kuat terjadi, kemungkinan barang
+terjatuh dan menyebarkan pecahan :
+Jangan berjalan dengan
+telanjang kaki
+Kebiasaan menggunakan sandal
+saat berada di dapur atau area
+rumah yang banyak terdapat kaca
+dapat menguntungkan Anda untuk
+tetap aman setelah gempabumi
+besar terjadi.
+Gunakan alas kaki yang
+mudah dipasang dan
+tertutup.
+Kebiasaan menggunakan sepatu
+tertutup saat berada di luar rumah
+juga sangat berguna mengurangi
+cidera saat melakukan evakuasi
+emuju tempat yang lebih aman
+50
+2.
+Untuk menghindari terjadi kebakaran akibat
+arus singkat:
+a.
+Jangan nyalakan saklar
+sesaat setelah gempa.
+b. Matikan dan cabut
+sambungan listrik yang
+masih terhubung dan
+menyala.
+c.
+d.
+3.
+a.
+Jangan segera nyalakan
+CB box yang turun
+sampai anda dapat
+memasstikan keadaan
+aman.
+Matikan keran air, agar
+tidak berpotensi
+menjadi konduktor
+listrik atau membuat
+terpeleset.
+Waspada akan kebocoran gas. 
+Jangan menyalakan api
+jika tidak darurat.
+51
+4.
+Jika anda sedang berada di dalam bangunan
+a.
+Segeralah keluar bangunan secara teratur
+Hindari saling
+mendorong dan
+memaksa keluar
+terlebih dahulu
+untuk keluar dari
+pintu
+EXIT
+TANGGA DARURAT
+b. Jangan gunakan lift atau
+eskalator untuk evakuasi,
+gunakan tangga darurat.
+c. Periksa sekeliling apakah
+ada yang terjebak atau
+membutuhkan
+pertolongan.
+d. Lakukan panggilan darurat
+ke nomor 112 jika ada yang
+memerlukan pertolongan.
+112
+Jangan segan meminta bantuan pada pendamping, orang
+terdekat, atau orang sekitar untuk membantu anda
+melakukan evakuasi. Jika anda menggunakan alat bantu
+jalan, pastikan tidak tertinggal saat evakuasi.
+52
+5.
+Jika harus menolong orang lain yang terjebak
+reruntuhan
+a.
+Lakukan bantuan saat
+guncangan telah
+berakhir.
+b. Segera minta bantuan
+untuk lakukan P3K
+53
+a.
+Saat berada di sekitar sungai atau pantai, waspadai
+potensi tsunami
+Segera cari bantuan orang terdekat, tetangga,
+atau ketua RT/RW untuk evakuasi ke tempat tinggi
+jika Anda merasakan salah satu tanda peringatan
+berikut di pantai
+i. Jika anda merasakan gempa yang sangat
+kuat atau berlangsung lama (sehingga susah
+berjalan, benda berjatuhan, bangunan rusak,
+atau gempa berlangsung sekitar 1 menit atau
+lebih)
+ii. Terdengar informasi bahwa surutnya permukaan
+laut secara tiba-tiba (menampakkan dasar laut,
+karang, dan ikan)
+iii. Anda mendengar suara dentuman keras
+(seperti suara gemuruh) yang berasal dari
+laut, atau menerima pesan resmi peringatan
+tsunami melalui sirene, televisi, radio
+komersial, atau pesan radio darurat lainnya.
+54
+6.
+i.
+b. Jauhi zona bahaya tsunami yang telah ditetapkan
+oleh pemerintah setempat
+Segera jauhi tepian
+sungai atau pantai
+dan pergilah ke titik
+kumpul, tempat
+evakuasi terdekat,
+atau tempat yang
+lebih tinggi.
+ii. Naiklah ke lantai
+yang lebih tinggi
+iii. Panjatlah pohon
+tinggi yang berakar
+kuat
+Jaringan komunikasi akan sangat padat sesaat
+setelah guncangan.
+a. Tunda melakukan
+siaran langsung
+disosial media,
+agar jaringan
+komunikasi dapat
+digunakan untuk
+pertukaran
+informasi darurat
+tidak terganggu.
+b. Hanya lakukan
+panggilan penting.
+55
+7.
+a.
+b.
+Selalu ingat dan waspada terhadap gempa
+susulan. Jika anda sedang berada di luar ruangan
+Jangan masuk atau mendekati bangunan yang
+runtuh karena gempa.
+Jangan masuk kembali kedalam bangunan sampai
+yakin semua aman. Periksa dahulu keretakan dan
+potensi runtuh dari luar bangunan.
+c. Jangan gunakan mobil untuk evakuasi agar tidak
+terjebak.
+e. Jauhi gardu listrik, tiang listrik, menara listrik
+tegangan tinggi, dan instalasi listrik lainnya
+56
+8.
+a.
+b.
+Karena jarak pandang yang rendah saat melakukan
+evakuasi pada malam hari, ada risiko tersandung
+atau terjatuh.
+Pastikan untuk berhati-hati, seperti memilih
+jalan yang lebar.
+Jika harus evakuasi dimalam hari
+c. Gunakan senter saat melakukan evakuasi di
+malam hari saat listrik padam, dan bergeraklah
+dengan hati-hati sambil memastikan lingkungan
+sekitar aman untuk dilalui.
+57
+9.
+HOAX
+ ! ALERT !
+bmkg
+bmkg jakarta
+bmkg gempa
+bmkg adalah
+bmkg maritim
+bmkg
+? ?
+dimulai dengan
+“Sebarkan berita
+ini” atau
+semacamnya.
+berisi konten yang
+membuat
+pembacanya
+semakin resah dan
+cenderung
+memicu
+kepanikan.
+a.
+Gunakan internet dan sosial media dengan bijak
+Dapatkan informasi
+situasi bencana terkini
+dari situs dan kanal
+informasi terpercaya
+seperti BMKG, BNPB,
+BPBD, atau kanal
+resmi lainnya.
+b. Kenali tanda-tanda berita
+“Hoax” yang mungkin
+beredar saat bencana,
+seperti:
+i.
+ii.
+58
+10.
+c. Jangan langsung percaya
+pada berita yang
+beredar, cek kembali
+berita yang anda akses
+dari sosial media pada
+situs resmi.
+d. Jangan sebarkan
+infomasi yang tidak
+dapat dipetanggung
+jawabkan.
+e. Anda juga dapat
+membantu
+melaporkan dampak
+gempabumi melalui
+aplikasi InfoBMKG
+atau WRS mobile.
+hoax?
+59
+60
+
+Potensi
+Gempabumi
+dan Tsunami
+Indonesia
+IV
+IV
+1.
+Sekilas tentang Gempabumi
+Proses Terjadinya Gempa Bumi
+Lapisan terluar kerak bumi terpecah menjadi
+beberapa bagian lempeng. Lempeng yang
+berdekatan dapat berinteraksi satu sama lain. Gempa
+bumi terjadi ketika lempengan-lempengan batuan
+bawah tanah (lempeng) terlepas atau saling
+mendekat.
+Indonesia terletak di zona Ring of Fire, daerah yang
+sangat aktif secara seismik, dan merupakan salah satu
+kawasan paling rawan gempabumi di dunia. Indonesia
+memiliki empat batas lempeng tektonik utama:
+Lempeng Indo-Australia, Lempeng Eurasia, Lempeng
+Pasifik, dan Lempeng Filipina. 
+63
+64
+Interaksi antara lempeng-lempeng ini menyebabkan
+aktivitas seismik atau kegempaan yang intens,
+termasuk pembentukan 13 Megathrust dan 295
+Sesar Aktif, menurut data (PUSGEN, 2017). Karna itu,
+46% panjang pantai di Indonesia adalah daerah yang
+rawan tsunami.
+Gempabumi terjadi ketika energi yang terakumulasi
+akibat pergerakan lempeng dilepaskan secara tiba
+tiba. Megathrust, zona subduksi besar di mana satu
+lempeng tektonik menyelusup di bawah lempeng
+lainnya, menjadi sumber gempabumi besar yang
+sangat destruktif. Selain itu, sesar aktif, yang
+merupakan retakan atau patahan di kerak bumi di
+mana pergerakan telah terjadi, juga menjadi sumber
+gempabumi yang signifikan.
+Aktivitas tektonik ini tidak hanya menyebabkan risiko
+gempabumi tetapi juga meningkatkan potensi terjadinya
+tsunami. Oleh karena itu, pemahaman dan kesiapsiagaan
+terhadap gempabumi menjadi sangat penting bagi
+masyarakat Indonesia.
+65
+Di Indonesia, skala intensitas seismik yang digunakan
+adalah skala MMI (Modified Mercalli Intensity).
+Sementara itu, BMKG menggunakan Skala Intensitas
+Gempabumi (SIG-BMKG) yang dihitung dengan
+mempertimbangkan dampak gempabumi berdasarkan
+budaya dan cara masyarakant menbangun bangunan di
+Indonesia. 
+Intensitas seismik adalah skala yang mengukur tingkat
+kerusakan akibat guncangan tanah atau gempa di suatu
+lokasi. Skala ini didasarkan pada efek guncangan yang
+terobservasi, seperti kerusakan bangunan, cakupan
+orang yang merasakan guncangan, dan tingkat kerusakan
+dampak lain yang ditimbulkan. 
+Intensitas seismik berbeda dengan magnitudo, yang
+merupakan ukuran kekuatan gempabumi secara
+keseluruhan. Magnitudo dihitung menggunakan
+seismograf, sedangkan intensitas dihitung berdasarkan
+pengamatan visual.
+Intensitas Seismik dan Magnitudo Gempa 2.
+3.
+Status Tingkat Ancaman Tsunami
+Putih
+Tidak Dirasakan (
+Non Felt)
+Skala
+MMI
+I-II
+Tidak dirasakan atau dirasakan
+hanya oleh beberapa orang tetapi
+terekam oleh alat
+Skala
+SIG
+BMKG
+I
+PGA (gal)
+<2,9
+Hijau
+Dirasakan (
+Felt)
+Skala
+MMI
+III-V
+Dirasakan oleh orang banyak
+tetapi tidak menimbulkan
+kerusakan. Benda-benda ringan
+yang digantung bergoyang dan
+jendela kaca bergetar
+Kuning
+Kerusakan Ringan (Slight Damage)
+PGA (gal)
+2,9-88
+Skala
+MMI
+Skala
+SIG
+BMKG
+II
+VI
+Bagian non struktur bangunan
+mengalami kerusakan ringan,
+seperti retak rambut pada dinding,
+atap bergeser ke bawah dan
+sebagian berjatuhan
+PGA (gal)
+89-167
+Skala
+SIG
+BMKG
+III
+66
+Jingga
+Kerusakan Sedang (Moderate
+Damage)
+Banyak Retakan terjadi pada
+dinding bangunan sederhana,
+sebagian roboh, kaca pecah,
+sebagian plester dinding lepas.
+Hampir sebagian besar atap
+bergeser ke bawah atau jatuh.
+Struktur bangunan mengalami
+kerusakan ringan sampai sedang. 
+Skala
+MMI
+VII-VIII
+PGA (gal)
+Skala
+SIG
+BMKG
+IV
+168-564
+Merah
+(Kerusakan Berat (Heavy
+Damage
+)
+Skala MMI
+IX-XII
+Sebagian besar dinding
+bangunan permanen roboh.
+Struktur bangunan mengalami
+kerusakan berat. Rel kereta api
+melengkung
+PGA (gal)
+>564
+Skala
+SIG
+BMKG
+V
+67
+Likuifaksi dapat menyebabkan tanah bergerak ke
+bagian bawah lereng atau bukit, sehingga benda
+benda di atasnya ikut terbawa. Fenomena ini pernah
+terjadi di Palu dan Donggala, Sulawesi Tengah, akibat
+gempa bumi yang mengguncang daerah tersebut.
+Likuifaksi 4.
+Likuifaksi adalah fenomena ketika tanah kehilangan
+kekuatannya dan berubah dari keadaan padat menjadi
+cair. Fenomena ini terjadi akibat tekanan air pori yang
+meningkat dan lapisan pasir yang terpadatkan akibat
+gempa bumi.
+68
+Tanah dengan
+dominasi pasir
+Guncangan kuat mengubah
+sifat padat pasir seperti air
+Gelombang datang tsunami dapat mencapai daratan  
+dengan kecepatan yang tidak dapat dilampaui
+kebanyakan orang. Tsunami juga surut dengan sangat
+kuat dan cepat. Semua benda yang terkena gelombang
+tsunami dapat tertarik ke laut. Sangat penting memiliki
+informasi tentang potensi terjadinya tsunami berulang di
+tempat anda tinggal.
+Gempabumi berpotensi Tsunami 5.
+Ketika gempa bumi besar terjadi di bawah permukaan
+dasar laut, pergerakan lempengan menyebabkan dasar
+laut amblas. Akibatnya terjadi peningkatan permukaan
+laut yang menjadi gelombang besar yang menjalar ke
+segala arah, salah satunya menyebabkan tsunami.
+Semakin dalam kedalaman air, semakin cepat tsunami
+bergerak. Semakin dangkal air, semakin tinggi tsunami
+yang terjadi. 
+69
+Episenter
+Wave fronts
+70
+
+V
+Sekilas Tentang
+Sistem Informasi
+Gempa
+Bumi dan
+Peringatan
+Dini
+Tsunami
+V
+Sekilas Tentang Sistem Informasi Gempa Bumi
+dan Peringatan Dini Tsunami
+Informasi gempabumi dan peringatan dini tsunami yang
+dilakukan oleh BMKG dilakukan dalam sebuah system
+peringatan dini yang disebut Indonesia Tsunami Early
+Warning System, yang selanjutnya disebut InaTEWS.
+Sistem ini hadir untuk memberikan kemudahan akses bagi
+semua orang mulai dari pemangku kepentingan sampai
+langsung dapat diakses oleh masyarakat secara individu.
+Dalam system InaTEWS ini BMKG dapat menerbitkan
+informasi terkait gempa bumi atau peringatan dini tsunami
+dalam waktu 3 menit setelah gempabumi terjadi.
+Informasi ini akan diperbarui secara berkala dan diakhiri
+dengan pemberitahuan saat ancaman tsunami dinyatakan
+berakhir.
+Tiga menit setelah gempa bumi
+terjadi, BMKG akan memberikan
+informasi yang mencakup parameter
+gempa bumi seperti waktu, lokasi,
+kekuatan, kedalaman, serta shakemap
+(peta guncangan) dan narasi informasi
+gempa bumi. Informasi gempa bumi
+yang disampaikan BMKG adalah
+informasi gempa bumi dengan
+magnitudo M≥5.0 atau gempa bumi
+yang dirasakan oleh masyarakat.
+73
+Gambar diatas merupakan alur informasi gempabumi & peringatan
+dini tsunami yang dilakukan oleh BMKG mulai dari guncangan terasa
+sampai dapat mengeluarkan informasi resmi melalui seluruh moda
+yang terhubung dengan InaTEWS BMKG. Sumber: BMKG, 2023
+Perlu diketahui bahwa peringatan status
+ancaman tsunami adalah anjuran yang
+dikeluarkan secara resmi untuk
+mengurangi jumlah korban jiwa. Semua
+elemen masyarakat dan pemerintahan
+perlu terbiasa menjaga diri sendiri dan
+sekitar jika hal yang terburuk terjadi.
+Selain itu, informasi Status Peringatan Dini
+yang dikeluarkan oleh BMKG bersifat
+umum untuk wilayah yang merasakan
+gempabumi, tidak hanya di lokasi anda
+berada saja. 
+Sangat memungkinkan Status Peringatan
+Dini AWAS dan SIAGA telah resmi
+dikeluarkan, namun gelombang tsunami
+tidak sampai pada tempat anda sedang
+berada. Tsunami tidak sampai pada lokasi
+anda berada TIDAK BERARTI informasi
+tersebut PALSU.
+74
+JANGAN RAGU
+untuk segera
+lakukan evakuasi
+mandiri menuju
+tempat yang lebih
+tinggi atau titik
+kumpul sementara.
+AWAS
+> 3m
+potensi gelombang
+datang
+SIAGA
+>
+3m
+0.5m
+Segera lakukan
+evakuasi mandiri
+menuju tempat yang
+lebih tinggi atau titik
+kumpul sementara.
+potensi gelombang
+datang
+WASPADA
+<0.5m
+Segera jauhi pantai,
+tepian sungai, dan
+badan air lainnya
+yang terhubung
+dengan laut.
+potensi gelombang
+datang
+Sumber : Petunjuk Status Tingkat ancaman
+tsunami bagi pemerintah daerah yang resmi
+dikeluarkan oleh BMKG, 2012
+Status Tingkat Ancaman Tsunami 1.
+75
+2.
+Bagaimana Mengakses Informasi Resmi BMKG
+Tentang Informasi Gempabumi dan Peringatan Dini
+Tsunami
+Untuk mendaptakan informasi resmi dan terpercaya,
+khususnya tentang Informasi Gempabumi dan
+Peringatan Dini Tsunami yang bersumber resmi dari
+BMKG, anda dapat mengakses melalui berbagai moda:
+a.
+Aplikasi Mobile
+Terdapat aplikasi
+mobile resmi yang
+dikelola oleh BMKG,
+salah satunya adalah
+InfoBMKG. Aplikasi ini
+memiliki fitur lengkap
+yang berisi Informasi
+Cuaca, Iklim, Kualitas
+Udara, dan Gempabumi
+yang terjadi di
+Indonesia. 
+Informasi Gempabumi dan Peringatan Dini Tsunami
+dapat dengan mudah anda akses di genggaman
+tangan anda. Aplikasi ini dapat dengan gratis anda
+unduh melalui tautan:
+Mobile Apps
+https://apps.bmkg.go.id
+Atau ada dapat memindai
+kode QR berikut
+76
+Anda dapat juga mengikuti Sosial
+Media InfoBMKG baik melalui
+Instagram, Facebook dan X
+(Twitter) untuk menerima Informasi
+Seputar Cuaca, Iklim serta
+Informasi Gempabumi dan
+Peringatan Dini Tsunami.
+Anda dapat mengakses informasi gempabumi dan
+peringatan dini tsunami terkini melalui akun sosial media
+resmi BMKG pada tautang berikut:
+Silahkan kunjungi alamat akun sosial media yang mudah
+anda akses yang terdapat dalam list di bawah ini: 
+https://www.bmkg.go.id/profil/?p=media-sosial
+b. Social Media
+Social Media
+Atau ada dapat memindai
+kode QR berikut
+77
+Official Channel merupakan salah
+satu alat moda penyebaran
+informasi gempabumi dan
+peringatan dini tsunami dari
+BMKG. Pengguna aplikasi yang
+telah berlangganan, secara
+bersamaan akan segera menerima
+informasi kapanpun pada saat
+BMKG mendiseminasikan
+informasi. 
+Whatsapp
+Telegram
+Saat ini BMKG telah memiliki aku
+official channel resmi pada
+aplikasi komunikasi WhatsApp
+dan Telegram. 
+Anda dapat mengakses informasi
+gempabumi dan peringatan dini
+tsunami terkini melalui akun
+official channel BMKG pada
+aplikasi WhatsApp dan Telegram
+dalam telepon genggam Anda.
+c. Official Chanel
+78
+Referensi
+BMKG. (2016, Nivember). Apa yang harus dilakukan
+sebelum, saat & sesudah gempa terjadi. Retrieved from
+antisipasi gempabumi:
+https://www.bmkg.go.id/gempabumi/antisipasi
+gempabumi.bmkg
+BMKG. (2020). Buku Saku, Mengenal Gempabumi dan
+Tsunami. Jakarta: Pusat Gempabumi & Tsunami, BMKG.
+BMKG. (2024). Potensi Gempabumi dan Tsunami
+Indonesia. Jakarta: Pusat Gempabumi dan Tsunami BMKG.
+BMKG. (n.d.). Skala Intensitas Gempabumi (SIG) BMKG.
+Retrieved from BMKG.go.id: https://shorturl.at/inI8U
+Kenalan Dengan Likuifaksi yang Sesungguhnya. (2023, 12
+5). Retrieved from Siaga Bencana.com:
+National Emergency Management Agency Te Rakau
+Whakamarumaru. (2022). What you can do to be ready
+for tsunami. Retrieved from Get prepared for tsunami:
+https://www.getready.govt.nz/
+National Emergency Management Agency Te Rakau
+Whakamarumaru. (2024). Alternate format/large-print.
+Retrieved from Get Ready:
+https://getready.govt.nz/alternate-formats/large
+print#e1782
+PUSGEN. (2017). PETA SUMBER DAN BAHAYA GEMPA ’
+INDONESIA TAHUN 2017. Pusat Penelitian dan
+Pengembangan Perumahan dan Permukiman Badan
+Penelitian dan Pengembangan Kementerian Pekerjaan
+Umum dan Perumahan Rakyat
+79
+Referensi
+Skinner, B., Porter. S.C, & Botkin D.J. (1999). The Blue
+Planet: An Introduction to Earth System Science, 2nd Ed.
+New York: John Wiley & Sons.
+Tokyo Metropolitan Government's Disaster Prevention.
+(2023). Disaster Preparedness Tokyo. Step 2, Get
+Deeper konowledge. Tokyo, Japan: Tokyo Metropolitan
+Government's Disaster Prevention.
+US Naval Research Labolatory. (2013). Cross Section by
+Jose F, Vigil from This Dynamic Planet - A Wall Map
+Poduce by Joint Research. US Geological Survey, The
+Smitsonian Institution, US Research LAbolatory
+80
+Kontributor
+Situs web untuk informasi lanjut
+www.bmkg.go.id
+Organisasi yang berpartisipasi dalam penyusunan
+dokumen ini:
+1. Badan Meteorologi, Klimatologi, dan Geofisika (BMKG)
+2. Japan International Cooperation Agency (JICA)
+
+Upaya Mitigasi Bencana Tsunami
+Nuriyana1, Aulia Rahman2, Muh Fickry Fadrullah3, Nadhilah Shabrina4, Qonitat Titis
+Ardiyani5, Marningot Tua Natalis Situmorang6
+1,2,3,4,5,6Universitas Sahid Jakarta
+E-mail: 2023339031@usahid.ac.id
+Abstrak
+(CA)
+Tsunami merupakan gelombang laut yang terbentuk akibat muka air laut yang bergerak secara
+anomali dengan skala besar yang mengalami gangguan pasca terjadi gempa, umumnya gelombang
+tsunami bergerak dengan kecepatan tinggi dan mengenai kawasan pantai. Penelitian ini bertujuan
+untuk mendeskripsikan upaya penanggulangan bencana tsunami di daerah pesisir pantai, dengan fokus
+pada evaluasi kondisi bencana dan perencanaan respon yang tepat. Metode yang digunakan meliputi
+pengumpulan informasi dari buku, artikel, dan jurnal yang relevan, serta analisis data sekunder melalui
+pendekatan konseptual dan komparatif. Kajian ini mengidentifikasi tiga tahapan utama dalam
+manajemen bencana: pra-bencana, tanggap darurat, dan pasca-bencana. Rencana operasional untuk
+tanggap darurat diuraikan sebagai dokumen strategis yang penting untuk memastikan koordinasi
+efektif antara semua pihak yang terlibat dalam penanganan keadaan darurat. Tanggap darurat
+melibatkan langkah-langkah kritis seperti penyelamatan, koordinasi dengan layanan darurat, dan
+pengelolaan informasi untuk meminimalkan dampak negatif terhadap keselamatan individu. Selain itu,
+pemulihan fisik pasca-bencana menjadi fokus utama untuk mengembalikan infrastruktur yang rusak,
+termasuk pengelolaan limbah dan pembersihan area terdampak. Temuan penelitian ini diharapkan
+dapat memberikan wawasan bagi perencanaan dan implementasi kebijakan penanggulangan bencana
+yang lebih efektif di daerah pesisir.
+Kata Kunci: Tsunami; Manajemen Bencana; Wilayah Pesisir; Tanggap Darurat; Strategi
+Mitigasi.
+Abstract
+Tsunami is a sea wave formed due to the anomalous movement of the sea surface on a large scale,
+which is disturbed following an earthquake. Generally, tsunami waves move at high speeds and
+impact coastal areas. This study aims to describe the efforts in tsunami disaster management in
+coastal areas, focusing on evaluating disaster conditions and planning appropriate responses. The
+methods used include gathering information from relevant books, articles, and journals, as well as
+analyzing secondary data through conceptual and comparative approaches. This study identifies three
+main stages in disaster management: pre-disaster, emergency response, and post-disaster. The
+operational plan for emergency response is outlined as an important strategic document to ensure
+effective coordination among all parties involved in handling emergencies. Emergency response
+involves critical steps such as rescue operations, coordination with emergency services, and
+information management to minimize negative impacts on individual safety. Additionally, post-disaster
+physical recovery becomes a primary focus to restore damaged infrastructure, including waste
+management and cleaning of affected areas. The findings of this research are expected to provide
+insights for planning and implementing more effective disaster management policies in coastal areas.
+Keywords: Tsunami; Disaster Management; Coastal Area; Emergency Response; Mitigation
+Strategies.
+Cara Sitasi:
+Nuryana, N., dkk. (2024). “Upaya Mitigasi Bencana Tsunami”. IURIS STUDIA: Jurnal Kajian Hukum Vol. 5, No. 3,
+Oktober 2024– Januari 2025, Pages: 891-904.
+Page
+891
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+A. Pendahuluan
+Indonesia merupakan negara yang berada di jalur pergerakan aktif subduksi lempeng Eurasia
+dengan Indo-Australia, mengakibatkan bencana geologi sangat rentan terjadi di wilayah Indonesia.1
+Salah satu bencana geologi tersebut adalah tsunami. Bencana tsunami terjadi hampir bersamaan atau
+rentetan dari gempa bumi. Tsunami merupakan gelombang laut yang terbentuk akibat muka air laut
+yang bergerak secara anomali dengan skala besar yang mengalami gangguan pasca terjadi gempa,
+umumnya gelombang tsunami bergerak dengan kecepatan tinggi dan mengenai kawasan pantai.
+Akibatnya, gelombang ini bersifat destruktif yang mengakibatkan kerusakan jika mengenai
+permukiman dan seluruh fasilitas di sekitarnya.2
+Undang-Undang Nomor 24 Tahun 2007 tentang penanggulangan bencana menjelaskan bahwa
+mitigasi adalah upaya untuk meminimalisasi dampak yang ditimbulkan oleh bencana. Upaya
+penanggulangan tersebut berupa pembangunan fisik, pendidikan mitigasi, serta peningkatan
+kemampuan dalam ketangguhan menghadapi bencana.3 Dalam konsepnya, mitigasi terdiri atas
+mitigasi struktural dan nonstruktural. Secara struktural, mitigasi bencana dapat berupa pembangunan
+infrastruktur ataupun fasilitas bangunan yang dapat meminimalisasi dampak, misalnya tanggul beton
+di bibir pantai, rumah tahan gempa, dan lain-lain, secara non-struktural berupa kebijakan oleh
+pemerintah seperti dibuatnya peraturan mengenai penanggulangan bencana, himbauan, atau juga
+pendidikan mitigasi bencana melalui sosialisasi dan penyuluhan.4
+Upaya penanggulangan bencana di Indonesia melibatkan berbagai aspek dan lembaga. Badan
+Penanggulangan Bencana Daerah (BPBD) berperan penting dalam meningkatkan kesadaran,
+kewaspadaan, dan kesiapsiagaan masyarakat melalui sosialisasi dan pelatihan.5 Namun, kendala
+seperti kurangnya dana, minimnya Sumber Daya Manusia (SDM) yang memahami penanggulangan
+bencana, dan terbatasnya fasilitas masih dihadapi.6 Penanggulangan bencana mencakup tahap pra
+bencana, tanggap darurat, dan pasca-bencana, dengan fokus pada pengurangan risiko bencana,
+rehabilitasi, dan rekonstruksi.7 Perpustakaan sebagai lembaga informasi juga perlu mempersiapkan diri
+menghadapi bencana, meskipun pembahasan lebih banyak terfokus pada kegiatan pasca-bencana.8
+Partisipasi dan kesadaran masyarakat yang masih rendah menjadi tantangan dalam upaya
+penanggulangan bencana.9
+Berdasarkan uraian di atas, maka penelitian ini ingin mengetahui apa saja upaya yang dapat
+dilakukan dalam penanggulangan bencana tsunami di daerah pantai dan bagaimana efektivitasnya.
+Mulai dari bagaimana proses atau tahapan manajemen bencana tsunami di daerah pesisir hingga
+implementasi dan keterlibatan masyarakat dalam proses mitigasi dan pemulihan pasca bencana
+tsunami. Apakah sudah terintegrasi dengan baik dari kebijakan penanggulangan bencana dengan
+pengelolaan destinasi wisata di daerah pesisir.
+Penelitian ini menggunakan metode deskriptif yang bertujuan untuk menggambarkan fenomena
+atau objek yang diteliti secara mendalam dan luas. Metode yang digunakan berupa pengumpulan
+informasi dari buku, artikel, serta jurnal yang relevan dengan kajian penelitian ini. Penelitian ini juga
+menggunakan beberapa data sekunder yang dianalisis dengan menggunakan pendekatan konseptual
+dan komparatif. Pendekatan konseptual bertujuan untuk mengetahui konsep mitigasi bencana tsunami,
+sedangkan pendekatan komparatif digunakan untuk membandingkan perencanaan mitigasi bencana
+tsunami di berbagai wilayah yang rawan bencana tsunami.
+B. Hasil dan Pembahasan
+Bencana alam merupakan peristiwa yang dapat menimbulkan dampak luas, baik terhadap manusia,
+lingkungan, maupun infrastruktur. Indonesia berada di posisi teratas dalam risiko bencana tsunami,
+tanah longsor, dan gunung berapi. Selain itu, negara ini berada di peringkat ketiga dalam risiko
+gempa bumi dan peringkat keenam dalam risiko banjir.101 Oleh karena itu, upaya penanggulangan
+bencana menjadi hal yang sangat penting dilakukan untuk mengurangi kerugian dan mempercepat
+proses pemulihan. Penanggulangan bencana terdiri dari beberapa tahap, dimulai dari upaya tanggap
+darurat hingga pencegahan dan mitigasi untuk mengurangi risiko bencana di masa depan. Setiap
+tahapan dalam penanggulangan bencana memerlukan keterlibatan serta koordinasi yang baik antara
+10Nakoe MR. (2020). Simulasi Tanggap Darurat Bencana Pada Masyarakat Se-Kecamatan Kabila Bone. Jurnal Universitas
+Negeri Gorontalo. 1(1): 1-29.
+Page
+892
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+pemerintah, masyarakat, dan berbagai pihak terkait untuk memastikan penanganan yang efektif dan
+efisien.
+1. Tanggap Darurat (Emergency Response)
+Tanggap darurat (emergency response) adalah bagian integral dari manajemen risiko bencana yang
+mencakup serangkaian kegiatan yang dilakukan segera setelah terjadinya bencana untuk menangani
+dampak buruk yang ditimbulkan. Sistem tanggap darurat sangat penting untuk mengurangi risiko dan
+mengelola krisis di berbagai lingkungan. Penanggulangan bencana tsunami dalam segi tanggap darurat
+(emergency response) memiliki beberapa langkah yang penting untuk mengurangi dampak bencana
+dan menyelamatkan nyawa. Dalam konteks ini, upaya yang dilakukan terdiri dari kajian darurat,
+rencana operasional, dan tanggap darurat yang meliputi langkah-langkah berikut:
+a. Kajian Darurat; Kajian darurat tsunami bertujuan untuk mengevaluasi kondisi bencana dan
+merencanakan respon yang tepat. Kajian darurat tsunami melibatkan tiga tahapan utama dalam
+manajemen bencana:
+1) Tahap Pra-bencana. Tahap pra-bencana merupakan fase penting dalam manajemen bencana
+yang bertujuan untuk mempersiapkan dan merencanakan langkah-langkah mitigasi terhadap
+potensi bencana tsunami. Pada tahap ini, langkah pertama adalah identifikasi dan analisis risiko
+bencana tsunami apabila terjadi di suatu daerah. Setelah potensi bahaya diidentifikasi, langkah
+selanjutnya adalah penyusunan rencana kontinjensi yang berfungsi sebagai panduan bagi
+pemerintah daerah dan masyarakat dalam menghadapi situasi darurat. Rencana kontinjensi
+mencakup prosedur evakuasi, penanganan darurat, serta alokasi sumber daya dan personel
+yang diperlukan saat bencana tsunami terjadi. Aspek lain yang sangat penting dalam tahap pra
+bencana adalah pelatihan personil, pelatihan bagi petugas tanggap darurat dan masyarakat
+umum untuk meningkatkan kesiapsiagaan bencana tsunami. Pelatihan ini mencakup simulasi
+situasi bencana, penggunaan alat-alat penyelamatan, serta teknik pertolongan pertama. Selain
+itu, kegiatan maintenance sistem peringatan dini bencana tsunami juga perlu dilakukan agar
+berfungsi dengan baik apabila terjadi keadaan tsunami.
+2) Tanggap Darurat. Fase tanggap darurat adalah tahap kritis dalam manajemen bencana yang
+dilakukan segera setelah terjadinya bencana tsunami. Pada tahap ini, berbagai kegiatan
+dilaksanakan untuk menyelamatkan jiwa, memberikan bantuan, dan memenuhi kebutuhan
+dasar masyarakat yang terdampak. Salah satu prioritas utama saat bencana tsunami terjadi
+adalah penyelamatan diri dan orang lain. Masyarakat diimbau untuk tetap tenang dan tidak
+panik, karena kepanikan dapat memperburuk situasi. Upaya penyelamatan ini melibatkan
+evakuasi dari area berbahaya ke tempat yang lebih aman. Melakukan evakuasi yang harus
+dilakukan secara terencana dan terkoordinasi. Prosedur evakuasi harus jelas dan diketahui oleh
+semua pihak yang terlibat, agar prosesnya dapat berjalan lancar tanpa menambah risiko bagi
+para korban. Setelah evakuasi, pemenuhan kebutuhan dasar seperti makanan, air bersih, dan
+tempat tinggal sementara menjadi prioritas utama. Dalam situasi darurat, penting untuk
+memastikan bahwa semua pengungsi mendapatkan akses cepat ke layanan kesehatan dan
+kebutuhan dasar lainnya.112 Prosedur tanggap darurat harus dirancang dengan baik agar semua
+pihak yang terlibat tahu apa yang harus dilakukan. Ini mencakup koordinasi antara pemerintah
+daerah, organisasi non-pemerintah (NGO), serta masyarakat setempat. Rencana tanggap
+darurat yang baik sangat penting untuk meminimalkan dampak bencana. Dengan adanya
+rencana yang jelas, diharapkan respons terhadap bencana tsunami dapat dilakukan dengan
+cepat dan terarah, sehingga jumlah korban jiwa dan kerugian material dapat diminimalkan.12
+3) Pasca-bencana. Tahap pasca-bencana adalah fase yang sangat penting dalam proses pemulihan
+setelah terjadinya bencana tsunami. Fokus utama dari tahap ini adalah pemulihan dan
+rekonstruksi untuk mengembalikan kehidupan masyarakat dan infrastruktur yang terdampak.
+Salah satu langkah awal dalam pemulihan adalah rehabilitasi infrastruktur yang rusak akibat
+bencana tsunami yang mencakup perbaikan jalan, jembatan, dan fasilitas umum lainnya. Upaya
+ini bertujuan untuk memastikan aksesibilitas dan mobilitas masyarakat kembali normal secepat
+11Awaludin, M. (2024). BPBD NTB Tetapkan Tanggap Darurat Bencana Banjir.
+12Sulistyo A & Rahmawati A. (2023). Manajemen Tanggap Darurat Bencana: Teori dan Praktik. Yogyakarta: Penerbit Andi.
+13Adiyoso W. (2018). Manajemen Bencana. Jakarta: Bumi Aksara.
+Page
+893
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+mungkin. Setelah infrastruktur diperbaiki, langkah selanjutnya adalah pemulihan layanan
+publik termasuk penyediaan kembali layanan kesehatan, pendidikan, dan utilitas dasar seperti
+air bersih dan listrik. Pemulihan layanan publik sangat penting untuk mendukung kehidupan
+sehari-hari masyarakat dan membantu mereka kembali ke rutinitas normal. Bencana tsunami
+tentunya tidak hanya berdampak fisik tetapi juga psikologis bagi para korban. Menyediakan
+layanan konseling dan dukungan psikologis menjadi bagian integral dari pemulihan pasca
+bencana untuk membantu korban mengatasi trauma dan stres akibat bencana tsunami.
+Program-program ini bertujuan untuk memperkuat ketahanan mental masyarakat serta
+membantu mereka beradaptasi dengan situasi baru setelah bencana. Rencana rehabilitasi dan
+rekonstruksi (R3P) yang baik sangat penting untuk meminimalkan dampak bencana dalam
+jangka panjang. R3P harus mencakup berbagai aspek, termasuk identifikasi kebutuhan
+masyarakat, alokasi sumber daya, serta timeline pelaksanaan proyek-proyek pemulihan.
+Keterlibatan berbagai pihak, termasuk pemerintah daerah, organisasi non-pemerintah (NGO),
+dan masyarakat setempat dalam perencanaan dan pelaksanaan R3P akan meningkatkan
+efektivitas program pemulihan.13
+b. Rencana Operasional; Rencana operasional untuk tanggap darurat adalah dokumen strategis yang
+sangat penting untuk memastikan bahwa semua pihak yang terlibat dalam penanganan keadaan
+darurat tahu apa yang harus dilakukan. Rencana operasional untuk tanggap darurat harus
+mencakup:
+1) Prosedur Pelaporan. Salah satu aspek utama dari rencana operasional adalah prosedur
+pelaporan. Prosedur pelaporan harus jelas dan terstruktur, sehingga setiap individu yang
+menyaksikan keadaan darurat dapat melaporkan kejadian tersebut dengan cepat kepada pihak
+berwenang. Hal ini mencakup identifikasi siapa yang harus dihubungi dan informasi apa yang
+perlu disampaikan, seperti jenis kejadian, lokasi, dan waktu kejadian. Misalnya, petugas
+tanggap darurat yang menerima laporan harus segera melaporkan kepada koordinator untuk
+memulai prosedur tanggap darurat.143
+2) Kebijakan Evakuasi. Kebijakan evakuasi adalah komponen vital dalam rencana operasional.
+Kebijakan evakuasi harus mencakup pengembangan jalur evakuasi yang aman dan mudah
+diakses. Setiap lokasi harus memiliki peta evakuasi yang jelas, menunjukkan titik kumpul dan
+rute evakuasi terdekat. Tim evakuasi yang terlatih juga perlu dibentuk untuk memandu
+individu selama proses evakuasi, memastikan bahwa semua orang dapat keluar dari gedung
+dengan aman.15 Penting untuk melatih tim evakuasi secara berkala. Pelatihan ini tidak hanya
+meningkatkan keterampilan mereka tetapi juga membangun kepercayaan diri dalam
+menghadapi situasi darurat. Pelatihan dapat mencakup simulasi keadaan darurat yang realistis,
+sehingga semua individu memahami peran mereka dan dapat bertindak cepat saat dibutuhkan.16
+3) Pelatihan dan simulasi. Melaksanakan pelatihan berkala sangat penting untuk memastikan
+bahwa semua individu di lokasi memahami peran mereka dalam situasi darurat. Pelatihan ini
+mencakup berbagai skenario, seperti kebakaran, gempa bumi, atau bencana lainnya. Simulasi
+ini tidak hanya membantu dalam penguasaan prosedur tetapi juga meningkatkan kesadaran
+situasional dan kemampuan untuk bekerja sama dalam tim.17 Setiap sesi pelatihan harus
+didokumentasikan dengan baik, termasuk daftar hadir dan catatan tentang apa yang telah
+diajarkan. Ini memungkinkan evaluasi efektivitas pelatihan dan identifikasi area yang perlu
+ditingkatkan di masa mendatang.
+c. Tanggap Darurat; Tanggap darurat adalah respons cepat yang dilakukan saat terjadi bencana untuk
+meminimalkan dampak negatif dan melindungi keselamatan individu. Proses ini melibatkan
+serangkaian langkah penting yang harus diambil oleh individu dan organisasi untuk memastikan
+penanganan yang efektif terhadap situasi darurat. Langkah-langkah penting dalam tanggap darurat
+meliputi:
+14Kemenag RI. (2023). Panduan Kesiapsiagaan dan Penanganan Tanggap Darurat.
+15Dukcapil Gunungkidul. (2024). Prosedur Tanggap Darurat.
+16Kurniawan A, et al. (2021). Manajemen Tanggap Darurat. Jurnal Keselamatan Kerja.
+17 Kurniawan A, et al. (2021). Manajemen Tanggap Darurat. Jurnal Keselamatan Kerja.
+Page
+894
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+1) Menyelamatkan diri dan orang lain. Langkah pertama dalam tanggap darurat adalah
+menyelamatkan diri sendiri. Individu harus memastikan bahwa mereka berada dalam kondisi
+aman sebelum mencoba membantu orang lain. Ini mencakup menjauh dari area berbahaya dan
+mencari tempat yang lebih aman. Dalam situasi darurat, panik dapat menyebar dengan cepat,
+sehingga penting untuk tetap tenang dan fokus pada langkah-langkah yang diperlukan untuk
+melindungi diri sendiri dan orang-orang terdekat.184
+2) Koordinasi dengan layanan darurat. Setelah memastikan keselamatan pribadi, langkah
+selanjutnya adalah menghubungi layanan darurat seperti pemadam kebakaran, polisi, atau
+layanan medis. Informasi yang akurat dan cepat sangat penting untuk memastikan bahwa
+bantuan dapat segera dikirim ke lokasi yang membutuhkan. Menggunakan saluran komunikasi
+yang tepat juga membantu dalam mempercepat respons dari pihak berwenang.19
+3) Pengelolaan informasi. Selama situasi darurat, penting untuk memastikan bahwa informasi
+yang disampaikan kepada masyarakat adalah akurat dan terkini. Hal ini bertujuan untuk
+mengurangi kepanikan dan kebingungan di antara individu yang terpengaruh. Penggunaan
+media sosial, siaran pers, atau pengumuman publik dapat menjadi cara efektif untuk
+menyebarluaskan informasi penting kepada masyarakat.20
+2. Pasca Darurat
+Fase pasca darurat merupakan tahapan strategis dan kompleks dalam manajemen bencana tsunami,
+yang memiliki signifikansi fundamental dalam proses pemulihan komprehensif wilayah terdampak.
+Tahapan ini bukan sekadar upaya rekonstruksi fisik, melainkan sebuah proses transformatif yang
+mencakup pemulihan multilevel, meliputi dimensi sosial, ekonomi, psikologis, dan infrastruktur.
+Proses pemulihan pasca bencana ini terdiri dari tiga tahap utama yaitu pemulihan (recovery),
+rehabilitasi, dan rekonstruksi. Setiap tahap memiliki peran penting dalam membantu masyarakat
+kembali ke keadaan normal dan bahkan lebih baik dari sebelumnya.
+3. Pemulihan (Recovery)
+Tahap pemulihan bertujuan untuk mengembalikan kondisi lingkungan dan kehidupan masyarakat
+pasca bencana. Pemulihan ini dilakukan dengan pendekatan terstruktur, partisipatif, dan berkelanjutan
+agar dampak bencana dapat diminimalkan serta mendorong kesiapan masyarakat menghadapi bencana
+serupa di masa depan. Pemulihan terdiri dari beberapa aspek penting, yaitu:
+a. Pemulihan Fisik Pasca Bencana Tsunami; Pemulihan fisik setelah bencana tsunami adalah proses
+krusial yang bertujuan untuk mengembalikan infrastruktur yang rusak, termasuk jalan, jembatan,
+dan fasilitas umum lainnya. Proses ini tidak hanya melibatkan perbaikan fisik, tetapi juga
+pengelolaan limbah dan pembersihan area yang terdampak. Berikut adalah penjelasan lebih
+mendalam mengenai aspek-aspek penting dalam pemulihan fisik.
+1) Pembersihan Area Terdampak. Setelah tsunami, langkah pertama yang harus dilakukan adalah
+pembersihan area terdampak. Kegiatan ini mencakup:
+▪ Pengangkatan Puing-Puing: Puing-puing dari bangunan yang hancur harus diangkat untuk
+mencegah risiko kesehatan dan keselamatan. Proses ini seringkali melibatkan alat berat
+dan tenaga kerja terlatih untuk memastikan bahwa area tersebut aman untuk diakses.
+▪ Pengelolaan Limbah: Limbah yang dihasilkan dari bencana, seperti material bangunan,
+sampah rumah tangga, dan bahan berbahaya, harus dikelola dengan baik. Pengelolaan
+limbah yang efektif sangat penting untuk mencegah pencemaran lingkungan dan dampak
+negatif terhadap kesehatan masyarakat. Hal ini termasuk pemisahan limbah organik dan
+non-organik serta pengolahan limbah berbahaya sesuai dengan regulasi lingkungan.
+2) Pemulihan Infrastruktur. Setelah pembersihan, fokus beralih ke pemulihan infrastruktur yang
+rusak:
+18BPBD NTB. (2024). Penanganan Bencana
+19Sulistyo B, et al. (2023). Implementasi Rencana Tanggap Darurat Berdasarkan Standar NFPA 1600 untuk Meningkatkan
+Keselamatan Tempat Kerja. Jurnal Keselamatan dan Kesehatan Kerja. 15(2): 123-135.
+20Kurniawan A, et al. (2021). Manajemen Tanggap Darurat. Jurnal Keselamatan Kerja.
+Page
+895
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+▪ Perbaikan Jalan dan Jembatan: Jalan raya dan jembatan merupakan akses vital bagi
+masyarakat. Proses perbaikan harus dilakukan dengan cepat untuk memfasilitasi mobilitas
+bantuan kemanusiaan dan pemulihan ekonomi. Misalnya, di Sulawesi Tengah pasca
+gempa dan tsunami pada tahun 2018, banyak jalan yang terputus akibat likuifaksi dan
+gelombang tsunami, sehingga pemerintah segera melakukan rehabilitasi jalan untuk
+memudahkan akses.
+▪ Rehabilitasi Fasilitas Umum: Fasilitas seperti sekolah, rumah sakit, dan pusat pelayanan
+masyarakat juga perlu diperbaiki atau dibangun kembali. Pembangunan fasilitas ini harus
+memperhatikan aspek ketahanan terhadap bencana di masa depan, seperti menerapkan
+desain bangunan tahan gempa dan tsunami.215
+3) Pembangunan Berkelanjutan. Dalam proses pemulihan fisik, prinsip "Build Back Better"
+(Membangun Kembali dengan Lebih Baik) harus diterapkan:
+▪ Desain Tahan Bencana: Infrastruktur baru harus dirancang untuk lebih tahan terhadap
+bencana di masa depan. Ini termasuk penggunaan material yang lebih kuat dan teknik
+konstruksi yang dapat mengurangi risiko kerusakan akibat bencana serupa.22
+▪ Peningkatan Aksesibilitas: Pembangunan infrastruktur juga harus mempertimbangkan
+aksesibilitas bagi seluruh lapisan masyarakat, termasuk kelompok rentan seperti
+penyandang disabilitas.
+4) Koordinasi Antar Lembaga. Keberhasilan pemulihan fisik sangat bergantung pada koordinasi
+antara berbagai lembaga pemerintah dan non-pemerintah:
+▪ Perencanaan Terintegrasi: Semua pihak terkait perlu bekerja sama dalam merencanakan
+pemulihan infrastruktur agar tidak terjadi tumpang tindih atau kekurangan sumber daya.
+Misalnya, Badan Penanggulangan Bencana Daerah (BPBD) berperan penting dalam
+mengkoordinasikan upaya pemulihan dengan kementerian terkait.23
+▪ Keterlibatan Masyarakat: Partisipasi masyarakat dalam proses pemulihan juga sangat
+penting. Masyarakat dapat memberikan masukan mengenai kebutuhan mereka serta
+membantu dalam pengawasan proyek-proyek pemulihan.24
+Pemulihan fisik pasca bencana tsunami adalah proses kompleks yang melibatkan pembersihan
+area terdampak, perbaikan infrastruktur, penerapan prinsip pembangunan berkelanjutan, serta
+koordinasi antara berbagai lembaga. Dengan pendekatan yang tepat dan partisipasi aktif dari
+semua pihak, proses ini dapat dilakukan secara efisien untuk mendukung kehidupan masyarakat
+yang lebih baik setelah bencana.
+b. Pemulihan Psikologis Pasca Bencana Tsunami; Pemulihan psikologis pasca bencana tsunami
+adalah aspek penting yang sering kali diabaikan dalam proses pemulihan keseluruhan. Selain
+dampak fisik yang terlihat, bencana seperti tsunami dapat meninggalkan jejak psikologis yang
+mendalam pada korban. Program dukungan psikologis sangat diperlukan untuk membantu
+masyarakat mengatasi trauma akibat bencana dan memulihkan kesehatan mental mereka.
+1) Dampak Psikologis Bencana. Bencana tsunami dapat menyebabkan berbagai reaksi psikologis
+yang serius pada penyintas. Gejala yang umum dialami antara lain:
+▪ Kecemasan dan Ketakutan: Penyintas sering mengalami kecemasan berlebihan, terutama
+saat menghadapi situasi yang mengingatkan mereka pada peristiwa traumatis tersebut.
+Ketakutan akan terulangnya bencana juga menjadi beban mental yang berat.26
+21Surtiari GAK. (2020). Pentingnya Penanganan Pascabencana yang Berfokus Pada Penduduk untuk Mewujudkan Build
+Back Better: Pembelajaran dari Bencana Palu, Sigi, dan Donggala. Jurnal Kependudukan Indonesia. 14(2): 165-184.
+22 Eprints IPDN. (2021). Rehabilitasi dan Rekonstruksi Pemulihan Infrastruktur Sumber Daya Air Dalam Mewujudkan
+Ketahanan Nasional Kota Palu.
+23Yulianto S, Bahar F, & Pranoto S. (2023). Rehabilitasi dan Rekonstruksi Bidang Perumahan dan Pascabencana Tsunami
+Pandeglang untuk Pemulihan Kehidupan Masyarakat Terdampak. Jagratara: Journal of Disaster Research. 1(1): 9-16.
+24Hutagalung S, Mulyana N, & Sulistio EB. (2021). Tata Kelola Dalam Pembangunan Infrastruktur Darurat Pasca Bencana
+Tsunami Di Lampung Selatan.
+25Muthmainnah, et al. (2021). After Tsunami: What Psychology Can Do? Peran Psikologi dalam Pemulihan dan Penanganan
+Bencana.
+Page
+896
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+▪ Depresi dan Rasa Kehilangan: Banyak korban mengalami perasaan sedih yang mendalam,
+kehilangan minat dalam aktivitas sehari-hari, dan kesulitan dalam menjalani kehidupan
+normal. Rasa kehilangan orang terkasih dan harta benda dapat memperburuk kondisi
+mental mereka.26
+▪ Gangguan Stres Pasca Trauma (PTSD): Beberapa penyintas mungkin mengalami PTSD,
+yang ditandai dengan kilas balik (flashback), mimpi buruk, dan kesulitan tidur. Gejala ini
+dapat berlangsung lama jika tidak ditangani dengan baik.27
+2) Pentingnya Dukungan Psikologis. Dukungan psikologis sangat penting untuk membantu
+penyintas mengatasi dampak traumatis dari bencana. Beberapa intervensi yang dapat
+dilakukan meliputi:
+▪ TraumaHealing: Kegiatan trauma healing bertujuan untuk mengurangi dampak psikologis
+dengan memberikan ruang bagi penyintas untuk mengekspresikan emosi mereka.
+Kegiatan ini dapat mencakup diskusi kelompok, seni ekspresif, dan teknik relaksasi.28
+▪ Konseling dan Terapi: Konseling individu atau kelompok dapat membantu penyintas
+memahami dan mengelola emosi mereka. Pendekatan seperti Cognitive Behavioral
+Therapy (CBT) dan Acceptance and Commitment Therapy (ACT) dapat digunakan untuk
+mengubah pola pikir negatif dan membantu individu menerima pengalaman traumatis
+mereka.29
+▪ Pendidikan Psikoedukasi: Memberikan informasi kepada penyintas tentang gejala trauma
+dan cara menghadapinya sangat penting. Psikoedukasi membantu individu memahami
+bahwa reaksi mereka adalah respons normal terhadap situasi luar biasa.307
+3) Membangun Resiliensi. Program pemulihan psikologis juga harus fokus pada penguatan
+resiliensi individu dan komunitas
+▪ Dukungan Sosial: Mendorong penyintas untuk mencari dukungan dari keluarga, teman,
+atau kelompok sebaya sangat penting. Dukungan sosial dapat memberikan rasa aman dan
+meningkatkan kemampuan individu untuk mengatasi stress.31
+▪ Pelatihan Keterampilan: Mengembangkan keterampilan baru melalui pelatihan dapat
+memberikan rasa kompetensi dan keberdayaan kepada penyintas. Ini juga berkontribusi
+pada pemulihan ekonomi mereka pasca bencana.32
+▪ Membangun Rutinitas: Membantu penyintas menyusun rutinitas harian dapat memberikan
+struktur dan stabilitas dalam hidup mereka setelah bencana. Rutinitas yang baik juga
+berkontribusi pada kesehatan mental yang lebih baik.33
+4) Tantangan dalam Pemulihan Psikologis. Implementasi dukungan psikologis sering kali
+menghadapi tantangan:
+▪ Stigma terhadap Kesehatan Mental: Banyak individu enggan mencari bantuan karena
+stigma yang melekat pada masalah kesehatan mental. Edukasi masyarakat tentang
+pentingnya kesehatan mental perlu ditingkatkan.
+▪ Keterbatasan Sumber Daya: Sumber daya untuk program dukungan psikologis sering kali
+terbatas, termasuk kurangnya tenaga ahli terlatih di daerah terdampak bencana.34
+▪ Intervensi psikologis yang tepat sangat penting untuk membantu penyintas mengatasi
+trauma dan membangun kembali kehidupan mereka. Dengan dukungan emosional,
+26Nawangsih R, et al. (2020). Trauma Healing Korban Terdampak Tsunami Selat Sunda.
+27Sahu S, & Gupta A. (2024). Identifikasi Kesehatan Mental Pada Masyarakat Penyintas Bencana.
+28 Nawangsih R, et al. (2020). Trauma Healing Korban Terdampak Tsunami Selat Sunda. .
+29Muthmainnah, et al. (2021). After Tsunami: What Psychology Can Do? Peran Psikologi dalam Pemulihan dan Penanganan
+Bencana
+30 Sahu S, & Gupta A. (2024). Identifikasi Kesehatan Mental Pada Masyarakat Penyintas Bencana.
+31Pusat Krisis Kementerian Kesehatan Republik Indonesia. (2016). Pemulihan Pasca Bencana Secara Psikologis.
+32 Sahu S, & Gupta A. (2024). Identifikasi Kesehatan Mental Pada Masyarakat Penyintas Bencana.
+33 Nawangsih R, et al. (2020). Trauma Healing Korban Terdampak Tsunami Selat Sunda.
+34 Nawangsih R, et al. (2020). Trauma Healing Korban Terdampak Tsunami Selat Sunda.
+35GITEWS. (2008). Pedoman Tata Cara Pemberian Bantuan Pemenuhan Kebutuhan Dasar.
+Page
+897
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+konseling, serta pendidikan psikoedukasi, individu dapat pulih secara efektif dari dampak
+psikologis bencana.
+c. Penyediaan Kebutuhan Dasar Pasca Bencana Tsunami; Penyediaan kebutuhan dasar merupakan
+salah satu aspek krusial dalam penanganan bencana, terutama setelah terjadinya tsunami.
+Kebutuhan dasar mencakup makanan, air bersih, tempat tinggal sementara, dan layanan kesehatan
+yang memadai. Memastikan terpenuhinya kebutuhan ini sangat penting untuk mendukung proses
+pemulihan masyarakat yang terdampak.
+1) Kebutuhan Pangan. Bantuan makanan dapat berupa bahan makanan pokok seperti beras,
+sayuran, dan lauk pauk. Dalam situasi darurat, dapur umum sering didirikan untuk
+menyediakan makanan siap saji bagi pengungsi. Standar minimal bantuan pangan biasanya
+mencakup 2100 kalori per orang per hari, dengan dua kali penyajian makanan.35 Distribusi
+makanan harus dilakukan dengan memperhatikan kelompok rentan seperti anak-anak, ibu
+hamil, dan lansia. Penggunaan sistem distribusi yang terorganisir dapat membantu
+memastikan bahwa semua korban mendapatkan akses yang adil terhadap makanan.
+Melibatkan masyarakat dalam proses distribusi pangan juga penting untuk membangun rasa
+kepemilikan dan tanggung jawab bersama dalam pemulihan.
+2) Penyediaan Air Bersih. Air bersih merupakan kebutuhan dasar yang penting untuk kesehatan
+Masyarakat. Penyediaan air bersih harus memenuhi standar kesehatan yang memadai. Dalam
+situasi darurat, air bersih biasanya disuplai melalui tangki air atau sumur bor yang dibangun di
+lokasi-lokasi strategis. Standar minimal adalah 15 liter per orang per hari. Selain penyediaan
+air bersih, fasilitas sanitasi yang memadai juga harus disediakan untuk mencegah penyebaran
+penyakit. Jarak antara tempat tinggal pengungsi dengan jamban harus diperhatikan agar
+aksesibilitas tetap terjaga. Edukasi tentang pentingnya kebersihan dan sanitasi kepada korban
+bencana juga perlu dilakukan untuk mencegah risiko kesehatan akibat pencemaran.
+3) Tempat Tinggal Sementara. Setelah bencana tsunami, banyak orang kehilangan tempat tinggal
+mereka, tenda-tenda penampungan atau barak sementara didirikan untuk menampung korban
+bencana. Standar minimal penampungan mencakup ukuran yang cukup untuk setiap individu
+(minimal 3 meter persegi per orang) serta memenuhi persyaratan keamanan dan Kesehatan
+dalam mendirikan tempat tinggal sementara, perlu diperhatikan privasi antar jenis kelamin dan
+kelompok usia. Ini penting untuk menjaga martabat pengungsi serta mengurangi risiko
+kekerasan berbasis gender. Tempat penampungan juga harus memiliki akses ke fasilitas umum
+seperti pos kesehatan dan dapur umum untuk mendukung kehidupan sehari-hari pengungsi.
+4) Layanan Kesehatan. Pos kesehatan didirikan untuk memberikan pelayanan medis kepada
+korban bencana. Ini termasuk pemeriksaan kesehatan umum, vaksinasi, dan penyediaan obat
+obatan. Kelompok rentan seperti bayi, balita, ibu hamil, dan lansia perlu mendapatkan
+perhatian khusus dalam pelayanan kesehatan. Program-program kesehatan reproduksi dan
+imunisasi harus diutamakan. Selain layanan kesehatan fisik, dukungan psikososial juga sangat
+penting untuk membantu korban mengatasi trauma akibat bencana.
+d. Rehabilitasi; Rehabilitasi pasca bencana adalah proses penting yang bertujuan untuk memperbaiki
+dan memperkuat sistem yang ada setelah terjadinya bencana. Tahapan ini tidak hanya berfokus
+pada pemulihan fisik, tetapi juga melibatkan aspek sosial dan ekonomi masyarakat yang
+terdampak.
+1) Kegiatan Rehabilitasi. Perbaikan infrastruktur adalah langkah pertama yang krusial dalam
+rehabilitasi. Pembangunan kembali fasilitas umum seperti rumah, sekolah, dan fasilitas
+kesehatan yang rusak harus dibangun kembali dengan standar yang lebih baik untuk
+mengurangi kerentanan terhadap bencana di masa depan. Memperhatikan aspek ketahanan
+bangunan terhadap bencana, seperti gempa bumi atau banjir, menjadi prioritas utama dalam
+perencanaan pembangunan. Melakukan pemetaan ulang untuk mengidentifikasi daerah rawan
+bencana dan merencanakan penggunaan lahan yang lebih baik Pemetaan wilayah pasca
+bencana sangat penting untuk merancang tata ruang yang lebih aman dan efisien. Partisipasi
+masyarakat dilibatkan dalam perencanaan agar kebutuhan dan aspirasi mereka terpenuhi,
+sehingga menciptakan rasa kepemilikan terhadap proyek rehabilitasi. Memberikan pelatihan
+Page
+898
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+keterampilan baru bagi masyarakat merupakan bagian integral dari rehabilitasi, pelatihan yang
+relevan dengan kebutuhan pasar kerja lokal untuk membantu masyarakat mendapatkan
+pekerjaan setelah bencana. Program pemberdayaan ini tidak hanya membantu individu, tetapi
+juga berkontribusi pada pemulihan ekonomi secara keseluruhan di daerah yang terkena
+dampak.
+2) Proses Rehabilitasi. Rehabilitasi dilakukan melalui beberapa tahapan yang terstruktur seperti
+Mengumpulkan data tentang kerusakan infrastruktur dan kebutuhan masyarakat. Menyusun
+rencana rehabilitasi berdasarkan hasil inventarisasi untuk memastikan semua aspek pelayanan
+publik dipulihkan secara efektif. Melaksanakan program rehabilitasi dengan melibatkan
+berbagai pemangku kepentingan, termasuk pemerintah daerah, Lembaga Swadaya Masyarakat
+(LSM), dan masyarakat setempat.
+3) Tujuan Rehabilitasi. Tujuan utama dari rehabilitasi adalah mengembalikan semua aspek
+kehidupan masyarakat ke kondisi normal. Serta membuat masyarakat lebih siap menghadapi
+kemungkinan bencana di masa depan melalui infrastruktur yang lebih baik dan pelatihan
+keterampilan.
+e. Rekonstruksi; Rekonstruksi adalah fase krusial dalam pemulihan pasca bencana yang bertujuan
+untuk membangun kembali semua aspek kehidupan masyarakat dengan cara yang lebih baik.
+Proses ini tidak hanya melibatkan perbaikan fisik, tetapi juga mencakup pengembangan sosial dan
+ekonomi.
+1) Pembangunan Berkelanjutan. Rekonstruksi berfokus pada pembangunan berkelanjutan yang
+tidak hanya memperbaiki infrastruktur yang rusak, tetapi juga meningkatkan kualitas hidup
+masyarakat. Membangun kembali fasilitas umum seperti sekolah, rumah sakit, dan
+infrastruktur transportasi dengan desain yang lebih tahan terhadap bencana.
+2) Pengembangan Ekonomi. Sektor ekonomi merupakan aspek penting dalam rekonstruksi.
+Memulihkan lahan pertanian dan tambak yang terdampak bencana untuk memastikan
+ketahanan pangan masyarakat. Ini termasuk penyediaan bantuan kepada petani dan nelayan
+untuk memulai kembali aktivitas mereka mendorong pertumbuhan ekonomi lokal melalui
+dukungan kepada Usaha Kecil dan Menengah (UKM) dan industri kreatif sebagai bagian dari
+strategi pemulihan jangka panjang.368
+3) Monitoring dan Evaluasi. Proses monitoring dan evaluasi sangat penting untuk memastikan
+bahwa semua program rekonstruksi berjalan sesuai rencana. Kegiatannya seperti Melakukan
+penilaian secara rutin terhadap kemajuan proyek rekonstruksi untuk memastikan bahwa tujuan
+pemulihan tercapai. Serta mengajak masyarakat terlibat dalam proses evaluasi agar mereka
+dapat memberikan masukan. Rekonstruksi pasca bencana merupakan proses kompleks yang
+memerlukan perencanaan dan koordinasi yang matang. Dengan fokus pada pembangunan
+berkelanjutan, pengembangan ekonomi, serta monitoring dan evaluasi, diharapkan masyarakat
+dapat pulih dengan lebih baik dan siap menghadapi kemungkinan bencana di masa depan.
+4. Pencegahan Dan Mitigasi
+Pencegahan dan mitigasi bencana merupakan langkah-langkah yang penting dalam upaya
+mengurangi dampak negatif bencana alam. Kedua konsep ini memiliki peran yang sangat vital dalam
+mengurangi potensi kerusakan dan kerugian yang dapat timbul akibat bencana, baik itu dari segi sosial,
+ekonomi, maupun lingkungan. Pencegahan dan mitigasi tidak hanya berfokus pada upaya yang
+dilakukan ketika bencana sudah terjadi, tetapi lebih pada langkah-langkah proaktif untuk
+meminimalkan risiko sebelum bencana menghampiri.
+a. Pencegahan Bencana; Pencegahan dan mitigasi bencana merupakan langkah-langkah yang penting
+dalam upaya mengurangi dampak negatif bencana alam. Salah satu bentuk pencegahan yang dapat
+dilakukan dengan mengatur tata ruang yang bijaksana, seperti larangan mendirikan bangunan di
+daerah rawan bencana alam, selain itu, pencegahan juga mencakup pengelolaan sumber daya alam
+secara berkelanjutan serta mengurangi aktivitas manusia yang dapat memperburuk kondisi alam.
+Pencegahan bencana tsunami pada dasarnya tidak dapat sepenuhnya dicegah, karena disebabkan
+oleh peristiwa alam seperti gempa bumi bawah laut, letusan gunung berapi, atau longsoran bawah
+36Kementerian PUPR. (2017). Modul 2 Manajemen Penanggulangan Bencana.
+Page
+899
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+laut yang sangat sulit diprediksi. Namun ada beberapa upaya yang dapat dilakukan untuk
+mengurangi risiko terjadinya bencana atau dampaknya, seperti:
+1) Pemasangan perangkat InaTEWS (Indonesia Tsunami Early Warning System) milik BMKG
+dan EWS (Early Warning System) milik BPBD di pesisir pantai. InaTEWS (Indonesia
+Tsunami Early Warning System) adalah sistem peringatan dini tsunami yang dikembangkan
+oleh Indonesia untuk mendeteksi dan memberi peringatan kepada masyarakat mengenai
+ancaman tsunami yang mungkin terjadi. Sistem ini dirancang untuk mengurangi risiko
+bencana tsunami di sepanjang pantai Indonesia, yang merupakan salah satu negara yang
+memiliki potensi tinggi terhadap bencana alam, terutama tsunami. Cara kerja InaTEWS yaitu
+mendeteksi gempa bumi, di mana sistem ini terhubung dengan jaringan seismometer yang
+memantau gempa bumi. Jika terjadi gempa bumi besar yang berpotensi memicu tsunami,
+sistem ini secara otomatis akan mendeteksi adanya pergerakan tektonik yang berbahaya.
+Kemudian pemantauan tsunami menggunakan sensor bawah laut yang dapat mendeteksi
+perubahan tekanan dan pergerakan dasar laut akibat gempa bumi atau longsoran bawah laut
+yang dapat menghasilkan tsunami. Sistem ini juga menggunakan data dari stasiun pemantauan
+pasang surut (tide gauges) untuk memantau perubahan level air laut. Setelah gempa atau
+aktivitas yang mencurigakan terdeteksi, InaTEWS melakukan pemrosesan data dan analisis
+dengan menggunakan model tsunami untuk memprediksi tinggi dan kecepatan gelombang
+tsunami. Proses ini melibatkan simulasi komputer untuk memprediksi bagaimana tsunami
+akan bergerak dan kapan sampai ke pesisir. Jika potensi tsunami terdeteksi, InaTEWS akan
+mengirimkan peringatan kepada pihak berwenang, termasuk Badan Meteorologi, Klimatologi,
+dan Geofisika (BMKG) yang kemudian menyebarkan peringatan kepada masyarakat melalui
+berbagai saluran, seperti sirine tsunami, sistem pesan teks (SMS), dan media massa.
+Peringatan ini untuk memberikan informasi tentang estimasi waktu kedatangan gelombang
+tsunami serta area yang harus diwaspadai. Peringatan yang diberikan oleh InaTEWS
+memungkinkan masyarakat dan pemerintah daerah untuk segera melakukan tindakan evakuasi
+ke tempat yang lebih aman, terutama di daerah pesisir yang rentan. Keuntungan dari
+Automatic Tsunami Early Warning System ini adalah lebih cepat karena tidak membutuhkan
+banyak perantara instansi terkait untuk menyampaikan informasi potensi tsunami, tidak
+menimbulkan kesenjangan informasi karena dapat didengar dan diketahui oleh berbagai
+segmen masyarakat berbeda dengan potensi tsunami yang hanya diberitahu melalui aplikasi di
+smartphone karena tidak semua orang memiliki smartphone.39
+2) Edukasi masyarakat dengan meningkatkan kesadaran masyarakat mengenai potensi bahaya
+tsunami. Edukasi tentang tanda-tanda tsunami seperti gempa bumi dan perubahan level air
+laut, serta penting untuk mengurangi jumlah korban jiwa. Masyarakat yang paham akan risiko
+tsunami akan lebih siap menghadapi bencana.
+3) Pencegahan bisa dilakukan dengan perencanaan yang tepat melalui zonasi bencana di daerah
+pesisir. Kawasan yang rawan tsunami sebaiknya dibatasi untuk pembangunan yang tidak
+melibatkan banyak orang. Misalnya, membatasi permukiman dan infrastruktur penting di
+sepanjang garis pantai atau membangun tempat perlindungan yang aman dari tsunami.
+b. Mitigasi Bencana; Mitigasi bencana merupakan serangkaian upaya dalam mengurangi risiko
+bencana, baik melalui pembangunan fisik maupun penyadaran dan peningkatan kemampuan
+menghadapi ancaman bencana.10 Dalam melakukan mitigasi bencana terdapat beberapa hal
+penting yang harus dilakukan yaitu:
+1) Membuat informasi peta kawasan rawan bencana untuk setiap jenis bencana
+2) Adanya sosialisasi untuk meningkatkan pemahaman serta kesadaran masyarakat untuk
+menghadapi bencana, karena bermukim di daerah yang rawan terjadi bencana
+3) Mengetahui apa yang harus dilakukan dan dihindari, serta mengetahui cara penyelamatan diri
+jika terjadi bencana
+39Atika R, Raditya AE, Marjianto RN. (2019). Automatic Tsunami Early Warning System Tersinkronisasi BMKG dan
+Pengeras Suara Tempat Ibadah. Jurnal Edukasi Elektro. 3(1): 30-35.
+38Peraturan Pemerintah Nomor 21 Tahun 2008 tentang Penyelenggaraan Penanggulangan Bencana.
+Page
+900
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+4) Melakukan pengaturan serta penataan kawasan rawan bencana untuk mengurangi ancaman
+terjadinya bencana
+Mitigasi tsunami bertujuan untuk mengurangi dampak buruk dari tsunami jika bencana
+tersebut terjadi. Mitigasi dapat dilakukan dengan memanfaatkan teknologi, perencanaan yang
+matang, dan pembangunan infrastruktur yang tangguh terhadap tsunami. Beberapa langkah
+mitigasi yang penting, yaitu:
+1) Sistem peringatan dini tsunami yang dapat mendeteksi gelombang tsunami dalam waktu
+singkat setelah terjadinya gempa bumi. Sistem ini menghubungkan informasi dari sensor
+seismik bawah laut, yang mendeteksi gempa bumi yang berpotensi menyebabkan tsunami,
+dengan pusat peringatan untuk memberi tanda kepada masyarakat. Peringatan bisa berupa
+alarm atau sirine yang akan memberitahu penduduk di daerah pesisir untuk segera mengungsi.
+Peringatan ini biasanya diikuti dengan informasi mengenai waktu evakuasi yang aman menuju
+tempat yang lebih tinggi dan aman.
+2) Membangun infrastruktur yang tahan tsunami seperti pemecah gelombang, sea walls (dinding
+penghalang tsunami), tanggul, dan bangunan yang dirancang untuk menahan dampak
+gelombang tsunami. Pemecah gelombang adalah salah satu bentuk infrastruktur yang
+digunakan untuk mengurangi dampak gelombang tsunami terhadap wilayah pesisir. Pemecah
+gelombang bekerja dengan cara mengubah arah atau mengurangi kekuatan gelombang laut
+yang menuju daratan, sehingga mengurangi potensi kerusakan yang dapat ditimbulkan oleh
+tsunami. Sebagai bagian dari upaya mitigasi tsunami, pemecah gelombang sangat berguna
+dalam melindungi permukiman, infrastruktur penting, serta kehidupan manusia di daerah
+pesisir yang rawan terhadap tsunami.
+3) Melakukan pelatihan dan simulasi evakuasi tsunami secara rutin. Latihan ini penting agar
+warga dapat mengetahui jalur evakuasi yang aman dan waktu yang diperlukan untuk menuju
+tempat yang lebih tinggi.
+4) Pemanfaatan teknologi komputer untuk membuat simulasi dan prediksi tsunami yang dapat
+membantu dalam perencanaan mitigasi. Dengan menggunakan teknologi Sistem Informasi
+Geografis (SIG) dan pemodelan gelombang tsunami, pihak berwenang bisa memperkirakan
+dampak tsunami di berbagai daerah pesisir dan merencanakan tindakan mitigasi yang lebih
+baik.
+Pencegahan dan mitigasi tsunami adalah langkah-langkah yang harus dilakukan secara
+menyeluruh untuk meminimalisir dampak dari bencana alam ini. Meskipun tsunami tidak dapat
+dicegah sepenuhnya, dengan adanya sistem peringatan dini, infrastruktur yang lebih baik, edukasi
+masyarakat, serta latihan evakuasi yang rutin, risiko kerugian besar akibat tsunami dapat dikurangi
+secara signifikan. Kerja sama antara pemerintah, masyarakat, dan lembaga-lembaga terkait sangat
+diperlukan untuk menciptakan strategi mitigasi yang efektif dalam menghadapi potensi bencana
+tsunami.
+c. Kesiapsiagaan (Preparedness); Kesiapsiagaan bencana adalah serangkaian tindakan yang diambil
+untuk mengantisipasi dan meminimalkan dampak dari bencana. Di Indonesia, yang merupakan
+negara rawan bencana, kesiapsiagaan ini sangat penting untuk melindungi nyawa dan harta benda.
+Kesiapsiagaan mencakup berbagai aspek, mulai dari peringatan dini hingga penyusunan rencana
+siaga yang efektif.
+1) Peringatan Dini. Peringatan dini merupakan sistem yang dirancang untuk memberikan
+informasi kepada masyarakat tentang potensi bencana sebelum terjadinya bencana tersebut.3911
+Peringatan dini mencakup pengamatan dan pengujian secara teratur terhadap gejala awal
+bencana, serta pengembangan sistem yang efektif untuk menyampaikan informasi tersebut
+kepada public. Peringatan dini yang efektif dapat mengurangi jumlah korban jiwa dan
+kerugian material dengan memungkinkan masyarakat untuk melakukan evakuasi atau
+tindakan pencegahan lainnya.
+39Maryani E. (2010). Model Pembelajaran Mitigasi Bencana dalam Ilmu Pengetahuan Sosial di Sekolah Menengah Pertama.
+Jurnal Geografi GEA. 10(1): 42-58.
+40Siswono E & Khasanah U. (2019). Sikap Masyarakat Pasca Banjir Lahar Dingin (Studi Fenomenologis Pada Masyarakat
+Kelurahan Tubo). Techno: Jurnal Penelitian. 8(2).
+Page
+901
+IURIS STUDIA: Jurnal Kajian Hukum
+Volume 5Nomor3,Oktober 2024– Januari 2025: Page 891-904
+Upaya Mitigasi Bencana...
+(Nuriyana, dkk.)
+Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) berperan penting dalam
+mengembangkan dan mengelola sistem peringatan dini tsunami di Indonesia. Menurut laporan
+GITEWS, sistem ini harus mampu memberikan informasi yang akurat dan tepat waktu,
+termasuk deteksi gempa yang terhubung dengan alat pemantau permukaan laut (buoy) untuk
+memberikan peringatan dalam hitungan menit setelah kejadian gempa
+Pentingnya peringatan dini terletak pada kemampuannya untuk memberikan waktu bagi
+masyarakat untuk melakukan evakuasi atau mengambil langkah-langkah perlindungan lainnya.
+Sebuah studi menunjukkan bahwa penerapan sistem peringatan dini yang efektif dapat
+mengurangi jumlah korban jiwa dan kerugian material secara signifikan.40
+Sistem peringatan dini harus melibatkan beberapa elemen, seperti:
+▪ Memahamijenis atau identifikasi resiko bencana yang mungkin terjadi di suatu daerah
+▪ Melakukan simulasi dan uji coba untuk memastikan bahwa sistem berfungsi dengan baik
+▪ Edukasi masyarakat perlu dilatih untuk memahami tanda-tanda peringatan dan cara
+bereaksi terhadapnya
+2) Rencana Siaga. Rencana siaga adalah dokumen strategis yang merinci langkah-langkah yang
+harus diambil oleh individu, keluarga, dan komunitas saat menghadapi bencana. Rencana ini
+mencakup identifikasi risiko, jalur evakuasi, lokasi berkumpul setelah evakuasi, dan cara
+berkomunikasi selama situasi darurat.
+Langkah-langkah dalam menyusun rencana siaga meliputi:
+▪ Melakukan Identifikasi Risiko jenis bencana yang mungkin terjadi di suatu daerah
+▪ Pengembangan jalur evakuasi rute yang aman untuk meninggalkan Lokasi bencana
+▪ Menetapkan cara untuk tetap berhubungan selama situasi darurat
+▪ Melakukan pelatihan dan simulasi secara rutin agar semua pihak memahami rencana dan
+dapat melaksanakannya dengan baik
+Kesiapsiagaan merupakan langkah proaktif yang sangat penting dalam manajemen risiko
+bencana tsunami. Dengan sistem peringatan dini yang efektif dan rencana siaga yang terorganisir,
+masyarakat dapat meningkatkan kemampuan mereka dalam menghadapi berbagai ancaman
+bencana.
+C. Penutup
+Penelitian ini mendeskripsikan upaya- upaya penanggulangan bencana tsunami di daerah pesisir
+pantai dengan menggunakan metode berupa pengumpulan informasi dari buku, artikel, serta jurnal
+yang relevan dengan kajian penelitian ini, dan juga menggunakan beberapa data sekunder yang
+dianalisis dengan menggunakan pendekatan konseptual dan komparatif. Kajian darurat tsunami
+bertujuan untuk mengevaluasi kondisi bencana dan merencanakan respon yang tepat. Kajian darurat
+tsunami melibatkan tiga tahapan utama dalam manajemen bencana yaitu, tahap pra-bencana, tanggap
+darurat, dan pasca bencana. Rencana operasional untuk tanggap darurat adalah dokumen strategis
+yang penting untuk memastikan semua pihak yang terlibat dalam penanganan keadaan darurat tahu
+apa yang harus dilakukan. Rencana operasional untuk tanggap darurat mencakup, prosedur pelaporan,
+kebijakan evakuasi, pelatihan, dan simulasi.
+Tanggap darurat adalah respons cepat yang dilakukan saat terjadi bencana untuk meminimalkan
+dampak negatif dan melindungi keselamatan individu. Proses ini melibatkan serangkaian langkah
+penting yang harus diambil oleh individu dan organisasi untuk memastikan penanganan yang efektif
+terhadap situasi darurat. Langkah- langkah tanggap darurat meliputi, menyelamatkan diri dan orang
+lain, koordinasi dengan layanan darurat, pengelolaan informasi. Pemulihan fisik setelah bencana
+tsunami adalah proses krusial yang bertujuan untuk mengembalikan infrastruktur yang rusak,
+termasuk jalan, jembatan, dan fasilitas umum lainnya. Proses ini tidak hanya melibatkan perbaikan
+fisik, tetapi juga pengelolaan limbah dan pembersihan area yang terdampak.

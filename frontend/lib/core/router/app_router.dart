@@ -6,6 +6,7 @@ import 'package:suar_app/features/onboarding/presentation/onboarding_screen.dart
 import '../../features/map_evacuation/presentation/cache_management_screen.dart';
 import '../../features/resources/presentation/emergency_numbers_screen.dart';
 import '../../features/resources/presentation/first_aid_screen.dart';
+import '../../features/resources/presentation/mitigation_guide_screen.dart';
 
 import '../../features/user/presentation/user_notifier.dart';
 import '../../features/user/presentation/profile_screen.dart';
@@ -116,6 +117,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+
+          // Mitigation Guide & Preparedness Bag
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/mitigation-guide',
+                name: 'mitigation_guide',
+                builder: (context, state) => const MitigationGuideScreen(),
+              ),
+            ],
+          ),
+
           // Profile
           StatefulShellBranch(
             routes: [

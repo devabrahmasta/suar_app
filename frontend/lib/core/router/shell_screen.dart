@@ -56,9 +56,10 @@ class ShellScreen extends StatelessWidget {
             );
           },
           destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home_1), label: 'Home'),
-            NavigationDestination(icon: Icon(Iconsax.map), label: 'Map'),
-            NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
+            NavigationDestination(icon: Icon(Iconsax.home_1), label: 'Beranda'),
+            NavigationDestination(icon: Icon(Iconsax.map), label: 'Peta Evakuasi'),
+            NavigationDestination(icon: Icon(Icons.backpack_rounded), label: 'Panduan Mitigasi'),
+            NavigationDestination(icon: Icon(Iconsax.user), label: 'Profil'),
           ],
         ),
       ),

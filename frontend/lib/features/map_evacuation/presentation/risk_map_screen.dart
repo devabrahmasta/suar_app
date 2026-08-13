@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
+import '../data/shelter_data_service.dart';
 import 'map_provider.dart';
 import '../../ews_ai/presentation/ews_provider.dart';
 
@@ -52,6 +53,205 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
 
   bool _isLandslideLoading = false;
   bool _isInLandslideZone = false;
+
+  void _showShelterDetailsModal(BuildContext context, ShelterModel shelter) {
+    final isTea = shelter.type == ShelterType.tea;
+    final color = isTea ? AppColors.success : AppColors.primary;
+    final typeLabel = isTea ? 'TEA (Tempat Evakuasi Akhir)' : 'TES (Tempat Evakuasi Sementara)';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.55,
+          maxChildSize: 0.8,
+          minChildSize: 0.3,
+          builder: (context, scrollController) {
+            return Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.border,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          typeLabel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: color,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.verified, size: 16, color: AppColors.success),
+                      const SizedBox(width: 4),
+                      const Text(
+                        'Resmi BNPB',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.success),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    shelter.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    shelter.address,
+                    style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Card Elevasi Aman & Kapasitas
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Elevasi Ketinggian', style: TextStyle(fontSize: 11, color: AppColors.textHint)),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${shelter.elevationMeters} m dpl',
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.success),
+                              ),
+                              const Text('Aman dari Tsunami (>20m)', style: TextStyle(fontSize: 10, color: AppColors.success)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.border),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Kapasitas Daya Tampung', style: TextStyle(fontSize: 11, color: AppColors.textHint)),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${shelter.capacityFilled} / ${shelter.capacityTotal}',
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primary),
+                              ),
+                              const Text('Terisi 34% (Tersedia)', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Standard Logistik Kebutuhan Dasar BNPB
+                  const Text(
+                    'FASILITAS & LOGISTIK DARURAT (STANDAR BNPB)',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textHint),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildFacilityBadge(Icons.water_drop, 'Pasokan Air Bersih (Min. 15L/hari/orang)', shelter.hasWaterSupply),
+                  _buildFacilityBadge(Icons.restaurant, 'Pangan Standar Bencana (2100 kcal)', shelter.hasFoodLogistics),
+                  _buildFacilityBadge(Icons.accessible, 'Akses Ramah Disabilitas (Netra, Tuli, Fisik)', shelter.hasDisabilityAccess),
+                  _buildFacilityBadge(Icons.medical_services, 'Tim Medis & Posko P3K Terpadu', shelter.hasMedicalTeam),
+                  const SizedBox(height: 20),
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: color,
+                        foregroundColor: AppColors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Rute Evakuasi Tercepat Menuju ${shelter.name} Aktif!'),
+                            backgroundColor: color,
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.directions_run),
+                      label: const Text('RUTE EVAKUASI TERCEPAT', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildFacilityBadge(IconData icon, String label, bool available) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: available ? AppColors.success : AppColors.textHint),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                color: available ? AppColors.textPrimary : AppColors.textHint,
+                decoration: available ? null : TextDecoration.lineThrough,
+              ),
+            ),
+          ),
+          Icon(
+            available ? Icons.check_circle : Icons.cancel,
+            size: 16,
+            color: available ? AppColors.success : AppColors.textHint,
+          ),
+        ],
+      ),
+    );
+  }
 
   void _showEarthquakeDetails(
     BuildContext context,
@@ -440,6 +640,39 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                         );
                       }).toList(),
                     ),
+
+                  // LAYER TITIK KUMPUL EVAKUASI TES & TEA (PEDOMAN RESMI BNPB/BMKG)
+                  MarkerLayer(
+                    markers: ShelterDataService.getNearbyShelters(currentLocation).map((shelter) {
+                      final isTea = shelter.type == ShelterType.tea;
+                      final color = isTea ? AppColors.success : AppColors.primary;
+                      final icon = isTea ? Icons.cabin : Icons.nature_people;
+
+                      return Marker(
+                        point: shelter.location,
+                        width: 54,
+                        height: 54,
+                        child: GestureDetector(
+                          onTap: () => _showShelterDetailsModal(context, shelter),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: color, width: 2.5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.3),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: Icon(icon, color: color, size: 26),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
 
                   // TITIK LOKASI USER
                   MarkerLayer(

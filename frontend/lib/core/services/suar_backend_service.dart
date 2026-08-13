@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:suar_app/core/config/app_config.dart';
 import 'package:suar_app/features/ews_ai/presentation/ews_provider.dart';
 import 'package:suar_app/main.dart';
 
@@ -22,6 +23,10 @@ class SuarBackendService {
     double? homeLatitude,
     double? homeLongitude,
   }) async {
+    if (AppConfig.useMockBackend) {
+      debugPrint('SuarBackendService [MOCK]: Devices registered successfully locally ($deviceId).');
+      return;
+    }
     try {
       debugPrint('SuarBackendService: Mengirim permintaan registerDevice untuk perangkat: $deviceId');
       final response = await _dio.post(
@@ -49,6 +54,10 @@ class SuarBackendService {
     required double latitude,
     required double longitude,
   }) async {
+    if (AppConfig.useMockBackend) {
+      debugPrint('SuarBackendService [MOCK]: Location updated successfully locally ($latitude, $longitude).');
+      return;
+    }
     try {
       debugPrint('SuarBackendService: Mengirim permintaan updateLocation untuk perangkat: $deviceId ke koordinat: ($latitude, $longitude)');
       final response = await _dio.post(

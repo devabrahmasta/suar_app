@@ -12,6 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../user/presentation/user_notifier.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../core/services/suar_backend_service.dart';
+import '../../../core/config/app_config.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
@@ -209,6 +210,16 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         speedInMetersPerSecond: 0.0,
         currentTime: DateTime.now(),
       );
+
+      // Pemicuan Notifikasi Darurat Lokal Mandiri (Tanpa Ketergantungan Backend FCM)
+      if (AppConfig.enableLocalMockNotification) {
+        await NotificationService.showNotification(
+          id: 888,
+          title: '🚨 PERINGATAN DINI: M${dummyGempa.magnitude} ${dummyGempa.wilayah}',
+          body: 'Status: ${finalResult.statusTindakan}! ${finalResult.tindakanSegera.first}',
+          payload: 'EWS_ALERT',
+        );
+      }
 
       return EwsAlertData(
         triageResult: finalResult,
