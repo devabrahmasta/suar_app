@@ -12,7 +12,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
-import 'features/ews_ai/domain/gempa_model.dart';
 import 'features/ews_ai/presentation/ews_provider.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -110,23 +109,15 @@ class MainApp extends ConsumerWidget {
     GoRouter router,
     String payload,
   ) async {
-    if (payload == 'MOCK_TSUNAMI') {
-      final dummyGempa = GempaModel(
-        tanggal: 'Hari Ini',
-        jam: 'Baru Saja',
-        dateTime: DateTime.now().toIso8601String(),
-        coordinates: '-8.50, 109.00',
-        magnitude: '8.5',
-        kedalaman: '10 km',
-        wilayah: '150 km Barat Daya KAB-PANGANDARAN',
-        potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
-        dirasakan: 'V-VI Pangandaran',
-        shakemapUrl: '',
-      );
-      await ref
-          .read(ewsProvider.notifier)
-          .triggerMockThreat(dummyGempa: dummyGempa, dummyIsDiZonaMerah: true);
+    if (payload == 'MOCK_ALERT') {
+      // Jalur simulasi (EWS Testing Screen, Skenario 1/2): data alert
+      // SUDAH ditrigger & hidup di ewsProvider sebelum notifikasi ini
+      // muncul -- aplikasi cuma di-minimize (FlutterAppMinimizerPlus),
+      // bukan di-kill, jadi state-nya tetap ada di memori. Jangan
+      // trigger ulang / timpa dengan data hardcoded di sini, cukup baca
+      // state yang sudah ada lalu jatuh ke pengecekan di bawah.
     } else if (payload == 'REAL_EWS' || payload == 'EWS_ALERT') {
+      // Jalur produksi: notifikasi asli dari backend -> fetch ulang.
       await ref.read(ewsProvider.notifier).checkLatestThreat();
     } else {
       router.go('/');
