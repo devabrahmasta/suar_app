@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:suar_app/core/services/notification_service.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
+import 'features/ews_ai/presentation/ews_provider.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError();
@@ -33,7 +35,9 @@ void main() async {
     isFirebaseInitialized = true;
     debugPrint('Firebase: Inisialisasi SDK berhasil.');
   } catch (e) {
-    debugPrint('Firebase: Gagal inisialisasi (belum dikonfigurasi). Mode mock fallback aktif: $e');
+    debugPrint(
+      'Firebase: Gagal inisialisasi (belum dikonfigurasi). Mode mock fallback aktif: $e',
+    );
   }
 
   await NotificationService.init();
@@ -64,6 +68,26 @@ class MainApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(goRouterProvider);
 
+    // Listener notifikasi didaftarkan di root (bukan di HomeScreen) supaya
+    // tap notifikasi (cold-start maupun warm-resume) selalu tertangani dari
+    // kondisi/halaman apapun yang sedang aktif.
+    ref.listen<AsyncValue<String?>>(notificationPayloadProvider, (
+      previous,
+      next,
+    ) {
+      if (next.hasValue && next.value != null) {
+        _handleNotificationPayload(ref, router, next.value!);
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (NotificationService.initialPayload != null) {
+        final payload = NotificationService.initialPayload!;
+        NotificationService.initialPayload = null;
+        _handleNotificationPayload(ref, router, payload);
+      }
+    });
+
     return MaterialApp.router(
       title: 'SUAR',
       debugShowCheckedModeBanner: false,
@@ -72,6 +96,43 @@ class MainApp extends ConsumerWidget {
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
     );
+  }
+
+  /// Menangani payload notifikasi yang di-tap user, dari kondisi apapun.
+  ///
+  /// Dipanggil dengan [WidgetRef]+[GoRouter] langsung (bukan lewat
+  /// BuildContext bertingkat Router) karena widget ini berada di ATAS
+  /// MaterialApp.router, sehingga context di sini belum punya ancestor
+  /// GoRouter untuk dipakai context.go()/context.push().
+  Future<void> _handleNotificationPayload(
+    WidgetRef ref,
+    GoRouter router,
+    String payload,
+  ) async {
+    if (payload == 'MOCK_ALERT') {
+      // Jalur simulasi (EWS Testing Screen, Skenario 1/2): data alert
+      // SUDAH ditrigger & hidup di ewsProvider sebelum notifikasi ini
+      // muncul -- aplikasi cuma di-minimize (FlutterAppMinimizerPlus),
+      // bukan di-kill, jadi state-nya tetap ada di memori. Jangan
+      // trigger ulang / timpa dengan data hardcoded di sini, cukup baca
+      // state yang sudah ada lalu jatuh ke pengecekan di bawah.
+    } else if (payload == 'REAL_EWS' || payload == 'EWS_ALERT') {
+      // Jalur produksi: notifikasi asli dari backend -> fetch ulang.
+      await ref.read(ewsProvider.notifier).checkLatestThreat();
+    } else {
+      router.go('/');
+      return;
+    }
+
+    // Navigasi ke halaman alert HANYA kalau data alert-nya benar-benar ada
+    // (mis. checkLatestThreat() bisa saja menyimpulkan ancaman tidak
+    // signifikan dan meninggalkan state null) -> fallback ke Home.
+    final alertData = ref.read(ewsProvider).value;
+    if (alertData != null) {
+      router.push('/alert');
+    } else {
+      router.go('/');
+    }
   }
 }
 

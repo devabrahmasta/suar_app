@@ -11,6 +11,7 @@ import '../../features/user/presentation/user_notifier.dart';
 import '../../features/user/presentation/profile_screen.dart';
 import 'shell_screen.dart';
 import '../../features/ews_ai/presentation/home_screen.dart';
+import '../../features/ews_ai/presentation/ews_alert_page.dart';
 import '../../features/ews_ai/presentation/ews_testing_screen.dart';
 import '../../features/ews_ai/presentation/ews_interactive_simulator_screen.dart';
 import '../../features/map_evacuation/presentation/risk_map_screen.dart';
@@ -51,6 +52,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/map',
         name: 'map',
         builder: (context, state) => const MapScreen(),
+      ),
+
+      GoRoute(
+        path: '/alert',
+        name: 'alert',
+        builder: (context, state) => const EwsAlertPage(),
       ),
 
       GoRoute(

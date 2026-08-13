@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_minimizer_plus/flutter_app_minimizer_plus.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,53 @@ import 'ews_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:suar_app/core/services/suar_backend_service.dart';
 import 'package:suar_app/features/user/presentation/user_notifier.dart';
+
+/// Menjalankan satu skenario simulasi EWS: tampilkan snackbar info,
+/// minimize aplikasi secara nyata (bukan simulasi UI), lalu setelah 5
+/// detik trigger data alert + tampilkan notifikasi sistem. User harus
+/// tap notifikasi itu secara manual untuk membuka kembali aplikasi dan
+/// melihat halaman alert (`/alert`) -- ditangani oleh listener global di
+/// MainApp (main.dart), bukan auto-navigasi dari sini.
+void _triggerScenarioWithBackgroundNotif({
+  required BuildContext context,
+  required WidgetRef ref,
+  required GempaModel dummyGempa,
+  required bool dummyIsDiZonaMerah,
+  required int notifId,
+  required String notifTitle,
+  required String notifBody,
+  bool callFindRouteManual = false,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Peringatan disetel! Tunggu 5 detik untuk simulasi...'),
+      backgroundColor: AppColors.info,
+      duration: Duration(seconds: 4),
+    ),
+  );
+
+  FlutterAppMinimizerPlus.minimizeApp();
+
+  Future.delayed(const Duration(seconds: 5), () {
+    ref
+        .read(ewsProvider.notifier)
+        .triggerMockThreat(
+          dummyGempa: dummyGempa,
+          dummyIsDiZonaMerah: dummyIsDiZonaMerah,
+        );
+
+    if (callFindRouteManual) {
+      ref.read(evacuationRouteProvider.notifier).findRouteManual();
+    }
+
+    NotificationService.showNotification(
+      id: notifId,
+      title: notifTitle,
+      body: notifBody,
+      payload: 'MOCK_ALERT',
+    );
+  });
+}
 
 class EwsTestingScreen extends ConsumerWidget {
   const EwsTestingScreen({super.key});
@@ -32,7 +80,7 @@ class EwsTestingScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Pilih skenario di bawah ini untuk menyuapkan data dummy ke sistem Triage AI. Aplikasi akan otomatis kembali ke Beranda setelah tombol ditekan.',
+            'Pilih skenario di bawah ini untuk menyuapkan data dummy ke sistem Triage AI. Ikuti instruksi pada masing-masing kartu setelah tombol ditekan.',
             style: TextStyle(color: AppColors.textSecondary),
           ),
           const SizedBox(height: 24),
@@ -40,41 +88,33 @@ class EwsTestingScreen extends ConsumerWidget {
           _ScenarioCard(
             title: 'Skenario 1: Tsunami Kritis',
             description:
-                'Gempa 8.5 SR, Berpotensi Tsunami, User di Zona Merah. (Ekspektasi: Muncul Pop-up Merah EVAKUASI)',
+                'Gempa 8.5 SR, Berpotensi Tsunami, User di Zona Merah. Aplikasi akan otomatis minimize; tap notifikasi setelah 5 detik untuk melihat alert. (Ekspektasi: Muncul halaman alert EVAKUASI)',
             icon: Icons.waves,
             color: AppColors.danger,
             onTap: () {
-              final dummyGempa = GempaModel(
-                tanggal: '17 Mar 2026',
-                jam: '20:30:00 WIB',
-                dateTime: DateTime.now().toIso8601String(),
-                coordinates: '-8.50, 109.00',
-                magnitude: '8.5',
-                kedalaman: '10 km',
-                wilayah: '150 km Barat Daya KAB-PANGANDARAN',
-                potensi: 'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
-                dirasakan: 'V-VI Pangandaran, IV Cilacap',
-                shakemapUrl: '',
-              );
-
-              ref
-                  .read(ewsProvider.notifier)
-                  .triggerMockThreat(
-                    dummyGempa: dummyGempa,
-                    dummyIsDiZonaMerah: true,
-                  );
-
-              ref.read(evacuationRouteProvider.notifier).findRouteManual();
-
-              NotificationService.showNotification(
-                id: 1,
-                title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
-                body:
+              _triggerScenarioWithBackgroundNotif(
+                context: context,
+                ref: ref,
+                dummyGempa: GempaModel(
+                  tanggal: '17 Mar 2026',
+                  jam: '20:30:00 WIB',
+                  dateTime: DateTime.now().toIso8601String(),
+                  coordinates: '-8.50, 109.00',
+                  magnitude: '8.5',
+                  kedalaman: '10 km',
+                  wilayah: '150 km Barat Daya KAB-PANGANDARAN',
+                  potensi:
+                      'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
+                  dirasakan: 'V-VI Pangandaran, IV Cilacap',
+                  shakemapUrl: '',
+                ),
+                dummyIsDiZonaMerah: true,
+                notifId: 1,
+                notifTitle: '⚠️ PERINGATAN TSUNAMI (SUAR)',
+                notifBody:
                     'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Segera evakuasi.',
-                payload: 'DUMMY_NO_ACTION',
+                callFindRouteManual: true,
               );
-
-              context.pop();
             },
           ),
           const SizedBox(height: 16),
@@ -82,39 +122,31 @@ class EwsTestingScreen extends ConsumerWidget {
           _ScenarioCard(
             title: 'Skenario 2: Gempa Ringan Darat',
             description:
-                'Gempa 5.2 SR, Tidak Berpotensi Tsunami. (Ekspektasi: Muncul Banner Oranye BERLINDUNG di Home)',
+                'Gempa 5.2 SR, Tidak Berpotensi Tsunami. Aplikasi akan otomatis minimize; tap notifikasi setelah 5 detik untuk melihat alert. (Ekspektasi: Muncul Banner Oranye BERLINDUNG di Home)',
             icon: Icons.dashboard_customize,
             color: AppColors.warning,
             onTap: () {
-              final dummyGempa = GempaModel(
-                tanggal: '17 Mar 2026',
-                jam: '10:15:00 WIB',
-                dateTime: DateTime.now().toIso8601String(),
-                coordinates: '-7.80, 110.36',
-                magnitude: '5.2',
-                kedalaman: '80 km',
-                wilayah: '10 km Tenggara KOTA-YOGYAKARTA',
-                potensi: 'Tidak berpotensi tsunami',
-                dirasakan: 'III Yogyakarta',
-                shakemapUrl: '',
-              );
-
-              ref
-                  .read(ewsProvider.notifier)
-                  .triggerMockThreat(
-                    dummyGempa: dummyGempa,
-                    dummyIsDiZonaMerah: false,
-                  );
-
-              NotificationService.showNotification(
-                id: 2,
-                title: '⚠️ PERINGATAN GEMPA BUMI',
-                body:
+              _triggerScenarioWithBackgroundNotif(
+                context: context,
+                ref: ref,
+                dummyGempa: GempaModel(
+                  tanggal: '17 Mar 2026',
+                  jam: '10:15:00 WIB',
+                  dateTime: DateTime.now().toIso8601String(),
+                  coordinates: '-7.80, 110.36',
+                  magnitude: '5.2',
+                  kedalaman: '80 km',
+                  wilayah: '10 km Tenggara KOTA-YOGYAKARTA',
+                  potensi: 'Tidak berpotensi tsunami',
+                  dirasakan: 'III Yogyakarta',
+                  shakemapUrl: '',
+                ),
+                dummyIsDiZonaMerah: false,
+                notifId: 2,
+                notifTitle: '⚠️ PERINGATAN GEMPA BUMI',
+                notifBody:
                     'Gempa M5.2 terdeteksi. Segera berlindung di tempat aman.',
-                payload: 'DUMMY_NO_ACTION',
               );
-
-              context.pop();
             },
           ),
           const SizedBox(height: 16),
@@ -154,7 +186,7 @@ class EwsTestingScreen extends ConsumerWidget {
                 ),
               );
 
-              context.pop();
+              context.go('/');
 
               try {
                 final locService = container.read(locationServiceProvider);
@@ -217,38 +249,6 @@ class EwsTestingScreen extends ConsumerWidget {
             },
           ),
 
-          const SizedBox(height: 16),
-
-          _ScenarioCard(
-            title: 'Skenario 4: Push Notification Darurat',
-            description:
-                'Klik ini lalu minimize/tutup aplikasi. Dalam 15 detik, HP Anda akan menerima peringatan darurat. (Ekspektasi: Saat notif diklik, aplikasi terbuka, pop-up Tsunami muncul, dan peta terunduh otomatis)',
-            icon: Icons.notification_important,
-            color: AppColors.primary,
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'Peringatan disetel! Silakan minimize aplikasi atau matikan layar HP Anda sekarang.',
-                  ),
-                  backgroundColor: AppColors.info,
-                  duration: Duration(seconds: 5),
-                ),
-              );
-
-              context.pop();
-
-              Future.delayed(const Duration(seconds: 15), () {
-                NotificationService.showNotification(
-                  id: 999,
-                  title: '⚠️ PERINGATAN TSUNAMI (SUAR)',
-                  body:
-                      'Gempa M8.5 terdeteksi. Potensi Tsunami di wilayah Anda! Tekan untuk instruksi evakuasi segera.',
-                  payload: 'MOCK_TSUNAMI',
-                );
-              });
-            },
-          ),
           const SizedBox(height: 24),
           const Divider(),
           const SizedBox(height: 16),
@@ -272,7 +272,9 @@ class EwsTestingScreen extends ConsumerWidget {
             onTap: () async {
               final messenger = ScaffoldMessenger.of(context);
               final dio = ref.read(dioProvider);
-              final baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';
+              final baseUrl =
+                  dotenv.env['BACKEND_URL'] ??
+                  'https://lintangnv-suar-backend.hf.space';
 
               messenger.showSnackBar(
                 const SnackBar(
@@ -331,7 +333,9 @@ class EwsTestingScreen extends ConsumerWidget {
 
               messenger.showSnackBar(
                 const SnackBar(
-                  content: Text('Membaca GPS dan memaksakan pengiriman ke backend...'),
+                  content: Text(
+                    'Membaca GPS dan memaksakan pengiriman ke backend...',
+                  ),
                   backgroundColor: AppColors.info,
                 ),
               );
@@ -347,7 +351,9 @@ class EwsTestingScreen extends ConsumerWidget {
 
                 messenger.showSnackBar(
                   SnackBar(
-                    content: Text('Sukses sinkronisasi koordinat: (${position.latitude}, ${position.longitude})'),
+                    content: Text(
+                      'Sukses sinkronisasi koordinat: (${position.latitude}, ${position.longitude})',
+                    ),
                     backgroundColor: AppColors.success,
                   ),
                 );
@@ -431,6 +437,7 @@ class _ScenarioCard extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(width: 8),
             const Icon(Icons.play_arrow, color: AppColors.textSecondary),
           ],
         ),
