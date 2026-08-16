@@ -212,7 +212,7 @@ Mengambil data gempa bumi terbaru yang telah diverifikasi dan diproses oleh serv
 ---
 
 #### 2.2 `POST /alerts/trigger-poll` *(Endpoint Pengujian / Dev Only)*
-Memicu polling manual backend ke API BMKG (`autogempa.json`).
+Memicu polling manual backend ke API BMKG (`gempaterkini.json`).
 
 * **Request Body:** `{}`
 * **Response 201 (Success):**
@@ -540,7 +540,7 @@ Agar pengembangan Flutter tidak terhambat saat backend sedang tahap penyelesaian
 2. **Hybrid Fallback Hierarchy (Keandalan Sistem):**
    Frontend wajib mengimplementasikan pola 3 lapis fallback:
    * **Lapis 1 (Utama):** NestJS Cloud Backend (`https://suar-backend-dev.hf.space/alerts/latest`).
-   * **Lapis 2 (Fallback Online 1):** API BMKG Langsung (`https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json`).
+   * **Lapis 2 (Fallback Online 1):** API BMKG Langsung (`https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json`).
    * **Lapis 3 (Fallback Offline Total):** GeoJSON Aset Lokal (`assets/data/tsunami_jawa_bali_mobile.geojson`) + Bluetooth/WiFi Direct Mesh Chat.
 
 ---

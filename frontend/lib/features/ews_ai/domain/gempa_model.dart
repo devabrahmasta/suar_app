@@ -52,8 +52,10 @@ class GempaModel {
     String tanggal = '';
     String jam = '';
     if (alertDateTime != null) {
-      tanggal = "${alertDateTime.day}-${alertDateTime.month}-${alertDateTime.year}";
-      jam = "${alertDateTime.hour}:${alertDateTime.minute}:${alertDateTime.second} WIB";
+      tanggal =
+          "${alertDateTime.day}-${alertDateTime.month}-${alertDateTime.year}";
+      jam =
+          "${alertDateTime.hour}:${alertDateTime.minute}:${alertDateTime.second} WIB";
     }
 
     final epicenter = json['epicenter'] as Map<String, dynamic>?;

@@ -62,7 +62,7 @@ export class AlertsService implements OnModuleInit {
     private readonly firebaseService: FirebaseService,
     @Optional() private readonly eventEmitter?: EventEmitter2,
     @Optional() private readonly configService?: ConfigService,
-  ) {}
+  ) { }
 
   async onModuleInit() {
     this.logger.log(
@@ -91,7 +91,7 @@ export class AlertsService implements OnModuleInit {
 
       this.logger.log('Starting polling BMKG EWS API...');
       const response = await fetch(
-        'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json',
+        'https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json',
       );
 
       if (!response.ok) {

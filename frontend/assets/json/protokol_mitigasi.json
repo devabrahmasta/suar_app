@@ -1,0 +1,84 @@
+{
+  "versi": "1.1.0",
+  "sumber": "SOP Resmi BMKG, BNPB, dan KemenPUPR Republik Indonesia",
+  "protokol": {
+    "gempa_bumi": {
+      "instruksi_utama": "Drop, Cover, Hold On (Merunduk, Lindungi Kepala, Berpegangan). Jangan lari keluar bangunan saat guncangan masih berlangsung.",
+      "dalam_ruangan": [
+        "Jangan lari keluar bangunan saat guncangan masih terjadi. Tunggu hingga guncangan benar-benar reda.",
+        "Drop, Cover, Hold On: Merunduk, lindungi kepala dan leher di bawah meja yang kokoh, dan berpegangan erat.",
+        "Jika tidak ada meja, merapat ke pilar utama atau sudut bangunan yang kuat, jauhi jendela kaca dan lemari besar.",
+        "Matikan segera kompor, regulator gas, dan instalasi listrik untuk mencegah bahaya kebakaran.",
+        "Jangan gunakan lift/elevator. Selalu gunakan tangga darurat setelah guncangan reda."
+      ],
+      "disabilitas_dan_kursi_roda": [
+        "Kunci roda kursi roda segera saat guncangan terjadi, lalu lindungi kepala dan leher dengan bantal, helm, atau kedua tangan.",
+        "Jika mengendalikan kursi roda listrik, matikan daya dan tetap merunduk serendah mungkin.",
+        "Jika mengalami keterbatasan mobilitas tanpa kursi roda, segera duduk atau berbaring di samping struktur kokoh (kolong meja/samping tempat tidur) dan lindungi kepala.",
+        "Bagi penyandang disabilitas netra/rungu, gunakan sinyal getar aplikasi SUAR dan raba jalur evakuasi utama yang bebas hambatan reruntuhan."
+      ],
+      "di_tempat_tidur": [
+        "Tetap di atas kasur, tengkurap, dan lindungi kepala serta leher menggunakan bantal atau selimut tebal.",
+        "Jauhi kaca jendela, lampu gantung, atau benda tajam yang berisiko jatuh di sekitar tempat tidur."
+      ],
+      "luar_ruangan": [
+        "Segera cari area terbuka yang bebas dari potensi reruntuhan.",
+        "Jauhi bangunan tinggi, tiang listrik, papan reklame, jembatan penyeberangan, dan pohon besar.",
+        "Merunduk dan lindungi kepala hingga getaran bumi benar-benar berhenti."
+      ],
+      "berkendara": [
+        "Segera kurangi kecepatan dan menepi perlahan ke bahu jalan aman.",
+        "Tarik rem tangan dan tetap di dalam kendaraan hingga guncangan berhenti.",
+        "Hindari berhenti di atas atau di bawah jembatan, jalan layang, underpass, serta dekat tebing atau pohon."
+      ],
+      "gedung_bertingkat": [
+        "Berlindung di bawah meja kerja atau sudut ruangan dekat struktur kolom pembawa beban.",
+        "Dilarang keras menggunakan lift selama dan sesudah gempa.",
+        "Gunakan tangga darurat secara tertib saat evakuasi setelah getaran reda."
+      ]
+    },
+    "tsunami": {
+      "instruksi_utama": "Tinggalkan barang bawaan. Ikuti peta rute SUAR segera ke dataran tinggi (minimal elevasi 20-30 meter).",
+      "zona_merah": [
+        "Tinggalkan barang bawaan berat. Segera lari ke dataran tinggi atau tempat evakuasi sementara (TES).",
+        "Ikuti petunjuk arah rute evakuasi aplikasi SUAR menuju area bebas risiko tsunami.",
+        "Gelombang tsunami dapat terjadi lebih dari satu kali dan gelombang susulan bisa lebih besar. Jangan kembali ke bawah sebelum ada pernyataan aman resmi BMKG/BNPB.",
+        "Jika tidak memungkinkan menjangkau dataran tinggi, lakukan evakuasi vertikal ke atap gedung beton bertulang yang kokoh (minimal lantai 3 ke atas)."
+      ],
+      "disabilitas_dan_evakuasi_khusus": [
+        "Bagi pengguna kursi roda/lansia: minta bantuan pendamping/warga sekitar untuk evakuasi cepat lewat jalur bidang miring (ramp) atau lakukan evakuasi vertikal ke lantai 3+ gedung beton kokoh terdekat.",
+        "Jika berada di area pesisir dan rute jalan terhambat, prioritaskan evakuasi vertikal ke bangunan tinggi ketimbang memaksakan rute darat yang jauh.",
+        "Siapkan kartu identitas darurat dan alat bantu fisik utama (tongkat/alat pendengar/obat esensial)."
+      ],
+      "pantai_dan_pesisir": [
+        "Jika merasakan gempa kuat di pantai atau melihat air laut surut tiba-tiba, segera lari keluar dari pantai tanpa menunggu sirine.",
+        "Lari ke arah daratan yang lebih tinggi dan jauh dari muara sungai.",
+        "Jangan berada di dekat saluran sungai karena gelombang tsunami dapat merambat cepat melintasi sungai."
+      ],
+      "berkendara_pesisir": [
+        "Jika terjebak macet di jalur evakuasi pesisir, segera tinggalkan kendaraan di bahu jalan dan lari berjalan kaki ke tempat tinggi.",
+        "Jangan memaksakan berkendara jika lalu lintas lumpuh karena mobil dapat terjebak gelombang tsunami."
+      ],
+      "evakuasi_vertikal": [
+        "Gunakan Gedung Evakuasi Sementara (TES) atau bangunan beton bertulang bertingkat tinggi jika rute darat terputus.",
+        "Naik ke lantai 3 atau atap gedung yang kokoh.",
+        "Pastikan posisi berdiri jauh dari pinggiran atap dan berpegangan pada struktur utama."
+      ],
+      "pasca_tsunami": [
+        "Hindari menyentuh genangan air tsunami karena berisiko terkontaminasi bahan kimia atau tersetrum arus listrik dari tiang roboh.",
+        "Buka menu P3K Dasar pada aplikasi SUAR jika terdapat anggota keluarga yang memerlukan pertolongan medis darurat."
+      ]
+    },
+    "pasca_bencana": {
+      "p3k": [
+        "Periksa cedera pada diri sendiri dan orang sekitar sebelum bergerak.",
+        "Berikan pertolongan pertama pada luka pendarahan atau patah tulang ringan.",
+        "Gunakan masker atau kain basah untuk menyaring debu reruntuhan."
+      ],
+      "komunikasi": [
+        "Gunakan pesan singkat (SMS/WhatsApp) untuk menghemat baterai HP dan saluran jaringan darurat.",
+        "Pantau pembaruan informasi resmi dari BMKG dan BNPB melalui aplikasi SUAR."
+      ]
+    }
+  }
+}

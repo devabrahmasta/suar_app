@@ -122,7 +122,7 @@ Sistem peringatan dini berbasis BMKG API yang secara otomatis mengunduh peta are
 **F2.1 Early Warning System (EWS)**
 - Polling BMKG API setiap 1 menit selagi internet tersedia
 - Endpoint yang dipantau:
-  - `autogempa.json` — gempa terkini real-time
+  - `gempaterkini.json` — gempa terkini real-time
   - `gempaberpotensi.json` — gempa berpotensi tsunami
 - Trigger alert jika: magnitude ≥ 6.0 ATAU berpotensi tsunami
 - Notifikasi push langsung ke pengguna

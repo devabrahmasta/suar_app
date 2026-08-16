@@ -103,8 +103,10 @@ class EwsTestingScreen extends ConsumerWidget {
                   magnitude: '8.5',
                   kedalaman: '10 km',
                   wilayah: '150 km Barat Daya KAB-PANGANDARAN',
-                  potensi:
-                      'Berpotensi TSUNAMI untuk diteruskan pada masyarakat',
+                  // Sengaja dipendekkan meniru format asli field "Potensi"
+                  // BMKG (lihat bmkg_service.dart) yang selalu singkat, biar
+                  // representatif buat testing tampilan headline alert.
+                  potensi: 'Berpotensi tsunami',
                   dirasakan: 'V-VI Pangandaran, IV Cilacap',
                   shakemapUrl: '',
                 ),

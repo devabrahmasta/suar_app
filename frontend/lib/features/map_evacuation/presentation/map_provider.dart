@@ -151,6 +151,21 @@ final mapCacheStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   }
 });
 
+/// Kapan `recentEarthquakesProvider` terakhir berhasil sinkron ke BMKG.
+/// Diisi di dalam body provider itu sendiri (bukan lewat `ref.listen` di
+/// tiap layar) supaya akurat walau providernya sudah ter-resolve duluan
+/// sebelum layar yang menampilkan badge "Diperbarui" sempat mount.
+class LastGempaSyncNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+  void markSynced(DateTime time) => state = time;
+}
+
+final lastGempaSyncProvider =
+    NotifierProvider<LastGempaSyncNotifier, DateTime?>(
+      () => LastGempaSyncNotifier(),
+    );
+
 final recentEarthquakesProvider = FutureProvider<List<Map<String, dynamic>>>((
   ref,
 ) async {
@@ -162,6 +177,7 @@ final recentEarthquakesProvider = FutureProvider<List<Map<String, dynamic>>>((
     if (response.statusCode == 200) {
       final data = response.data;
       final gempaList = data['Infogempa']['gempa'] as List;
+      ref.read(lastGempaSyncProvider.notifier).markSynced(DateTime.now());
       return gempaList.cast<Map<String, dynamic>>();
     }
     return [];

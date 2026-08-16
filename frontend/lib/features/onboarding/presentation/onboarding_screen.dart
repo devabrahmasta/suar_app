@@ -28,6 +28,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   double? _homeLat;
   double? _homeLng;
   String? _homeAddress;
+  String _specialNeeds = 'Tidak Ada';
   bool _isFetchingLocation = false;
 
   @override
@@ -257,6 +258,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           .createUser(
             name: _namaController.text.trim(),
             homeType: _homeTypeController.text.trim(),
+            specialNeeds: _specialNeeds,
             homeLat: _homeLat,
             homeLng: _homeLng,
           );
@@ -350,6 +352,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       formKey: _formKey,
                       namaController: _namaController,
                       homeTypeController: _homeTypeController,
+                      specialNeeds: _specialNeeds,
+                      onSpecialNeedsChanged: (val) => setState(() => _specialNeeds = val),
                       homeAddress: _homeAddress,
                       isLoading: _isLoading && _currentIndex == 3,
                       onSubmit: _handleSubmit,
@@ -358,34 +362,50 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       onSetHomeLocation: () async {
                         setState(() => _isFetchingLocation = true);
                         try {
-                          final pos = await Geolocator.getCurrentPosition();
-                          if (!context.mounted) return;
-                          final selectedLocation =
-                              await Navigator.push<(LatLng, String)>(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => HomeLocationPickerScreen(
-                                    initialLocation: LatLng(
-                                      pos.latitude,
-                                      pos.longitude,
-                                    ),
-                                  ),
-                                ),
-                              );
+                          Position? pos;
+                          try {
+                            pos = await Geolocator.getCurrentPosition(
+                              locationSettings: const LocationSettings(
+                                timeLimit: Duration(seconds: 4),
+                              ),
+                            );
+                          } catch (_) {
+                            pos = await Geolocator.getLastKnownPosition();
+                          }
 
-                          if (selectedLocation != null) {
-                            setState(() {
-                              _homeLat = selectedLocation.$1.latitude;
-                              _homeLng = selectedLocation.$1.longitude;
-                              _homeAddress = selectedLocation.$2;
-                            });
+                          final initialLatLng = pos != null
+                              ? LatLng(pos.latitude, pos.longitude)
+                              : const LatLng(-7.79, 110.36);
+
+                          if (context.mounted) {
+                            final selectedLocation =
+                                await Navigator.push<(LatLng, String)>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => HomeLocationPickerScreen(
+                                  initialLocation: initialLatLng,
+                                ),
+                              ),
+                            );
+
+                            if (selectedLocation != null && context.mounted) {
+                              setState(() {
+                                _homeLat = selectedLocation.$1.latitude;
+                                _homeLng = selectedLocation.$1.longitude;
+                                _homeAddress = selectedLocation.$2;
+                              });
+                            }
                           }
                         } catch (e) {
-                          _showDangerSnackBar(
-                            'Gagal mendapatkan lokasi. Pastikan GPS aktif.',
-                          );
+                          if (context.mounted) {
+                            _showDangerSnackBar(
+                              'Gagal mendapatkan lokasi. Pastikan GPS aktif.',
+                            );
+                          }
                         } finally {
-                          setState(() => _isFetchingLocation = false);
+                          if (context.mounted) {
+                            setState(() => _isFetchingLocation = false);
+                          }
                         }
                       },
                     ),
@@ -428,6 +448,8 @@ class _IdentityFormSlide extends StatelessWidget {
     required this.formKey,
     required this.namaController,
     required this.homeTypeController,
+    required this.specialNeeds,
+    required this.onSpecialNeedsChanged,
     required this.homeAddress,
     required this.isLoading,
     required this.onSubmit,
@@ -439,6 +461,8 @@ class _IdentityFormSlide extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController namaController;
   final TextEditingController homeTypeController;
+  final String specialNeeds;
+  final ValueChanged<String> onSpecialNeedsChanged;
   final String? homeAddress;
   final bool isLoading;
   final VoidCallback onSubmit;
@@ -596,6 +620,63 @@ class _IdentityFormSlide extends StatelessWidget {
                                 ),
                               ),
                             ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Kebutuhan Khusus / Kondisi Fisik',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<String>(
+                            isExpanded: true,
+                            initialValue: specialNeeds,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.accessible_forward),
+                              filled: true,
+                              fillColor: AppColors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Tidak Ada',
+                                child: Text('Tidak Ada (Mandiri)', overflow: TextOverflow.ellipsis),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Pengguna Kursi Roda',
+                                child: Text('Pengguna Kursi Roda / Fisik', overflow: TextOverflow.ellipsis),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Lansia / Pendamping Balita',
+                                child: Text('Lansia / Pendamping Balita', overflow: TextOverflow.ellipsis),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Gangguan Penglihatan / Pendengaran',
+                                child: Text('Sensori (Penglihatan/Pendengaran)', overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
+                            onChanged: (val) {
+                              if (val != null) onSpecialNeedsChanged(val);
+                            },
                           ),
                           const SizedBox(height: 16),
                           Text(

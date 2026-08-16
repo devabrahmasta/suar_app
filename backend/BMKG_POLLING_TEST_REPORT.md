@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-This report documents the re-verification of the **BMKG EWS (Early Warning System) Data Polling Service** for **Suar App**. The service continuously polls BMKG's TEWS API (`https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json`) every 30 seconds (`@Interval(30000)`).
+This report documents the re-verification of the **BMKG EWS (Early Warning System) Data Polling Service** for **Suar App**. The service continuously polls BMKG's TEWS API (`https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json`) every 30 seconds (`@Interval(30000)`).
 
 To prevent duplicate earthquake alert insertions and duplicate emergency push notifications, the backend implements deterministic **SHA-256 hash deduplication** based on the earthquake's timestamp (`DateTime`) and epicenter (`Coordinates`).
 

@@ -17,9 +17,24 @@ void callbackDispatcher() {
       final latestGempa = await bmkgService.fetchLatestEarthquake();
 
       final lastGempaTime = prefs.getString('last_gempa_time_bg');
+      final isFirstRun = lastGempaTime == null;
 
       if (lastGempaTime != latestGempa.dateTime) {
         await prefs.setString('last_gempa_time_bg', latestGempa.dateTime);
+
+        // Cek umur gempa agar gempa lama dari BMKG tidak memicu sirine notifikasi
+        final gempaTime = DateTime.tryParse(latestGempa.dateTime);
+        if (gempaTime != null) {
+          final ageInMinutes =
+              DateTime.now().toUtc().difference(gempaTime.toUtc()).inMinutes;
+          // Jika instalasi/run pertama dan gempa > 30 menit, atau gempa > 60 menit lalu: abaikan notifikasi
+          if ((isFirstRun && ageInMinutes > 30) || ageInMinutes > 60) {
+            debugPrint(
+              "Background task: Gempa diabaikan karena kejadian sudah berlalu ($ageInMinutes menit lalu).",
+            );
+            return Future.value(true);
+          }
+        }
 
         bool isDanger = false;
         final mag = double.tryParse(latestGempa.magnitude) ?? 0.0;

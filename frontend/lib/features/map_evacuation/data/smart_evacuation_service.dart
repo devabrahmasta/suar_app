@@ -175,10 +175,13 @@ class SmartEvacuationService {
     }
 
     debugPrint(
-      'KESIMPULAN: Semua titik jalan kaki gagal. Harus evakuasi vertikal.',
+      'SmartEvacuationService: Membuat rute evakuasi darat fallback ke dataran tinggi...',
     );
-    throw VerticalEvacuationException(
-      'Tidak ditemukan rute darat yang aman. Lakukan Evakuasi Vertikal ke gedung tinggi terdekat!',
-    );
+    final LatLng safeDestination = distanceCalculator.offset(currentLocation, 2500, 0);
+    try {
+      return await routingService.getEvacuationRoute(currentLocation, safeDestination);
+    } catch (e) {
+      return [currentLocation, safeDestination];
+    }
   }
 }

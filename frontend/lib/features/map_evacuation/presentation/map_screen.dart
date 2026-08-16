@@ -78,47 +78,56 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ],
           ),
         ),
-        error: (err, stack) => Center(child: Text('Gagal memuat lokasi: $err')),
-        data: (currentLocation) {
-          return Stack(
-            children: [
-              FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  initialCenter: currentLocation,
-                  initialZoom: 16,
-                  onMapReady: () {
-                    setState(() {
-                      _isMapReady = true;
-                    });
-                  },
-                ),
-                children: [
-                  // base map layer
-                  TileLayer(
-                    urlTemplate:
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    userAgentPackageName: 'com.suar.app',
-                    tileProvider: FMTCTileProvider(
-                      stores: const {
-                        'evacuation_map': BrowseStoreStrategy.read,
-                      },
-                    ),
-                  ),
+        error: (err, stack) => _buildMapContent(const LatLng(-7.79, 110.36), routeAsync, activeGempaPoint, activeGempaColor),
+        data: (currentLocation) => _buildMapContent(currentLocation, routeAsync, activeGempaPoint, activeGempaColor),
+      ),
+    );
+  }
 
-                  if (routeAsync.hasValue &&
-                      routeAsync.value != null &&
-                      routeAsync.value!.isNotEmpty)
-                    PolylineLayer(
-                      polylines: [
-                        Polyline(
-                          points: routeAsync.value!,
-                          color: AppColors.primary,
-                          strokeWidth: 5,
-                          strokeJoin: StrokeJoin.round,
-                        ),
-                      ],
-                    ),
+  Widget _buildMapContent(
+    LatLng currentLocation,
+    AsyncValue<List<LatLng>?> routeAsync,
+    LatLng? activeGempaPoint,
+    Color activeGempaColor,
+  ) {
+    return Stack(
+      children: [
+        FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            initialCenter: currentLocation,
+            initialZoom: 16,
+            onMapReady: () {
+              setState(() {
+                _isMapReady = true;
+              });
+            },
+          ),
+          children: [
+            // base map layer
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.suar.app',
+              tileProvider: FMTCTileProvider(
+                stores: const {
+                  'evacuation_map': BrowseStoreStrategy.read,
+                },
+              ),
+            ),
+
+            if (routeAsync.hasValue &&
+                routeAsync.value != null &&
+                routeAsync.value!.isNotEmpty)
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: routeAsync.value!,
+                    color: AppColors.primary,
+                    strokeWidth: 5,
+                    strokeJoin: StrokeJoin.round,
+                  ),
+                ],
+              ),
 
                   // user position layer
                   MarkerLayer(
@@ -360,8 +369,5 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               ),
             ],
           );
-        },
-      ),
-    );
   }
 }
