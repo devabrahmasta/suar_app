@@ -21,7 +21,7 @@ Berikut adalah peta perubahan komponen EWS pada monorepo proyek SUAR:
 
 ### 2. Sisi Mobile Frontend (Flutter)
 * **[suar_backend_service.dart](./frontend/lib/core/services/suar_backend_service.dart) [NEW]:** Penghubung REST API ke cloud backend dengan optimasi kompresi data spasial.
-* **[bmkg_service.dart](./frontend/lib/features/ews_ai/data/bmkg_service.dart):** Logika **Hybrid Fallback** yang mengutamakan pengambilan data gempa dari cloud backend kita (`/alerts/latest`), namun secara otomatis beralih langsung ke API BMKG asli (`autogempa.json`) jika koneksi internet terputus atau backend luring.
+* **[bmkg_service.dart](./frontend/lib/features/ews_ai/data/bmkg_service.dart):** Logika **Hybrid Fallback** yang mengutamakan pengambilan data gempa dari cloud backend kita (`/alerts/latest`), namun secara otomatis beralih langsung ke API BMKG asli (`gempaterkini.json`) jika koneksi internet terputus atau backend luring.
 * **[ews_provider.dart](./frontend/lib/features/ews_ai/presentation/ews_provider.dart):** Menghubungkan pembacaan GPS geolocator, pengecekan InaRISK, pemfilteran signifikansi ancaman gempa, dan pemanggilan analisis AI Triage (Google Gemini).
 * **[user_notifier.dart](./frontend/lib/features/user/presentation/user_notifier.dart):** Otomatisasi pendaftaran token perangkat fisik ke backend pada saat pembuatan profil dan startup aplikasi.
 

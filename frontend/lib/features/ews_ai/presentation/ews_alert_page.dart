@@ -1,6 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
@@ -9,15 +8,8 @@ import 'ews_provider.dart';
 
 /// Halaman penuh untuk menampilkan peringatan EWS aktif.
 ///
-/// Menggantikan showModalBottomSheet lama (_showEwsAlertModal di
-/// home_screen.dart) agar bisa dibuka dari kondisi apapun (cold-start,
-/// warm-resume, tap notifikasi, atau trigger foreground) lewat route
-/// '/alert' — bukan lewat parameter navigasi. Semua data diambil
-/// langsung dari [ewsProvider].
-///
-/// Visual DI-HARDCODE ke skema "ada evakuasi" (Skenario 1) terlepas dari
-/// status tindakan asli — hanya konten (judul, subjudul, zona, angka
-/// fakta, wilayah) yang tetap dinamis sesuai data.
+/// Merespon data secara dinamis dari [ewsProvider] (GempaModel, TriageResult, & distanceKm)
+/// dengan desain UI EWS Alert modern sesuai spesifikasi visual aplikasi Suar.
 class EwsAlertPage extends ConsumerWidget {
   const EwsAlertPage({super.key});
 
@@ -26,9 +18,7 @@ class EwsAlertPage extends ConsumerWidget {
     final ewsAsync = ref.watch(ewsProvider);
     final alertData = ewsAsync.value;
 
-    // Tidak ada alert aktif saat page ini dibuka (mis. diakses langsung,
-    // atau state sempat berubah jadi null) -> jangan crash, redirect ke
-    // Home setelah frame ini selesai.
+    // Tidak ada alert aktif -> redirect ke Home
     if (alertData == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) {
@@ -44,387 +34,462 @@ class EwsAlertPage extends ConsumerWidget {
     final hasInternet = !networkState.contains(ConnectivityResult.none);
     final isMapAvailable = isCacheReady || hasInternet;
 
-    final userLocation = ref.watch(userLocationStreamProvider).value;
-
     final result = alertData.triageResult;
     final gempa = alertData.gempa;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
 
-    // Skema visual di-hardcode ke versi "ada evakuasi" (Skenario 1),
-    // tidak peduli status tindakan asli.
-    const themeColor = AppColors.primary;
-    const themeLightColor = AppColors.dangerLight;
+    // Penentuan Judul & Subjudul Peringatan secara dinamis
+    final String alertTitle = gempa.potensi.isNotEmpty
+        ? gempa.potensi.toUpperCase()
+        : (isEvakuasi ? 'POTENSI TSUNAMI' : 'PERINGATAN GEMPA BUMI');
 
-    // Konten tetap dinamis mengikuti data asli.
-    final alertTitle = isEvakuasi ? 'POTENSI TSUNAMI' : 'GEMPA BUMI';
-    final alertSubtitle = isEvakuasi
-        ? 'STATUS: AWAS (HIGH ALERT)'
-        : 'STATUS: WASPADA';
-    final zoneText = isEvakuasi
-        ? 'LOKASI ANDA: ZONA MERAH TSUNAMI'
-        : 'LOKASI ANDA: AMAN DARI TSUNAMI';
+    final String alertSubtitle =
+        'STATUS: ${result.statusTindakan} · ${isEvakuasi ? "ZONA MERAH TSUNAMI" : "ZONA WASPADA"}';
+
+    // Penentuan Waktu Gempa Terjadi
+    final String timeText = () {
+      if (gempa.tanggal.isNotEmpty && gempa.jam.isNotEmpty) {
+        return '${gempa.tanggal}, ${gempa.jam}';
+      } else if (gempa.tanggal.isNotEmpty) {
+        return gempa.tanggal;
+      } else if (gempa.jam.isNotEmpty) {
+        return gempa.jam;
+      } else if (gempa.dateTime.isNotEmpty) {
+        return gempa.dateTime;
+      }
+      return '';
+    }();
+
+    // Menggabungkan seluruh instruksi tindakan segera dan persiapan
+    final List<String> allInstructions = [
+      ...result.tindakanSegera,
+      ...result.persiapan,
+    ].where((item) => item.trim().isNotEmpty).toList();
+
+    if (allInstructions.isEmpty) {
+      allInstructions.add('Tetap waspada dan ikuti arahan pihak berwenang.');
+    }
+
+    const primaryAccent = AppColors.danger;
+    const secondaryAccent = AppColors.primary;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: themeLightColor,
+        backgroundColor: AppColors.background,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: themeColor),
-          onPressed: () => context.go('/'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.dangerLight,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: primaryAccent,
+                size: 20,
+              ),
+              padding: EdgeInsets.zero,
+              onPressed: () => context.go('/'),
+            ),
+          ),
         ),
         title: const Text(
           'SUAR EWS ALERT',
           style: TextStyle(
-            color: themeColor,
-            fontWeight: FontWeight.bold,
+            color: primaryAccent,
+            fontWeight: FontWeight.w800,
             fontSize: 16,
             letterSpacing: 1.5,
           ),
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.warning, color: themeLightColor),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 295,
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Container(
-                      height: 220,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(color: AppColors.border),
-                      child: (userLocation != null && isMapAvailable)
-                          ? FlutterMap(
-                              options: MapOptions(
-                                initialCenter: userLocation,
-                                initialZoom: 15.0,
-                                interactionOptions: const InteractionOptions(
-                                  flags: InteractiveFlag.none,
-                                ),
-                              ),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName: 'com.suar.app',
-                                ),
-                                MarkerLayer(
-                                  markers: [
-                                    Marker(
-                                      point: userLocation,
-                                      width: 40,
-                                      height: 40,
-                                      child: const Icon(
-                                        Icons.location_on,
-                                        color: AppColors.primary,
-                                        size: 32,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          : Image.asset(
-                              'assets/images/topo_bg.png',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Center(
-                                    child: Icon(
-                                      Icons.map_outlined,
-                                      color: AppColors.textHint,
-                                      size: 48,
-                                    ),
-                                  ),
-                            ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 24,
-                      right: 24,
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const CircleAvatar(
-                              radius: 24,
-                              backgroundColor: themeColor,
-                              child: Icon(
-                                Icons.sensors,
-                                size: 24,
-                                color: AppColors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              alertTitle,
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(
-                                    color: themeColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              alertSubtitle,
-                              style: const TextStyle(
-                                color: themeColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Card(
-                              elevation: 0,
-                              color: themeColor.withValues(alpha: 0.08),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(
-                                  color: themeColor.withValues(alpha: 0.25),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 10,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.location_on_rounded,
-                                      size: 18,
-                                      color: themeColor,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Flexible(
-                                      child: Text(
-                                        gempa.wilayah.isNotEmpty
-                                            ? 'Titik Gempa: ${gempa.wilayah}'
-                                            : 'Titik Gempa: Lokasi belum tersedia dari BMKG',
-                                        style: const TextStyle(
-                                          color: themeColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+              // 1. Red Alert Banner Header (Kartu Peringatan Utama)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: primaryAccent,
+                  borderRadius: BorderRadius.circular(24.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: primaryAccent.withValues(alpha: 0.3),
+                      blurRadius: 16,
+                      offset: const Offset(0, 6),
                     ),
                   ],
                 ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
+                child: Row(
                   children: [
                     Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
+                      width: 52,
+                      height: 52,
+                      decoration: const BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.border),
+                        shape: BoxShape.circle,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.circle, color: themeColor, size: 12),
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: Text(
-                              zoneText,
-                              style: const TextStyle(
-                                color: themeColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+                      child: const Center(
+                        child: Icon(
+                          Icons.priority_high_rounded,
+                          color: primaryAccent,
+                          size: 32,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Column(
-                        children: [
-                          _buildListStatRow(
-                            icon: Icons.sensors,
-                            label: 'MAGNITUDE',
-                            value: '${gempa.magnitude} SR',
-                            subValue: '*tingkat kekuatan gempa bumi',
-                            isRed: true,
-                            themeColor: themeColor,
-                          ),
-                          const Divider(),
-                          _buildListStatRow(
-                            icon: Icons.waves,
-                            label: 'KEDALAMAN',
-                            value: gempa.kedalaman,
-                            subValue: '*kedalaman pusat titik gempa',
-                            isRed: true,
-                            themeColor: themeColor,
-                          ),
-                          const Divider(),
-                          _buildListStatRow(
-                            icon: Icons.near_me_outlined,
-                            label: 'JARAK EPISENTRUM',
-                            value:
-                                '${alertData.distanceKm.toStringAsFixed(1)} km',
-                            subValue: '*jarak titik gempa dengan anda',
-                            isRed: true,
-                            themeColor: themeColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: themeColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                    const SizedBox(width: 16),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Row(
-                            children: [
-                              Icon(Icons.psychology, color: AppColors.white),
-                              SizedBox(width: 8),
-                              Text(
-                                'AI RECOMMENDATION',
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-
-                          const Text(
-                            'Tindakan Segera:',
-                            style: TextStyle(
+                          Text(
+                            alertTitle,
+                            style: const TextStyle(
                               color: AppColors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          _buildInstructionList(result.tindakanSegera),
-
-                          const SizedBox(height: 12),
-
-                          const Text(
-                            'Persiapan:',
+                          const SizedBox(height: 4),
+                          Text(
+                            alertSubtitle,
                             style: TextStyle(
-                              color: AppColors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              color: AppColors.white.withValues(alpha: 0.9),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.3,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          _buildInstructionList(result.persiapan),
-
-                          const SizedBox(height: 24),
-
-                          if (isEvakuasi)
-                            SizedBox(
-                              width: double.infinity,
-                              height: 48,
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isMapAvailable
-                                      ? AppColors.white
-                                      : AppColors.surface,
-                                  foregroundColor: isMapAvailable
-                                      ? themeColor
-                                      : AppColors.textHint,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  if (isMapAvailable) {
-                                    context.push('/map');
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Peta tidak tersedia! Harap ikuti instruksi dari AI.',
-                                        ),
-                                        backgroundColor: AppColors.warning,
-                                      ),
-                                    );
-                                  }
-                                },
-                                icon: Icon(
-                                  isMapAvailable
-                                      ? Icons.location_on
-                                      : Icons.location_off,
-                                ),
-                                label: Text(
-                                  isMapAvailable
-                                      ? 'BUKA PETA EVAKUASI'
-                                      : "PETA TIDAK TERSEDIA",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ),
-                            ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
+
+              const SizedBox(height: 20),
+
+              // 2. BMKG Earthquake Details Card (Pusat Gempa)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(24.0),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'PUSAT GEMPA · BMKG',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      gempa.wilayah.isNotEmpty
+                          ? gempa.wilayah
+                          : 'Lokasi episentrum belum tersedia',
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        height: 1.3,
+                      ),
+                    ),
+                    if (timeText.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.access_time_rounded,
+                            size: 13,
+                            color: AppColors.textSecondary,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              'Waktu: $timeText',
+                              style: const TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        _buildStatBox(
+                          label: 'MAGNITUDE',
+                          value: gempa.magnitude.isNotEmpty
+                              ? gempa.magnitude
+                              : '-',
+                        ),
+                        const SizedBox(width: 10),
+                        _buildStatBox(
+                          label: 'KEDALAMAN',
+                          value: gempa.kedalaman.isNotEmpty
+                              ? gempa.kedalaman
+                              : '-',
+                        ),
+                        const SizedBox(width: 10),
+                        _buildStatBox(
+                          label: 'EPISENTRUM',
+                          value:
+                              '${alertData.distanceKm.toStringAsFixed(1)} km',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // 3. Section Title "Lakukan sekarang"
+              const Text(
+                'Lakukan sekarang',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // 4. Instructions Action Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(24.0),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: List.generate(allInstructions.length, (index) {
+                    final isLast = index == allInstructions.length - 1;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: isLast ? 0.0 : 16.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: const BoxDecoration(
+                              color: secondaryAccent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${index + 1}'.toLowerCase(),
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.w200,
+                                  fontSize: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                allInstructions[index],
+                                style: const TextStyle(
+                                  color: AppColors.textPrimary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // 5. Dynamic Context Chips
+              Wrap(
+                spacing: 10,
+                runSpacing: 8,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: secondaryAccent.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: secondaryAccent,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          isEvakuasi
+                              ? 'Terdeteksi: Zona Risiko Evakuasi'
+                              : 'Terdeteksi: Zona Waspada Gempa',
+                          style: const TextStyle(
+                            color: secondaryAccent,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.border.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_box_outlined,
+                          size: 14,
+                          color: AppColors.textSecondary,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Panduan Resmi BMKG & AI',
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 28),
+
+              // 6. Action Buttons
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryAccent,
+                    foregroundColor: AppColors.white,
+                    elevation: 4,
+                    shadowColor: primaryAccent.withValues(alpha: 0.4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (isMapAvailable) {
+                      context.push('/map');
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Peta tidak tersedia! Harap ikuti instruksi AI di atas.',
+                          ),
+                          backgroundColor: AppColors.warning,
+                        ),
+                      );
+                    }
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'BUKA PETA EVAKUASI',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward_rounded, size: 20),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: secondaryAccent,
+                    side: const BorderSide(color: secondaryAccent, width: 1.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                  ),
+                  onPressed: () => context.go('/'),
+                  child: const Text(
+                    'Lihat panduan lengkap',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -432,102 +497,44 @@ class EwsAlertPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildListStatRow({
-    required IconData icon,
-    required String label,
-    required String value,
-    required String subValue,
-    required bool isRed,
-    required Color themeColor,
-  }) {
-    final activeColor = isRed ? themeColor : AppColors.textPrimary;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: isRed
-                  ? themeColor.withValues(alpha: 0.1)
-                  : AppColors.surface,
-              shape: BoxShape.circle,
+  Widget _buildStatBox({required String label, required String value}) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: AppColors.background,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            child: Icon(
-              icon,
-              color: isRed ? themeColor : AppColors.textSecondary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
+            const SizedBox(height: 6),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  subValue,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: AppColors.textSecondary,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ],
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: activeColor,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-    );
-  }
-
-  Widget _buildInstructionList(List<String> items) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: items.map((item) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                '• ',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  item,
-                  style: const TextStyle(
-                    color: AppColors.white,
-                    fontSize: 14,
-                    height: 1.4,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
     );
   }
 }
