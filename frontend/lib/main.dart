@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
+import 'core/widgets/network_status_chip.dart';
 import 'features/ews_ai/presentation/ews_provider.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -95,6 +96,14 @@ class MainApp extends ConsumerWidget {
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            ?child,
+            const NetworkStatusChip(),
+          ],
+        );
+      },
     );
   }
 

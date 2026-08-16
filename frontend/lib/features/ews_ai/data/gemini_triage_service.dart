@@ -12,7 +12,7 @@ class GeminiTriageService {
 
   GeminiTriageService({required this.apiKey}) {
     _model = GenerativeModel(
-      model: 'gemini-1.5-flash',
+      model: 'gemini-3.5-flash-lite',
       apiKey: apiKey.isNotEmpty ? apiKey : 'mock_key',
       generationConfig: GenerationConfig(responseMimeType: 'application/json'),
     );
@@ -28,14 +28,18 @@ class GeminiTriageService {
   }) async {
     String protocolJson = '';
     try {
-      protocolJson = await rootBundle.loadString('assets/json/protokol_mitigasi.json');
+      protocolJson = await rootBundle.loadString(
+        'assets/json/protokol_mitigasi.json',
+      );
     } catch (e) {
       debugPrint('GeminiTriageService: Gagal memuat asset JSON protokol: $e');
     }
 
     try {
       if (apiKey.isEmpty) {
-        throw Exception('GEMINI_API_KEY kosong, menggunakan fallback protokol resmi');
+        throw Exception(
+          'GEMINI_API_KEY kosong, menggunakan fallback protokol resmi',
+        );
       }
 
       final String timeFormat =
@@ -73,7 +77,7 @@ ATURAN KEPUTUSAN STATUS TINDAKAN:
 - Jika isDiZonaMerah = false ATAU tidak ada potensi tsunami -> Status: "BERLINDUNG"
 
 ATURAN PENGAMBILAN PROTOKOL (MANDATORI):
-1. Pilih dan ambil instruksi HANYA dari DATABASE PROTOKOL MITIGASI RESMI di atas. DILARANG MENGARANG (hallucinate) instruksi di luar database tersebut.
+1. Pilih dan ambil instruksi HANYA dari DATABASE PROTOKOL MITIGASI RESMI di atas. DILARANG MENGARANG instruksi di luar database tersebut.
 2. Jika STATUS = "EVAKUASI", utamakan poin dari bagian "tsunami" -> "zona_merah", "berkendara_pesisir", atau "evakuasi_vertikal".
 3. Jika STATUS = "BERLINDUNG", utamakan poin dari bagian "gempa_bumi" -> "dalam_ruangan", "di_tempat_tidur", "berkendara", atau "gedung_bertingkat" sesuai profil posisi pengguna.
 4. Jika Kebutuhan Khusus / Kondisi Fisik pengguna BUKAN "Tidak Ada" (misal: Pengguna Kursi Roda / Lansia), WAJIB sertakan poin instruksi keselamatan khusus dari bagian "disabilitas_dan_kursi_roda" atau "disabilitas_dan_evakuasi_khusus".
@@ -115,7 +119,7 @@ Keluarkan hasil analisis murni DALAM FORMAT JSON SAJA seperti ini (TANPA blok ko
             if (hasSpecialNeeds)
               'Siapkan kartu identitas darurat, obat-obatan esensial, dan alat bantu fisik (tongkat/alat bantu dengar).',
             'Jika rute darat terputus, lakukan Evakuasi Vertikal ke lantai 3+ gedung beton kokoh.',
-            'Buka menu P3K Dasar pada aplikasi SUAR jika ada yang memerlukan bantuan medis.'
+            'Buka menu P3K Dasar pada aplikasi SUAR jika ada yang memerlukan bantuan medis.',
           ],
           aktifkanPeta: true,
         );
@@ -132,7 +136,7 @@ Keluarkan hasil analisis murni DALAM FORMAT JSON SAJA seperti ini (TANPA blok ko
           ],
           persiapan: [
             'Matikan segera kompor, regulator gas, dan instalasi listrik untuk mencegah bahaya kebakaran.',
-            'Jangan gunakan lift. Gunakan tangga darurat saat evakuasi setelah getaran reda.'
+            'Jangan gunakan lift. Gunakan tangga darurat saat evakuasi setelah getaran reda.',
           ],
           aktifkanPeta: false,
         );
