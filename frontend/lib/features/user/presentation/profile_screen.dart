@@ -3,19 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/name_utils.dart';
 import 'user_notifier.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
-
-  String _getInitials(String name) {
-    if (name.isEmpty) return '?';
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.length > 1) {
-      return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
-    }
-    return name.substring(0, 1).toUpperCase();
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +17,7 @@ class ProfileScreen extends ConsumerWidget {
     final fullName = user?.fullName ?? 'Pengguna';
     final homeType = user?.homeType ?? '-';
     final specialNeeds = user?.specialNeeds ?? 'Tidak Ada';
-    final initials = _getInitials(fullName);
+    final initials = getInitials(fullName);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profil')),

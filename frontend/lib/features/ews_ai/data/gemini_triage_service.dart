@@ -109,10 +109,10 @@ Keluarkan hasil analisis murni DALAM FORMAT JSON SAJA seperti ini (TANPA blok ko
           statusTindakan: 'EVAKUASI',
           tindakanSegera: [
             if (isWheelchair)
-              'BAGI PENGGUNA KURSI RODA: Minta bantuan pendamping/warga sekitar untuk evakuasi cepat lewat jalur bidang miring (ramp) atau Evakuasi Vertikal ke lantai 3+ gedung beton kokoh.',
+              'Bagi pengguna kursi roda: minta bantuan pendamping/warga sekitar untuk evakuasi cepat lewat jalur bidang miring (ramp) atau evakuasi vertikal ke lantai 3+ gedung beton kokoh.',
             if (hasSpecialNeeds && !isWheelchair)
-              'KHUSUS KONDISI KEBUTUHAN KHUSUS (${user.specialNeeds}): Prioritaskan pendampingan evakuasi cepat ke dataran tinggi atau lantai 3+ gedung kokoh.',
-            'TINGGALKAN BARANG BAWAAN BERAT. SEGERA EVAKUASI KE DATARAN TINGGI ATAU TEMPAT EVAKUASI SEMENTARA (TES).',
+              'Khusus kondisi kebutuhan khusus (${user.specialNeeds}): prioritaskan pendampingan evakuasi cepat ke dataran tinggi atau lantai 3+ gedung kokoh.',
+            'Tinggalkan barang bawaan berat. Segera evakuasi ke dataran tinggi atau tempat evakuasi sementara (TES).',
             'Ikuti petunjuk arah rute evakuasi aplikasi SUAR menuju area bebas risiko tsunami.',
           ],
           persiapan: [
@@ -128,10 +128,10 @@ Keluarkan hasil analisis murni DALAM FORMAT JSON SAJA seperti ini (TANPA blok ko
           statusTindakan: 'BERLINDUNG',
           tindakanSegera: [
             if (isWheelchair)
-              'KUNCI RODA KURSI RODA SEGERA saat guncangan terjadi, lalu lindungi kepala dan leher dengan bantal, helm, atau kedua tangan.',
+              'Kunci roda kursi roda segera saat guncangan terjadi, lalu lindungi kepala dan leher dengan bantal, helm, atau kedua tangan.',
             if (hasSpecialNeeds && !isWheelchair)
-              'KHUSUS KONDISI (${user.specialNeeds}): Ambil posisi berbaring/duduk di samping struktur kokoh dan lindungi kepala.',
-            'JANGAN LARI KELUAR BANGUNAN SAAT GUNCANGAN MASIH TERJADI. Tunggu hingga guncangan benar-benar reda.',
+              'Khusus kondisi (${user.specialNeeds}): ambil posisi berbaring/duduk di samping struktur kokoh dan lindungi kepala.',
+            'Jangan lari keluar bangunan saat guncangan masih terjadi. Tunggu hingga guncangan benar-benar reda.',
             'Drop, Cover, Hold On: Merunduk, lindungi kepala dan leher di bawah meja yang kokoh, dan berpegangan erat.',
           ],
           persiapan: [

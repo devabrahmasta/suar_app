@@ -48,6 +48,19 @@ class EwsAlertData {
   });
 }
 
+/// Kapan pengecekan ancaman EWS terakhir berhasil dijalankan (baik hasilnya
+/// ada ancaman maupun tidak). Dipakai untuk caption "diambil sejak HH:mm"
+/// di halaman alert saat sedang offline.
+class LastEwsCheckNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+  void markChecked(DateTime time) => state = time;
+}
+
+final lastEwsCheckProvider = NotifierProvider<LastEwsCheckNotifier, DateTime?>(
+  () => LastEwsCheckNotifier(),
+);
+
 class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
   @override
   Future<EwsAlertData?> build() async {
@@ -75,16 +88,22 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
 
       try {
         final locService = ref.read(locationServiceProvider);
-        debugPrint('EwsNotifier: Mengambil koordinat GPS waktu-nyata dari geolocator...');
+        debugPrint(
+          'EwsNotifier: Mengambil koordinat GPS waktu-nyata dari geolocator...',
+        );
         final position = await locService.getCurrentPosition();
         currentLat = position.latitude;
         currentLng = position.longitude;
         currentSpeed = position.speed;
         hasLocation = true;
-        debugPrint('EwsNotifier: Koordinat GPS didapatkan: ($currentLat, $currentLng), Speed: $currentSpeed m/s');
+        debugPrint(
+          'EwsNotifier: Koordinat GPS didapatkan: ($currentLat, $currentLng), Speed: $currentSpeed m/s',
+        );
 
         // Kirim pembaruan lokasi secara teroptimasi ke backend
-        debugPrint('EwsNotifier: Menjalankan sinkronisasi lokasi GPS ke backend...');
+        debugPrint(
+          'EwsNotifier: Menjalankan sinkronisasi lokasi GPS ke backend...',
+        );
         final backendService = ref.read(suarBackendServiceProvider);
         await backendService.updateLocationWithOptimization(
           deviceId: user.deviceId,
@@ -92,12 +111,16 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
           longitude: currentLng,
         );
       } catch (e) {
-        debugPrint('EwsNotifier: Gagal mengambil GPS atau memperbarui lokasi: $e. Mencoba fallback lokasi rumah...');
+        debugPrint(
+          'EwsNotifier: Gagal mengambil GPS atau memperbarui lokasi: $e. Mencoba fallback lokasi rumah...',
+        );
         if (user.homeLatitude != null && user.homeLongitude != null) {
           currentLat = user.homeLatitude!;
           currentLng = user.homeLongitude!;
           hasLocation = true;
-          debugPrint('EwsNotifier Fallback: Menggunakan lokasi rumah: ($currentLat, $currentLng)');
+          debugPrint(
+            'EwsNotifier Fallback: Menggunakan lokasi rumah: ($currentLat, $currentLng)',
+          );
         }
       }
 
@@ -105,7 +128,9 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       if (hasLocation) {
         final inariskService = ref.read(inariskServiceProvider);
         try {
-          debugPrint('EwsNotifier: Mengecek bahaya tsunami InaRISK untuk lokasi ($currentLat, $currentLng)...');
+          debugPrint(
+            'EwsNotifier: Mengecek bahaya tsunami InaRISK untuk lokasi ($currentLat, $currentLng)...',
+          );
           isDiZonaMerah = await inariskService.checkTsunamiHazard(
             currentLat,
             currentLng,
@@ -127,7 +152,9 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
           user.homeLongitude!,
         );
         isAtHome = distanceToHome <= 100;
-        debugPrint('EwsNotifier: Jarak ke rumah = ${distanceToHome.toStringAsFixed(2)}m (isAtHome = $isAtHome)');
+        debugPrint(
+          'EwsNotifier: Jarak ke rumah = ${distanceToHome.toStringAsFixed(2)}m (isAtHome = $isAtHome)',
+        );
       }
 
       double distanceKm = 0.0;
@@ -144,7 +171,9 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
               lngGempa,
             );
             distanceKm = distMeters / 1000;
-            debugPrint('EwsNotifier: Jarak ke episentrum gempa = ${distanceKm.toStringAsFixed(2)} km');
+            debugPrint(
+              'EwsNotifier: Jarak ke episentrum gempa = ${distanceKm.toStringAsFixed(2)} km',
+            );
           }
         } catch (e) {
           debugPrint("EwsNotifier: Gagal menghitung jarak gempa: $e");
@@ -158,8 +187,10 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       bool isStale = false;
       final gempaTime = DateTime.tryParse(gempa.dateTime);
       if (gempaTime != null) {
-        final ageInMinutes =
-            DateTime.now().toUtc().difference(gempaTime.toUtc()).inMinutes;
+        final ageInMinutes = DateTime.now()
+            .toUtc()
+            .difference(gempaTime.toUtc())
+            .inMinutes;
         if (ageInMinutes > 120) {
           isStale = true;
           debugPrint(
@@ -179,14 +210,20 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         }
       }
 
-      debugPrint('EwsNotifier: Evaluasi Ancaman -> Magnitude: $mag, Potensi Tsunami: $isTsunami, Jarak: ${distanceKm.toStringAsFixed(2)}km, Signifikan: $isSignificant');
+      debugPrint(
+        'EwsNotifier: Evaluasi Ancaman -> Magnitude: $mag, Potensi Tsunami: $isTsunami, Jarak: ${distanceKm.toStringAsFixed(2)}km, Signifikan: $isSignificant',
+      );
 
       if (!isSignificant) {
-        debugPrint('EwsNotifier: Ancaman tidak signifikan bagi lokasi pengguna. Mengabaikan triage.');
+        debugPrint(
+          'EwsNotifier: Ancaman tidak signifikan bagi lokasi pengguna. Mengabaikan triage.',
+        );
         return null;
       }
 
-      debugPrint('EwsNotifier: Ancaman SIGNIFIKAN. Memulai analisis Triage menggunakan Google Gemini AI...');
+      debugPrint(
+        'EwsNotifier: Ancaman SIGNIFIKAN. Memulai analisis Triage menggunakan Google Gemini AI...',
+      );
       final geminiService = ref.read(geminiTriageServiceProvider);
       final finalResult = await geminiService.analyzeThreat(
         gempa: gempa,
@@ -196,7 +233,9 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         speedInMetersPerSecond: currentSpeed,
         currentTime: DateTime.now(),
       );
-      debugPrint('EwsNotifier: Hasil Analisis AI Triage -> Keputusan: ${finalResult.statusTindakan}, Tindakan: ${finalResult.tindakanSegera.join(', ')}');
+      debugPrint(
+        'EwsNotifier: Hasil Analisis AI Triage -> Keputusan: ${finalResult.statusTindakan}, Tindakan: ${finalResult.tindakanSegera.join(', ')}',
+      );
 
       return EwsAlertData(
         triageResult: finalResult,
@@ -204,6 +243,10 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         distanceKm: distanceKm,
       );
     });
+
+    if (!state.hasError) {
+      ref.read(lastEwsCheckProvider.notifier).markChecked(DateTime.now());
+    }
   }
 
   Future<void> triggerMockThreat({

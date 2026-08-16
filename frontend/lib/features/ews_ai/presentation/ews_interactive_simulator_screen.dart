@@ -29,10 +29,12 @@ class _EwsInteractiveSimulatorScreenState
   String _wilayah = "Lautan Selatan Jawa (Simulasi)";
   bool _isLoading = false;
 
-  final TextEditingController _depthController =
-      TextEditingController(text: "15 km");
-  final TextEditingController _wilayahController =
-      TextEditingController(text: "Lautan Selatan Jawa (Simulasi)");
+  final TextEditingController _depthController = TextEditingController(
+    text: "15 km",
+  );
+  final TextEditingController _wilayahController = TextEditingController(
+    text: "Lautan Selatan Jawa (Simulasi)",
+  );
 
   @override
   void initState() {
@@ -75,7 +77,7 @@ class _EwsInteractiveSimulatorScreenState
   double _calculateLocalRadiusInMeters() {
     final isTsunami =
         _potensi.toLowerCase().contains('tsunami') || _magnitude >= 6.5;
-    
+
     double baseRadius = 50000.0;
     if (isTsunami) {
       baseRadius = 250000.0;
@@ -86,7 +88,8 @@ class _EwsInteractiveSimulatorScreenState
     }
 
     // Parsing kedalaman (menghapus " km" jika ada)
-    final depthVal = double.tryParse(_depth.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 10.0;
+    final depthVal =
+        double.tryParse(_depth.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 10.0;
 
     if (depthVal >= 70.0) {
       return baseRadius * 0.5; // Reduksi 50% untuk gempa dalam (>= 70 km)
@@ -145,10 +148,12 @@ class _EwsInteractiveSimulatorScreenState
 
         final isTsunami = _potensi.toLowerCase().contains('tsunami');
 
-        ref.read(ewsProvider.notifier).triggerMockThreat(
-          dummyGempa: dummyGempa,
-          dummyIsDiZonaMerah: isTsunami,
-        );
+        ref
+            .read(ewsProvider.notifier)
+            .triggerMockThreat(
+              dummyGempa: dummyGempa,
+              dummyIsDiZonaMerah: isTsunami,
+            );
 
         if (isTsunami) {
           ref.read(evacuationRouteProvider.notifier).findRouteManual();
@@ -248,7 +253,9 @@ class _EwsInteractiveSimulatorScreenState
                         polylines: [
                           Polyline(
                             points: [_userLocation!, _epicenter!],
-                            color: isInside ? AppColors.success : AppColors.textSecondary,
+                            color: isInside
+                                ? AppColors.success
+                                : AppColors.textSecondary,
                             strokeWidth: 3.0,
                           ),
                         ],
@@ -261,7 +268,9 @@ class _EwsInteractiveSimulatorScreenState
                             radius: _calculateLocalRadiusInMeters(),
                             useRadiusInMeter: true,
                             color: AppColors.danger.withValues(alpha: 0.15),
-                            borderColor: AppColors.danger.withValues(alpha: 0.6),
+                            borderColor: AppColors.danger.withValues(
+                              alpha: 0.6,
+                            ),
                             borderStrokeWidth: 2,
                           ),
                         ],
@@ -299,15 +308,18 @@ class _EwsInteractiveSimulatorScreenState
                   right: 12,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.surface.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(8),
                       boxShadow: const [
                         BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 4,
-                            offset: Offset(0, 2))
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
                       ],
                     ),
                     child: Text(
@@ -348,8 +360,12 @@ class _EwsInteractiveSimulatorScreenState
                     child: Row(
                       children: [
                         Icon(
-                          isInside ? Icons.warning_amber_rounded : Icons.info_outline,
-                          color: isInside ? AppColors.danger : AppColors.textSecondary,
+                          isInside
+                              ? Icons.warning_amber_rounded
+                              : Icons.info_outline,
+                          color: isInside
+                              ? AppColors.danger
+                              : AppColors.textSecondary,
                         ),
                         const SizedBox(width: 12),
                         Expanded(

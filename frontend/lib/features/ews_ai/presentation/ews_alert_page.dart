@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/alert_text_utils.dart';
 import '../../map_evacuation/presentation/map_provider.dart';
 import 'ews_provider.dart';
 
@@ -33,15 +34,17 @@ class EwsAlertPage extends ConsumerWidget {
         ref.watch(networkStatusProvider).value ?? [ConnectivityResult.none];
     final hasInternet = !networkState.contains(ConnectivityResult.none);
     final isMapAvailable = isCacheReady || hasInternet;
+    final lastEwsCheck = ref.watch(lastEwsCheckProvider);
 
     final result = alertData.triageResult;
     final gempa = alertData.gempa;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
 
     // Penentuan Judul & Subjudul Peringatan secara dinamis
-    final String alertTitle = gempa.potensi.isNotEmpty
-        ? gempa.potensi.toUpperCase()
-        : (isEvakuasi ? 'POTENSI TSUNAMI' : 'PERINGATAN GEMPA BUMI');
+    final String alertTitle = resolveAlertHeadline(
+      gempa.potensi,
+      fallback: isEvakuasi ? 'POTENSI TSUNAMI' : 'PERINGATAN GEMPA BUMI',
+    );
 
     final String alertSubtitle =
         'STATUS: ${result.statusTindakan} · ${isEvakuasi ? "ZONA MERAH TSUNAMI" : "ZONA WASPADA"}';
@@ -316,11 +319,11 @@ class EwsAlertPage extends ConsumerWidget {
                             ),
                             child: Center(
                               child: Text(
-                                '${index + 1}'.toLowerCase(),
+                                '${index + 1}',
                                 style: const TextStyle(
                                   color: AppColors.white,
-                                  fontWeight: FontWeight.w200,
-                                  fontSize: 2,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
@@ -468,26 +471,36 @@ class EwsAlertPage extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(height: 12),
-
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: secondaryAccent,
-                    side: const BorderSide(color: secondaryAccent, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
+              // Tombol "Lihat panduan lengkap" sengaja dihapus: halaman ini
+              // sudah jadi panduan lengkapnya, dan tombol back di AppBar
+              // sudah menuju ke tempat yang sama (context.go('/')).
+              if (!hasInternet) ...[
+                const SizedBox(height: 14),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        color: AppColors.textHint,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-                  onPressed: () => context.go('/'),
-                  child: const Text(
-                    'Lihat panduan lengkap',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-                  ),
+                    const SizedBox(width: 8),
+                    Text(
+                      lastEwsCheck != null
+                          ? 'Tampil tanpa internet · diambil sejak ${_formatHm(lastEwsCheck)}'
+                          : 'Tampil tanpa internet · data tersimpan di perangkat',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textHint,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              ],
 
               const SizedBox(height: 20),
             ],
@@ -495,6 +508,12 @@ class EwsAlertPage extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _formatHm(DateTime time) {
+    final hh = time.hour.toString().padLeft(2, '0');
+    final mm = time.minute.toString().padLeft(2, '0');
+    return '$hh:$mm';
   }
 
   Widget _buildStatBox({required String label, required String value}) {

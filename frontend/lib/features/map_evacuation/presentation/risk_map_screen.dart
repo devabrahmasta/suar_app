@@ -4,38 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
+import 'package:suar_app/core/widgets/icon_circle_badge.dart';
 import 'map_provider.dart';
-import '../../ews_ai/presentation/ews_provider.dart';
-
-class TsunamiLayerNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-  void setLayer(bool value) => state = value;
-}
-
-final showTsunamiProvider = NotifierProvider<TsunamiLayerNotifier, bool>(
-  () => TsunamiLayerNotifier(),
-);
-
-class LandslideLayerNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-  void setLayer(bool value) => state = value;
-}
-
-final showLandslideProvider = NotifierProvider<LandslideLayerNotifier, bool>(
-  () => LandslideLayerNotifier(),
-);
-
-class EarthquakeLayerNotifier extends Notifier<bool> {
-  @override
-  bool build() => true;
-  void setLayer(bool value) => state = value;
-}
-
-final showEarthquakeProvider = NotifierProvider<EarthquakeLayerNotifier, bool>(
-  () => EarthquakeLayerNotifier(),
-);
 
 class RiskMapScreen extends ConsumerStatefulWidget {
   const RiskMapScreen({super.key});
@@ -44,14 +14,126 @@ class RiskMapScreen extends ConsumerStatefulWidget {
   ConsumerState<RiskMapScreen> createState() => _RiskMapScreenState();
 }
 
-class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
+class _RiskMapScreenState extends ConsumerState<RiskMapScreen>
+    with TickerProviderStateMixin {
   final MapController _mapController = MapController();
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
 
-  bool _isTsunamiLoading = false;
-  bool _isInTsunamiZone = false;
+  static const double _sheetMinSize = 0.14;
+  static const double _sheetMaxSize = 0.65;
+  static const List<double> _sheetSnapSizes = [
+    _sheetMinSize,
+    0.4,
+    _sheetMaxSize,
+  ];
 
-  bool _isLandslideLoading = false;
-  bool _isInLandslideZone = false;
+  AnimationController? _moveController;
+
+  @override
+  void dispose() {
+    _moveController?.dispose();
+    _sheetController.dispose();
+    super.dispose();
+  }
+
+  Color _magnitudeColor(double magnitude) {
+    if (magnitude >= 5.0) return AppColors.danger;
+    if (magnitude >= 3.0) return AppColors.warning;
+    return AppColors.info;
+  }
+
+  LatLng? _parseGempaCoords(Map<String, dynamic> gempa) {
+    final coordsStr = gempa['Coordinates'] as String? ?? '';
+    final coords = coordsStr.split(',');
+    if (coords.length != 2) return null;
+    final lat = double.tryParse(coords[0].trim());
+    final lng = double.tryParse(coords[1].trim());
+    if (lat == null || lng == null) return null;
+    return LatLng(lat, lng);
+  }
+
+  /// Menganimasikan kamera peta secara halus ke [destLocation], lalu
+  /// menjalankan [onComplete] setelah animasi selesai (mis. membuka
+  /// detail gempa).
+  void _animatedMapMove(
+    LatLng destLocation,
+    double destZoom, {
+    VoidCallback? onComplete,
+  }) {
+    _moveController?.dispose();
+
+    final camera = _mapController.camera;
+    final latTween = Tween<double>(
+      begin: camera.center.latitude,
+      end: destLocation.latitude,
+    );
+    final lngTween = Tween<double>(
+      begin: camera.center.longitude,
+      end: destLocation.longitude,
+    );
+    final zoomTween = Tween<double>(begin: camera.zoom, end: destZoom);
+
+    final controller = AnimationController(
+      duration: const Duration(milliseconds: 650),
+      vsync: this,
+    );
+    _moveController = controller;
+
+    final animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.fastOutSlowIn,
+    );
+
+    controller.addListener(() {
+      _mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+      );
+    });
+
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        if (status == AnimationStatus.completed) onComplete?.call();
+        controller.dispose();
+        if (identical(_moveController, controller)) {
+          _moveController = null;
+        }
+      }
+    });
+
+    controller.forward();
+  }
+
+  /// Saat item gempa di-tap: minimize dulu panel Gempa Terbaru supaya
+  /// tidak menutupi peta, baru kamera bergerak ke titik gempa, lalu
+  /// detail gempanya muncul.
+  Future<void> _onGempaItemTap(Map<String, dynamic> gempa) async {
+    final point = _parseGempaCoords(gempa);
+    if (point == null) return;
+
+    final magStr = gempa['Magnitude'] as String? ?? '0';
+    final color = _magnitudeColor(double.tryParse(magStr) ?? 0.0);
+
+    if (_sheetController.isAttached) {
+      await _sheetController.animateTo(
+        _sheetMinSize,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    }
+
+    if (!mounted) return;
+
+    _animatedMapMove(
+      point,
+      12.0,
+      onComplete: () {
+        if (mounted) _showEarthquakeDetails(context, gempa, color);
+      },
+    );
+  }
 
   void _showEarthquakeDetails(
     BuildContext context,
@@ -188,134 +270,209 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
     );
   }
 
-  void _showLegendBottomSheet(BuildContext context, LatLng currentLocation) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setStateModal) {
-            return Consumer(
-              builder: (context, ref, child) {
-                final showTsunami = ref.watch(showTsunamiProvider);
-                final showLandslide = ref.watch(showLandslideProvider);
-                final showEarthquake = ref.watch(showEarthquakeProvider);
+  String _formatCacheAge(DateTime? lastSync) {
+    if (lastSync == null) return '—';
+    final diff = DateTime.now().difference(lastSync);
+    if (diff.inSeconds < 60) return 'baru saja';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m lalu';
+    if (diff.inHours < 24) return '${diff.inHours}j lalu';
+    return '${diff.inDays}h lalu';
+  }
 
-                return Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24),
+  Widget _buildCacheBadge(DateTime? lastSync) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primaryLight.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        'Diperbarui ${_formatCacheAge(lastSync)}',
+        style: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          color: AppColors.primaryDark,
+        ),
+      ),
+    );
+  }
+
+  /// Menutup panel ke ukuran snap terdekat dari posisi drag saat ini.
+  void _snapSheetToNearest() {
+    if (!_sheetController.isAttached) return;
+    final current = _sheetController.size;
+    var nearest = _sheetSnapSizes.first;
+    var minDiff = (current - nearest).abs();
+    for (final size in _sheetSnapSizes) {
+      final diff = (current - size).abs();
+      if (diff < minDiff) {
+        minDiff = diff;
+        nearest = size;
+      }
+    }
+    _sheetController.animateTo(
+      nearest,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+  }
+
+  /// Drag handle (dash abu-abu) bisa langsung ditarik untuk stretch panel,
+  /// tanpa harus melalui list (yang scroll-nya bisa bentrok dengan gesture
+  /// resize saat konten sudah panjang).
+  Widget _buildDragHandle() {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onVerticalDragUpdate: (details) {
+        if (!_sheetController.isAttached) return;
+        final screenHeight = MediaQuery.sizeOf(context).height;
+        final delta = details.primaryDelta ?? 0;
+        final newSize = (_sheetController.size - delta / screenHeight).clamp(
+          _sheetMinSize,
+          _sheetMaxSize,
+        );
+        _sheetController.jumpTo(newSize);
+      },
+      onVerticalDragEnd: (_) => _snapSheetToNearest(),
+      child: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        alignment: Alignment.center,
+        child: Container(
+          width: 40,
+          height: 4,
+          decoration: BoxDecoration(
+            color: AppColors.border,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGempaListItem(Map<String, dynamic> gempa) {
+    final wilayah = gempa['Wilayah']?.toString() ?? 'Unknown Location';
+    final magnitude = gempa['Magnitude']?.toString() ?? '-';
+    final jam = gempa['Jam']?.toString() ?? '-';
+    final color = _magnitudeColor(double.tryParse(magnitude) ?? 0.0);
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => _onGempaItemTap(gempa),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            IconCircleBadge(label: magnitude, color: color),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                wilayah,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              jam,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGempaTerbaruContent(ScrollController scrollController) {
+    final recentQuakesAsync = ref.watch(recentEarthquakesProvider);
+    final lastSync = ref.watch(lastGempaSyncProvider);
+    final quakes = recentQuakesAsync.value ?? const [];
+    final limited = quakes.take(15).toList();
+
+    return Column(
+      children: [
+        _buildDragHandle(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'GEMPA TERBARU',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              _buildCacheBadge(lastSync),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView.separated(
+            controller: scrollController,
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            itemCount: limited.isEmpty ? 1 : limited.length,
+            separatorBuilder: (_, _) =>
+                const Divider(height: 20, color: AppColors.border),
+            itemBuilder: (context, index) {
+              if (limited.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Center(
+                    child: Text(
+                      recentQuakesAsync.isLoading
+                          ? 'Memuat data gempa...'
+                          : 'Belum ada data gempa terbaru',
+                      style: const TextStyle(
+                        color: AppColors.textHint,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: 40,
-                          height: 4,
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: AppColors.border,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "Legenda Peta",
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
-                            ),
-                      ),
-                      const SizedBox(height: 16),
-                      _LayerToggle(
-                        label: "Zona Bahaya Tsunami",
-                        value: showTsunami,
-                        activeColor: AppColors.primary,
-                        isLoading: _isTsunamiLoading,
-                        onChanged: (val) async {
-                          ref.read(showTsunamiProvider.notifier).setLayer(val);
-                          if (val) {
-                            setStateModal(() => _isTsunamiLoading = true);
-                            setState(() => _isTsunamiLoading = true);
-                            final inarisk = ref.read(inariskServiceProvider);
-                            final result = await inarisk.checkTsunamiHazard(
-                              currentLocation.latitude,
-                              currentLocation.longitude,
-                            );
-                            if (mounted) {
-                              setState(() {
-                                _isInTsunamiZone = result;
-                                _isTsunamiLoading = false;
-                              });
-                              setStateModal(() => _isTsunamiLoading = false);
-                            }
-                          } else {
-                            if (mounted) {
-                              setState(() => _isInTsunamiZone = false);
-                            }
-                          }
-                        },
-                      ),
-                      _LayerToggle(
-                        label: "Zona Bahaya Longsor",
-                        value: showLandslide,
-                        activeColor: AppColors.primary,
-                        isLoading: _isLandslideLoading,
-                        onChanged: (val) async {
-                          ref
-                              .read(showLandslideProvider.notifier)
-                              .setLayer(val);
-                          if (val) {
-                            setStateModal(() => _isLandslideLoading = true);
-                            setState(() => _isLandslideLoading = true);
-                            final inarisk = ref.read(inariskServiceProvider);
-                            final result = await inarisk.checkLandslideHazard(
-                              currentLocation.latitude,
-                              currentLocation.longitude,
-                            );
-                            if (mounted) {
-                              setState(() {
-                                _isInLandslideZone = result;
-                                _isLandslideLoading = false;
-                              });
-                              setStateModal(() => _isLandslideLoading = false);
-                            }
-                          } else {
-                            if (mounted) {
-                              setState(() => _isInLandslideZone = false);
-                            }
-                          }
-                        },
-                      ),
-                      _LayerToggle(
-                        label: "Titik Gempa Live",
-                        value: showEarthquake,
-                        activeColor: AppColors.primary,
-                        onChanged: (val) => ref
-                            .read(showEarthquakeProvider.notifier)
-                            .setLayer(val),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        "Data zona bahaya bersumber dari InaRISK BNPB. Ketersediaan data bergantung pada server BNPB.",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.textHint,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
                 );
-              },
-            );
-          },
+              }
+              return _buildGempaListItem(limited[index]);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBottomPanel(BuildContext context) {
+    return DraggableScrollableSheet(
+      controller: _sheetController,
+      initialChildSize: _sheetMinSize,
+      minChildSize: _sheetMinSize,
+      maxChildSize: _sheetMaxSize,
+      snap: true,
+      snapSizes: _sheetSnapSizes,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 12,
+                offset: Offset(0, -2),
+              ),
+            ],
+          ),
+          child: _buildGempaTerbaruContent(scrollController),
         );
       },
     );
@@ -325,10 +482,6 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
   Widget build(BuildContext context) {
     final locationAsync = ref.watch(userLocationStreamProvider);
     final recentQuakesAsync = ref.watch(recentEarthquakesProvider);
-
-    final showTsunami = ref.watch(showTsunamiProvider);
-    final showLandslide = ref.watch(showLandslideProvider);
-    final showEarthquake = ref.watch(showEarthquakeProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -371,59 +524,16 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
                     userAgentPackageName: 'com.suar.app',
                   ),
 
-                  // LAYER TSUNAMI
-                  if (showTsunami && _isInTsunamiZone)
-                    CircleLayer(
-                      circles: [
-                        CircleMarker(
-                          point: currentLocation,
-                          radius: 3000,
-                          useRadiusInMeter: true,
-                          color: AppColors.danger.withValues(alpha: 0.3),
-                          borderColor: AppColors.danger.withValues(alpha: 0.5),
-                          borderStrokeWidth: 2,
-                        ),
-                      ],
-                    ),
-
-                  // LAYER LONGSOR
-                  if (showLandslide && _isInLandslideZone)
-                    CircleLayer(
-                      circles: [
-                        CircleMarker(
-                          point: currentLocation,
-                          radius: 3000,
-                          useRadiusInMeter: true,
-                          color: AppColors.warning.withValues(alpha: 0.3),
-                          borderColor: AppColors.warning.withValues(alpha: 0.5),
-                          borderStrokeWidth: 2,
-                        ),
-                      ],
-                    ),
-
                   // TITIK GEMPA LIVE
-                  if (showEarthquake && recentQuakesAsync.value != null)
+                  if (recentQuakesAsync.value != null)
                     MarkerLayer(
                       markers: recentQuakesAsync.value!.map((gempa) {
-                        final coordsStr = gempa['Coordinates'] as String? ?? '';
-                        final coords = coordsStr.split(',');
-                        LatLng point = const LatLng(0, 0);
-                        if (coords.length == 2) {
-                          point = LatLng(
-                            double.tryParse(coords[0].trim()) ?? 0.0,
-                            double.tryParse(coords[1].trim()) ?? 0.0,
-                          );
-                        }
+                        final point =
+                            _parseGempaCoords(gempa) ?? const LatLng(0, 0);
 
                         final magStr = gempa['Magnitude'] as String? ?? '0';
                         final magnitude = double.tryParse(magStr) ?? 0.0;
-
-                        Color markerColor = AppColors.info;
-                        if (magnitude >= 5.0) {
-                          markerColor = AppColors.danger;
-                        } else if (magnitude >= 3.0) {
-                          markerColor = AppColors.warning;
-                        }
+                        final markerColor = _magnitudeColor(magnitude);
 
                         return Marker(
                           point: point,
@@ -468,40 +578,23 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen> {
               ),
 
               Positioned(
-                bottom: 24,
+                bottom: MediaQuery.sizeOf(context).height * _sheetMinSize + 16,
                 right: 16,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      heroTag: 'legend_fab',
-                      backgroundColor: AppColors.surface,
-                      foregroundColor: AppColors.primary,
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      onPressed: () =>
-                          _showLegendBottomSheet(context, currentLocation),
-                      child: const Icon(Icons.layers),
-                    ),
-                    const SizedBox(height: 12),
-                    FloatingActionButton(
-                      backgroundColor: AppColors.surface,
-                      foregroundColor: AppColors.primary,
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      onPressed: () {
-                        _mapController.move(currentLocation, 14.0);
-                      },
-                      child: const Icon(Icons.my_location),
-                    ),
-                  ],
+                child: FloatingActionButton(
+                  backgroundColor: AppColors.surface,
+                  foregroundColor: AppColors.primary,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onPressed: () {
+                    _mapController.move(currentLocation, 14.0);
+                  },
+                  child: const Icon(Icons.my_location),
                 ),
               ),
+
+              Positioned.fill(child: _buildBottomPanel(context)),
             ],
           );
         },
@@ -594,62 +687,5 @@ class _RipplePainter extends CustomPainter {
   bool shouldRepaint(covariant _RipplePainter oldDelegate) {
     return oldDelegate.animationValue != animationValue ||
         oldDelegate.color != color;
-  }
-}
-
-class _LayerToggle extends StatelessWidget {
-  final String label;
-  final bool value;
-  final Color activeColor;
-  final ValueChanged<bool> onChanged;
-  final bool isLoading;
-
-  const _LayerToggle({
-    required this.label,
-    required this.value,
-    required this.activeColor,
-    required this.onChanged,
-    this.isLoading = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              if (isLoading)
-                const Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: SizedBox(
-                    width: 12,
-                    height: 12,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(
-            height: 32,
-            child: Switch(
-              value: value,
-              activeThumbColor: AppColors.white,
-              activeTrackColor: activeColor,
-              onChanged: onChanged,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
