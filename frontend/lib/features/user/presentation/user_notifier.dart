@@ -69,15 +69,17 @@ class UserNotifier extends Notifier<UserModel?> {
   Future<void> createUser({
     required String name,
     required String homeType,
+    String specialNeeds = 'Tidak Ada',
     required double? homeLat,
     required double? homeLng,
   }) async {
-    debugPrint('UserNotifier: Membuat profil pengguna baru: $name');
+    debugPrint('UserNotifier: Membuat profil pengguna baru: $name ($specialNeeds)');
     final String generatedDeviceId = const Uuid().v4();
     final user = UserModel(
       fullName: name,
       deviceId: generatedDeviceId,
       homeType: homeType,
+      specialNeeds: specialNeeds,
       homeLatitude: homeLat,
       homeLongitude: homeLng,
     );

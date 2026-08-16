@@ -154,13 +154,29 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       final mag = double.tryParse(gempa.magnitude) ?? 0.0;
       final isTsunami = gempa.potensi.toLowerCase().contains('tsunami');
 
+      // Evaluasi umur gempa agar data BMKG masa lalu (> 2 jam) tidak memicu peringatan aktif
+      bool isStale = false;
+      final gempaTime = DateTime.tryParse(gempa.dateTime);
+      if (gempaTime != null) {
+        final ageInMinutes =
+            DateTime.now().toUtc().difference(gempaTime.toUtc()).inMinutes;
+        if (ageInMinutes > 120) {
+          isStale = true;
+          debugPrint(
+            'EwsNotifier: Gempa BMKG terjadi $ageInMinutes menit lalu (> 2 jam). Ancaman dianggap telah berlalu/tidak aktif.',
+          );
+        }
+      }
+
       bool isSignificant = false;
-      if (isTsunami || mag >= 7.0) {
-        isSignificant = true;
-      } else if (mag >= 6.0 && distanceKm <= 1000) {
-        isSignificant = true;
-      } else if (mag >= 5.0 && distanceKm <= 500) {
-        isSignificant = true;
+      if (!isStale) {
+        if (isTsunami || mag >= 7.0) {
+          isSignificant = true;
+        } else if (mag >= 6.0 && distanceKm <= 1000) {
+          isSignificant = true;
+        } else if (mag >= 5.0 && distanceKm <= 500) {
+          isSignificant = true;
+        }
       }
 
       debugPrint('EwsNotifier: Evaluasi Ancaman -> Magnitude: $mag, Potensi Tsunami: $isTsunami, Jarak: ${distanceKm.toStringAsFixed(2)}km, Signifikan: $isSignificant');

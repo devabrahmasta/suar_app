@@ -44,7 +44,16 @@ class RoutingService {
         throw Exception('Gagal mengambil rute: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error kalkulasi rute evakuasi ORS: $e');
+      debugPrint('RoutingService ORS Error: $e. Generasi garis rute fallback.');
+      final List<LatLng> fallbackRoute = [];
+      const int steps = 10;
+      for (int i = 0; i <= steps; i++) {
+        final double t = i / steps;
+        final lat = start.latitude + (destination.latitude - start.latitude) * t;
+        final lng = start.longitude + (destination.longitude - start.longitude) * t;
+        fallbackRoute.add(LatLng(lat, lng));
+      }
+      return fallbackRoute;
     }
   }
 

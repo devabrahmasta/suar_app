@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:suar_app/core/services/suar_backend_service.dart';
+import 'package:suar_app/core/services/notification_service.dart';
 import 'package:suar_app/features/ews_ai/presentation/ews_provider.dart';
+import 'package:suar_app/features/ews_ai/domain/gempa_model.dart';
+import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart';
 import '../../../core/theme/app_colors.dart';
 
 class EwsInteractiveSimulatorScreen extends ConsumerStatefulWidget {
@@ -126,6 +129,43 @@ class _EwsInteractiveSimulatorScreenState
         wilayah: _wilayah,
       );
 
+      if (isInside) {
+        final dummyGempa = GempaModel(
+          tanggal: '17 Mar 2026',
+          jam: '20:30:00 WIB',
+          dateTime: DateTime.now().toIso8601String(),
+          coordinates: '${_epicenter!.latitude}, ${_epicenter!.longitude}',
+          magnitude: _magnitude.toStringAsFixed(1),
+          kedalaman: _depth,
+          wilayah: _wilayah,
+          potensi: _potensi,
+          dirasakan: 'V-VI MMI',
+          shakemapUrl: '',
+        );
+
+        final isTsunami = _potensi.toLowerCase().contains('tsunami');
+
+        ref.read(ewsProvider.notifier).triggerMockThreat(
+          dummyGempa: dummyGempa,
+          dummyIsDiZonaMerah: isTsunami,
+        );
+
+        if (isTsunami) {
+          ref.read(evacuationRouteProvider.notifier).findRouteManual();
+        }
+
+        NotificationService.showNotification(
+          id: 10,
+          title: isTsunami
+              ? '⚠️ PERINGATAN TSUNAMI (SUAR)'
+              : '⚠️ PERINGATAN GEMPA BUMI (SUAR)',
+          body: isTsunami
+              ? 'Gempa M${_magnitude.toStringAsFixed(1)} terdeteksi. Potensi Tsunami! Segera evakuasi.'
+              : 'Gempa M${_magnitude.toStringAsFixed(1)} terdeteksi. Segera berlindung.',
+          payload: 'MOCK_ALERT',
+        );
+      }
+
       final int impacted = result['impactedCount'] ?? 0;
 
       messenger.showSnackBar(
@@ -134,9 +174,9 @@ class _EwsInteractiveSimulatorScreenState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 '⚡ GEMPA SIMULASI BERHASIL DILUNCURKAN!',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
               Text(

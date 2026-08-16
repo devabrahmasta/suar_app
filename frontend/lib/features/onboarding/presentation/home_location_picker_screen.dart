@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -51,21 +52,32 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
           'zoom': 18,
           'addressdetails': 1,
         },
-        options: Options(headers: {'User-Agent': 'suar_app/1.0'}),
+        options: Options(
+          headers: {'User-Agent': 'suar_app/1.0'},
+          sendTimeout: const Duration(seconds: 3),
+          receiveTimeout: const Duration(seconds: 3),
+        ),
       );
 
       if (response.statusCode == 200 && response.data != null) {
         final displayName = response.data['display_name'] as String?;
         if (mounted) {
           setState(() {
-            _currentAddress = displayName ?? "Alamat tidak ditemukan";
+            _currentAddress = displayName ??
+                "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}";
           });
         }
       } else {
-        if (mounted) setState(() => _currentAddress = "Gagal mengambil alamat");
+        if (mounted) {
+          setState(() => _currentAddress =
+              "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}");
+        }
       }
     } catch (e) {
-      if (mounted) setState(() => _currentAddress = "Gagal mengambil alamat");
+      if (mounted) {
+        setState(() => _currentAddress =
+            "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}");
+      }
     }
   }
 
@@ -117,7 +129,15 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
             children: [
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.suar_app',
+                userAgentPackageName: 'com.suar.app',
+                tileProvider: FMTCTileProvider(
+                  stores: const {
+                    'evacuation_map': BrowseStoreStrategy.read,
+                  },
+                ),
+                errorTileCallback: (tile, error, stackTrace) {
+                  debugPrint('Tile error (mode luring): $error');
+                },
               ),
             ],
           ),

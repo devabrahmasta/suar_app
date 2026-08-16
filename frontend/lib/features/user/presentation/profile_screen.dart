@@ -24,6 +24,7 @@ class ProfileScreen extends ConsumerWidget {
 
     final fullName = user?.fullName ?? 'Pengguna';
     final homeType = user?.homeType ?? '-';
+    final specialNeeds = user?.specialNeeds ?? 'Tidak Ada';
     final initials = _getInitials(fullName);
 
     return Scaffold(
@@ -65,7 +66,7 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$homeType • Zona Aman',
+                      '$homeType • Kondisi: $specialNeeds',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: AppColors.textSecondary,
                       ),

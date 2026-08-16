@@ -2,6 +2,7 @@ class UserModel {
   final String fullName;
   final String deviceId;
   final String homeType;
+  final String specialNeeds;
   final double? homeLatitude;
   final double? homeLongitude;
 
@@ -9,6 +10,7 @@ class UserModel {
     required this.fullName,
     required this.deviceId,
     required this.homeType,
+    this.specialNeeds = 'Tidak Ada',
     this.homeLatitude,
     this.homeLongitude,
   });
@@ -18,6 +20,7 @@ class UserModel {
       'fullName': fullName,
       'deviceId': deviceId,
       'homeType': homeType,
+      'specialNeeds': specialNeeds,
       'homeLatitude': homeLatitude,
       'homeLongitude': homeLongitude,
     };
@@ -28,6 +31,7 @@ class UserModel {
       fullName: map['fullName'] ?? '',
       deviceId: map['deviceId'] ?? '',
       homeType: map['homeType'] ?? '',
+      specialNeeds: map['specialNeeds'] ?? 'Tidak Ada',
       homeLatitude: map['homeLatitude']?.toDouble(),
       homeLongitude: map['homeLongitude']?.toDouble(),
     );
