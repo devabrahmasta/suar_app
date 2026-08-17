@@ -561,7 +561,7 @@ class HomeScreen extends ConsumerWidget {
           if (remaining > 0) ...[
             const SizedBox(height: 10),
             Text(
-              '$remaining langkah berikutnya ada di rincian peringatan.',
+              'Langkah berikutnya ada di rincian peringatan.',
               style: const TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,

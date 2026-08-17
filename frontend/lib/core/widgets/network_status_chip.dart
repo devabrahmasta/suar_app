@@ -85,15 +85,6 @@ class _NetworkStatusChipState extends ConsumerState<NetworkStatusChip>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        color: textColor,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
                     Icon(iconData, size: 13, color: textColor),
                     const SizedBox(width: 4),
                     Text(
