@@ -25,8 +25,10 @@ void callbackDispatcher() {
         // Cek umur gempa agar gempa lama dari BMKG tidak memicu sirine notifikasi
         final gempaTime = DateTime.tryParse(latestGempa.dateTime);
         if (gempaTime != null) {
-          final ageInMinutes =
-              DateTime.now().toUtc().difference(gempaTime.toUtc()).inMinutes;
+          final ageInMinutes = DateTime.now()
+              .toUtc()
+              .difference(gempaTime.toUtc())
+              .inMinutes;
           // Jika instalasi/run pertama dan gempa > 30 menit, atau gempa > 60 menit lalu: abaikan notifikasi
           if ((isFirstRun && ageInMinutes > 30) || ageInMinutes > 60) {
             debugPrint(

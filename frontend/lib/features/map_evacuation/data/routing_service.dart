@@ -49,8 +49,10 @@ class RoutingService {
       const int steps = 10;
       for (int i = 0; i <= steps; i++) {
         final double t = i / steps;
-        final lat = start.latitude + (destination.latitude - start.latitude) * t;
-        final lng = start.longitude + (destination.longitude - start.longitude) * t;
+        final lat =
+            start.latitude + (destination.latitude - start.latitude) * t;
+        final lng =
+            start.longitude + (destination.longitude - start.longitude) * t;
         fallbackRoute.add(LatLng(lat, lng));
       }
       return fallbackRoute;

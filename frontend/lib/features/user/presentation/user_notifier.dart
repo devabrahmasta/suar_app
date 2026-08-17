@@ -20,11 +20,15 @@ class UserNotifier extends Notifier<UserModel?> {
         );
         final token = await messaging.getToken();
         if (token != null) {
-          debugPrint('UserNotifier: Berhasil mendapatkan token FCM asli: $token');
+          debugPrint(
+            'UserNotifier: Berhasil mendapatkan token FCM asli: $token',
+          );
           return token;
         }
       } catch (e) {
-        debugPrint('UserNotifier: Gagal mendapatkan token asli ($e). Fallback ke mock.');
+        debugPrint(
+          'UserNotifier: Gagal mendapatkan token asli ($e). Fallback ke mock.',
+        );
       }
     }
     final fallbackToken = 'mock_token_${deviceId.substring(0, 8)}';
@@ -39,10 +43,14 @@ class UserNotifier extends Notifier<UserModel?> {
 
     if (userJson != null) {
       final user = UserModel.fromMap(jsonDecode(userJson));
-      debugPrint('UserNotifier: Profil pengguna ditemukan di cache: ${user.fullName} (${user.deviceId})');
-      
+      debugPrint(
+        'UserNotifier: Profil pengguna ditemukan di cache: ${user.fullName} (${user.deviceId})',
+      );
+
       // Sinkronisasi status perangkat ke backend secara asynchronous di background
-      debugPrint('UserNotifier: Memulai sinkronisasi latar belakang ke cloud backend...');
+      debugPrint(
+        'UserNotifier: Memulai sinkronisasi latar belakang ke cloud backend...',
+      );
       Future.microtask(() async {
         try {
           final fcmToken = await _getRealOrMockFcmToken(user.deviceId);
@@ -54,12 +62,16 @@ class UserNotifier extends Notifier<UserModel?> {
             homeLatitude: user.homeLatitude,
             homeLongitude: user.homeLongitude,
           );
-          debugPrint('UserNotifier: Sinkronisasi latar belakang ke backend berhasil.');
+          debugPrint(
+            'UserNotifier: Sinkronisasi latar belakang ke backend berhasil.',
+          );
         } catch (e) {
-          debugPrint('UserNotifier: Sinkronisasi latar belakang gagal (offline mode tetap berjalan): $e');
+          debugPrint(
+            'UserNotifier: Sinkronisasi latar belakang gagal (offline mode tetap berjalan): $e',
+          );
         }
       });
-      
+
       return user;
     }
     debugPrint('UserNotifier: Tidak ada profil pengguna ter-cache.');
@@ -73,7 +85,9 @@ class UserNotifier extends Notifier<UserModel?> {
     required double? homeLat,
     required double? homeLng,
   }) async {
-    debugPrint('UserNotifier: Membuat profil pengguna baru: $name ($specialNeeds)');
+    debugPrint(
+      'UserNotifier: Membuat profil pengguna baru: $name ($specialNeeds)',
+    );
     final String generatedDeviceId = const Uuid().v4();
     final user = UserModel(
       fullName: name,
@@ -88,7 +102,9 @@ class UserNotifier extends Notifier<UserModel?> {
     state = user;
 
     // Registrasi perangkat baru ke cloud backend
-    debugPrint('UserNotifier: Mendaftarkan perangkat baru $generatedDeviceId ke cloud backend...');
+    debugPrint(
+      'UserNotifier: Mendaftarkan perangkat baru $generatedDeviceId ke cloud backend...',
+    );
     try {
       final fcmToken = await _getRealOrMockFcmToken(generatedDeviceId);
       final backendService = ref.read(suarBackendServiceProvider);
@@ -101,7 +117,9 @@ class UserNotifier extends Notifier<UserModel?> {
       );
       debugPrint('UserNotifier: Pendaftaran perangkat baru ke backend sukses.');
     } catch (e) {
-      debugPrint('UserNotifier: Pendaftaran perangkat baru ke backend gagal (offline mode tetap berjalan): $e');
+      debugPrint(
+        'UserNotifier: Pendaftaran perangkat baru ke backend gagal (offline mode tetap berjalan): $e',
+      );
     }
   }
 }

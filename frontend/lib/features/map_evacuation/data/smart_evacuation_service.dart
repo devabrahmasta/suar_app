@@ -177,9 +177,16 @@ class SmartEvacuationService {
     debugPrint(
       'SmartEvacuationService: Membuat rute evakuasi darat fallback ke dataran tinggi...',
     );
-    final LatLng safeDestination = distanceCalculator.offset(currentLocation, 2500, 0);
+    final LatLng safeDestination = distanceCalculator.offset(
+      currentLocation,
+      2500,
+      0,
+    );
     try {
-      return await routingService.getEvacuationRoute(currentLocation, safeDestination);
+      return await routingService.getEvacuationRoute(
+        currentLocation,
+        safeDestination,
+      );
     } catch (e) {
       return [currentLocation, safeDestination];
     }
