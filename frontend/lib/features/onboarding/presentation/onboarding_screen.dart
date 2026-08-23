@@ -353,7 +353,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       namaController: _namaController,
                       homeTypeController: _homeTypeController,
                       specialNeeds: _specialNeeds,
-                      onSpecialNeedsChanged: (val) => setState(() => _specialNeeds = val),
+                      onSpecialNeedsChanged: (val) =>
+                          setState(() => _specialNeeds = val),
                       homeAddress: _homeAddress,
                       isLoading: _isLoading && _currentIndex == 3,
                       onSubmit: _handleSubmit,
@@ -380,13 +381,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           if (context.mounted) {
                             final selectedLocation =
                                 await Navigator.push<(LatLng, String)>(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => HomeLocationPickerScreen(
-                                  initialLocation: initialLatLng,
-                                ),
-                              ),
-                            );
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => HomeLocationPickerScreen(
+                                      initialLocation: initialLatLng,
+                                    ),
+                                  ),
+                                );
 
                             if (selectedLocation != null && context.mounted) {
                               setState(() {
@@ -659,19 +660,31 @@ class _IdentityFormSlide extends StatelessWidget {
                             items: const [
                               DropdownMenuItem(
                                 value: 'Tidak Ada',
-                                child: Text('Tidak Ada (Mandiri)', overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  'Tidak Ada (Mandiri)',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               DropdownMenuItem(
                                 value: 'Pengguna Kursi Roda',
-                                child: Text('Pengguna Kursi Roda / Fisik', overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  'Pengguna Kursi Roda / Fisik',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               DropdownMenuItem(
                                 value: 'Lansia / Pendamping Balita',
-                                child: Text('Lansia / Pendamping Balita', overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  'Lansia / Pendamping Balita',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               DropdownMenuItem(
                                 value: 'Gangguan Penglihatan / Pendengaran',
-                                child: Text('Sensori (Penglihatan/Pendengaran)', overflow: TextOverflow.ellipsis),
+                                child: Text(
+                                  'Sensori (Penglihatan/Pendengaran)',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                             onChanged: (val) {

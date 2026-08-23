@@ -63,20 +63,25 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
         final displayName = response.data['display_name'] as String?;
         if (mounted) {
           setState(() {
-            _currentAddress = displayName ??
+            _currentAddress =
+                displayName ??
                 "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}";
           });
         }
       } else {
         if (mounted) {
-          setState(() => _currentAddress =
-              "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}");
+          setState(
+            () => _currentAddress =
+                "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}",
+          );
         }
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _currentAddress =
-            "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}");
+        setState(
+          () => _currentAddress =
+              "Koordinat: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}",
+        );
       }
     }
   }
@@ -131,9 +136,7 @@ class _HomeLocationPickerScreenState extends State<HomeLocationPickerScreen> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.suar.app',
                 tileProvider: FMTCTileProvider(
-                  stores: const {
-                    'evacuation_map': BrowseStoreStrategy.read,
-                  },
+                  stores: const {'evacuation_map': BrowseStoreStrategy.read},
                 ),
                 errorTileCallback: (tile, error, stackTrace) {
                   debugPrint('Tile error (mode luring): $error');

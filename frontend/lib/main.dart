@@ -97,12 +97,7 @@ class MainApp extends ConsumerWidget {
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
       builder: (context, child) {
-        return Stack(
-          children: [
-            ?child,
-            const NetworkStatusChip(),
-          ],
-        );
+        return Stack(children: [?child, const NetworkStatusChip()]);
       },
     );
   }

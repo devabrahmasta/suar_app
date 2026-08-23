@@ -78,8 +78,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ],
           ),
         ),
-        error: (err, stack) => _buildMapContent(const LatLng(-7.79, 110.36), routeAsync, activeGempaPoint, activeGempaColor),
-        data: (currentLocation) => _buildMapContent(currentLocation, routeAsync, activeGempaPoint, activeGempaColor),
+        error: (err, stack) => _buildMapContent(
+          const LatLng(-7.79, 110.36),
+          routeAsync,
+          activeGempaPoint,
+          activeGempaColor,
+        ),
+        data: (currentLocation) => _buildMapContent(
+          currentLocation,
+          routeAsync,
+          activeGempaPoint,
+          activeGempaColor,
+        ),
       ),
     );
   }
@@ -109,9 +119,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.suar.app',
               tileProvider: FMTCTileProvider(
-                stores: const {
-                  'evacuation_map': BrowseStoreStrategy.read,
-                },
+                stores: const {'evacuation_map': BrowseStoreStrategy.read},
               ),
             ),
 
@@ -129,245 +137,233 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 ],
               ),
 
-                  // user position layer
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: currentLocation,
-                        width: 50,
-                        height: 50,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryLight.withValues(
-                              alpha: 0.5,
-                            ),
-                            shape: BoxShape.circle,
+            // user position layer
+            MarkerLayer(
+              markers: [
+                Marker(
+                  point: currentLocation,
+                  width: 50,
+                  height: 50,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLight.withValues(alpha: 0.5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.my_location,
+                        color: AppColors.primary,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            // titik episentrum gempa yang sedang memicu alert aktif
+            // (hanya 1 titik statis, style sama seperti "TITIK GEMPA
+            // LIVE" di risk_map_screen.dart — tidak ada toggle/opsi
+            // tambahan)
+            if (activeGempaPoint != null)
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: activeGempaPoint,
+                    width: 60,
+                    height: 60,
+                    child: RippleMarker(color: activeGempaColor),
+                  ),
+                ],
+              ),
+          ],
+        ),
+
+        Positioned(
+          top: 16,
+          left: 16,
+          right: 16,
+          child: routeAsync.when(
+            data: (routeData) {
+              if (routeData == null) {
+                return Card(
+                  color: AppColors.surface,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryLight.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.waves,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      title: const Text(
+                        'Simulasi Evakuasi',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: const Text(
+                        'Bencana Tsunami',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      trailing: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          textStyle: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
                           ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.my_location,
-                              color: AppColors.primary,
-                              size: 28,
+                        ),
+                        onPressed: () {
+                          ref
+                              .read(evacuationRouteProvider.notifier)
+                              .findRouteManual();
+                        },
+                        child: const Text('CARI RUTE'),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              return Card(
+                color: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: AppColors.success,
+                            size: 24,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'RUTE AMAN DITEMUKAN',
+                            style: TextStyle(
+                              color: AppColors.success,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
                             ),
                           ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Ikuti garis rute pada peta menuju dataran tinggi. Segera tinggalkan area pesisir sekarang juga!',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 13,
+                          height: 1.4,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
-
-                  // titik episentrum gempa yang sedang memicu alert aktif
-                  // (hanya 1 titik statis, style sama seperti "TITIK GEMPA
-                  // LIVE" di risk_map_screen.dart — tidak ada toggle/opsi
-                  // tambahan)
-                  if (activeGempaPoint != null)
-                    MarkerLayer(
-                      markers: [
-                        Marker(
-                          point: activeGempaPoint,
-                          width: 60,
-                          height: 60,
-                          child: RippleMarker(color: activeGempaColor),
-                        ),
-                      ],
-                    ),
-                ],
+                ),
+              );
+            },
+            loading: () => const Card(
+              color: AppColors.surface,
+              child: ListTile(
+                leading: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                title: Text(
+                  'Menganalisis Topografi...',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  'Mencari rute ke dataran tinggi terdekat',
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
-
-              Positioned(
-                top: 16,
-                left: 16,
-                right: 16,
-                child: routeAsync.when(
-                  data: (routeData) {
-                    if (routeData == null) {
-                      return Card(
-                        color: AppColors.surface,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryLight.withValues(
-                                  alpha: 0.3,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.waves,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            title: const Text(
-                              'Simulasi Evakuasi',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: const Text(
-                              'Bencana Tsunami',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            trailing: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                textStyle: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              onPressed: () {
-                                ref
-                                    .read(evacuationRouteProvider.notifier)
-                                    .findRouteManual();
-                              },
-                              child: const Text('CARI RUTE'),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-
-                    return Card(
-                      color: AppColors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            error: (err, stack) {
+              if (err is VerticalEvacuationException) {
+                return Card(
+                  color: AppColors.danger,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
                           children: [
-                            const Row(
-                              children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: AppColors.success,
-                                  size: 24,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'RUTE AMAN DITEMUKAN',
-                                  style: TextStyle(
-                                    color: AppColors.success,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
+                            Icon(
+                              Icons.warning_amber_rounded,
+                              color: AppColors.white,
+                              size: 28,
                             ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Ikuti garis rute pada peta menuju dataran tinggi. Segera tinggalkan area pesisir sekarang juga!',
+                            SizedBox(width: 8),
+                            Text(
+                              'EVAKUASI VERTIKAL!',
                               style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 13,
-                                height: 1.4,
-                                fontWeight: FontWeight.w500,
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  },
-                  loading: () => const Card(
-                    color: AppColors.surface,
-                    child: ListTile(
-                      leading: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      title: Text(
-                        'Menganalisis Topografi...',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(
-                        'Mencari rute ke dataran tinggi terdekat',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ),
-                  error: (err, stack) {
-                    if (err is VerticalEvacuationException) {
-                      return Card(
-                        color: AppColors.danger,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Row(
-                                children: [
-                                  Icon(
-                                    Icons.warning_amber_rounded,
-                                    color: AppColors.white,
-                                    size: 28,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'EVAKUASI VERTIKAL!',
-                                    style: TextStyle(
-                                      color: AppColors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                err.message,
-                                style: const TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 14,
-                                  height: 1.4,
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 8),
+                        Text(
+                          err.message,
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontSize: 14,
+                            height: 1.4,
                           ),
                         ),
-                      );
-                    }
-                    return Card(
-                      color: AppColors.warningLight,
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.wifi_off,
-                          color: AppColors.warning,
-                        ),
-                        title: const Text('Gagal membuat rute darat'),
-                        subtitle: Text(
-                          err.toString(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    );
-                  },
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return Card(
+                color: AppColors.warningLight,
+                child: ListTile(
+                  leading: const Icon(Icons.wifi_off, color: AppColors.warning),
+                  title: const Text('Gagal membuat rute darat'),
+                  subtitle: Text(
+                    err.toString(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
+              );
+            },
+          ),
+        ),
 
-              Positioned(
-                bottom: 24,
-                right: 16,
-                child: FloatingActionButton(
-                  heroTag: 'recenter_fab',
-                  backgroundColor: AppColors.white,
-                  foregroundColor: AppColors.primary,
-                  onPressed: _isMapReady
-                      ? () {
-                          _mapController.move(currentLocation, 16.0);
-                        }
-                      : null,
-                  child: const Icon(Icons.center_focus_strong),
-                ),
-              ),
-            ],
-          );
+        Positioned(
+          bottom: 24,
+          right: 16,
+          child: FloatingActionButton(
+            heroTag: 'recenter_fab',
+            backgroundColor: AppColors.white,
+            foregroundColor: AppColors.primary,
+            onPressed: _isMapReady
+                ? () {
+                    _mapController.move(currentLocation, 16.0);
+                  }
+                : null,
+            child: const Icon(Icons.center_focus_strong),
+          ),
+        ),
+      ],
+    );
   }
 }

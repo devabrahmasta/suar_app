@@ -2,6 +2,7 @@ import { Controller, Post, Get, Body, Query, Param, Res, Header } from '@nestjs/
 import { AlertsService } from './alerts.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam } from '@nestjs/swagger';
 import type { Response as ExpressResponse } from 'express';
+import { CalculateImpactDto } from './dto/calculate-impact.dto';
 
 @ApiTags('alerts')
 @Controller('alerts')
@@ -41,6 +42,23 @@ export class AlertsController {
     },
   ) {
     return this.alertsService.simulateAlert(body);
+  }
+
+  @Post('calculate-impact')
+  @ApiOperation({
+    summary: 'Calculate user impact distance and estimated MMI intensity for Jawa-Bali region',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Returns distance in KM, estimated MMI, shaking level, and tsunami status.',
+  })
+  async calculateImpact(@Body() dto: CalculateImpactDto) {
+    return this.alertsService.calculateUserImpact(
+      dto.latitude,
+      dto.longitude,
+      dto.earthquakeId,
+    );
   }
 
   @Get('latest')

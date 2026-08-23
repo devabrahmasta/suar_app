@@ -13,7 +13,9 @@ class SuarBackendService {
   final String _baseUrl;
 
   SuarBackendService(this._dio, this._prefs)
-      : _baseUrl = dotenv.env['BACKEND_URL'] ?? 'https://lintangnv-suar-backend.hf.space';
+    : _baseUrl =
+          dotenv.env['BACKEND_URL'] ??
+          'https://lintangnv-suar-backend.hf.space';
 
   Future<void> registerDevice({
     required String deviceId,
@@ -23,7 +25,9 @@ class SuarBackendService {
     double? homeLongitude,
   }) async {
     try {
-      debugPrint('SuarBackendService: Mengirim permintaan registerDevice untuk perangkat: $deviceId');
+      debugPrint(
+        'SuarBackendService: Mengirim permintaan registerDevice untuk perangkat: $deviceId',
+      );
       final response = await _dio.post(
         '$_baseUrl/users/register-device',
         data: {
@@ -34,7 +38,9 @@ class SuarBackendService {
           'homeLongitude': homeLongitude,
         },
       );
-      debugPrint('SuarBackendService: Respons registerDevice status: ${response.statusCode}, data: ${response.data}');
+      debugPrint(
+        'SuarBackendService: Respons registerDevice status: ${response.statusCode}, data: ${response.data}',
+      );
       if (response.statusCode != 201 && response.statusCode != 200) {
         throw Exception('Gagal registrasi perangkat: ${response.statusCode}');
       }
@@ -50,7 +56,9 @@ class SuarBackendService {
     required double longitude,
   }) async {
     try {
-      debugPrint('SuarBackendService: Mengirim permintaan updateLocation untuk perangkat: $deviceId ke koordinat: ($latitude, $longitude)');
+      debugPrint(
+        'SuarBackendService: Mengirim permintaan updateLocation untuk perangkat: $deviceId ke koordinat: ($latitude, $longitude)',
+      );
       final response = await _dio.post(
         '$_baseUrl/users/update-location',
         data: {
@@ -59,7 +67,9 @@ class SuarBackendService {
           'longitude': longitude,
         },
       );
-      debugPrint('SuarBackendService: Respons updateLocation status: ${response.statusCode}');
+      debugPrint(
+        'SuarBackendService: Respons updateLocation status: ${response.statusCode}',
+      );
       if (response.statusCode != 201 && response.statusCode != 200) {
         throw Exception('Gagal memperbarui lokasi: ${response.statusCode}');
       }
@@ -76,7 +86,9 @@ class SuarBackendService {
     required double latitude,
     required double longitude,
   }) async {
-    debugPrint('SuarBackendService: Memulai pengecekan pembaruan lokasi teroptimasi.');
+    debugPrint(
+      'SuarBackendService: Memulai pengecekan pembaruan lokasi teroptimasi.',
+    );
     final lastLat = _prefs.getDouble('last_sent_latitude');
     final lastLng = _prefs.getDouble('last_sent_longitude');
     final lastTimeString = _prefs.getString('last_sent_time');
@@ -96,12 +108,18 @@ class SuarBackendService {
       );
 
       // Hitung selisih waktu dari pembaruan terakhir
-      final lastTime = DateTime.tryParse(lastTimeString) ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final lastTime =
+          DateTime.tryParse(lastTimeString) ??
+          DateTime.fromMillisecondsSinceEpoch(0);
       final minutesElapsed = DateTime.now().difference(lastTime).inMinutes;
 
       debugPrint('SuarBackendService: Info Optimasi:');
-      debugPrint('  - Jarak Pergeseran: ${distanceMeters.toStringAsFixed(2)}m (Threshold: 1000m)');
-      debugPrint('  - Selisih Waktu: ${minutesElapsed}menit (Threshold: 30menit)');
+      debugPrint(
+        '  - Jarak Pergeseran: ${distanceMeters.toStringAsFixed(2)}m (Threshold: 1000m)',
+      );
+      debugPrint(
+        '  - Selisih Waktu: ${minutesElapsed}menit (Threshold: 30menit)',
+      );
 
       // Threshold: Bergerak >= 1000m (1 km) ATAU Waktu >= 30 menit
       if (distanceMeters >= 1000 || minutesElapsed >= 30) {
@@ -109,7 +127,9 @@ class SuarBackendService {
       }
     }
 
-    debugPrint('SuarBackendService: Keputusan Pembaruan -> shouldUpdate = $shouldUpdate');
+    debugPrint(
+      'SuarBackendService: Keputusan Pembaruan -> shouldUpdate = $shouldUpdate',
+    );
 
     if (shouldUpdate) {
       await updateLocation(
@@ -121,11 +141,18 @@ class SuarBackendService {
       // Simpan koordinat dan waktu terbaru di cache lokal
       await _prefs.setDouble('last_sent_latitude', latitude);
       await _prefs.setDouble('last_sent_longitude', longitude);
-      await _prefs.setString('last_sent_time', DateTime.now().toIso8601String());
+      await _prefs.setString(
+        'last_sent_time',
+        DateTime.now().toIso8601String(),
+      );
 
-      debugPrint('SuarBackendService: Cache koordinat dan waktu terbaru diperbarui.');
+      debugPrint(
+        'SuarBackendService: Cache koordinat dan waktu terbaru diperbarui.',
+      );
     } else {
-      debugPrint('SuarBackendService: Pengiriman dilewati untuk efisiensi daya & jaringan.');
+      debugPrint(
+        'SuarBackendService: Pengiriman dilewati untuk efisiensi daya & jaringan.',
+      );
     }
   }
 
@@ -138,7 +165,9 @@ class SuarBackendService {
     required String wilayah,
   }) async {
     try {
-      debugPrint('SuarBackendService: Mengirim permintaan simulasi gempa ke backend: $wilayah');
+      debugPrint(
+        'SuarBackendService: Mengirim permintaan simulasi gempa ke backend: $wilayah',
+      );
       final response = await _dio.post(
         '$_baseUrl/alerts/simulate',
         data: {
@@ -150,14 +179,18 @@ class SuarBackendService {
           'wilayah': wilayah,
         },
       );
-      debugPrint('SuarBackendService: Respons simulasi status: ${response.statusCode}');
+      debugPrint(
+        'SuarBackendService: Respons simulasi status: ${response.statusCode}',
+      );
       if (response.statusCode == 201 || response.statusCode == 200) {
         return Map<String, dynamic>.from(response.data);
       } else {
         throw Exception('Gagal melakukan simulasi: ${response.statusCode}');
       }
     } catch (e) {
-      debugPrint('SuarBackendService Error simulateAlert: $e. Fallback ke respons mock lokal.');
+      debugPrint(
+        'SuarBackendService Error simulateAlert: $e. Fallback ke respons mock lokal.',
+      );
       return {
         'status': 'success',
         'message': 'Simulasi gempa berhasil (Mode Standalone/Mock)',
@@ -174,4 +207,3 @@ final suarBackendServiceProvider = Provider<SuarBackendService>((ref) {
     ref.watch(sharedPreferencesProvider),
   );
 });
-

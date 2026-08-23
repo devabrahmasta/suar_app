@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:suar_app/features/map_evacuation/presentation/geofence_provider.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/alert_text_utils.dart';
 import '../domain/triage_result_model.dart';
 import 'ews_provider.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -378,10 +377,9 @@ class HomeScreen extends ConsumerWidget {
     final gempa = alertData.gempa;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
     final bgColor = isEvakuasi ? AppColors.danger : AppColors.warning;
-    final headline = resolveAlertHeadline(
-      gempa.potensi,
-      fallback: isEvakuasi ? 'POTENSI TSUNAMI' : 'PERINGATAN GEMPA BUMI',
-    );
+    final headline = gempa.potensi.isNotEmpty
+        ? gempa.potensi.toUpperCase()
+        : (isEvakuasi ? 'POTENSI TSUNAMI' : 'PERINGATAN GEMPA BUMI');
     final statusLine =
         'STATUS: ${result.statusTindakan} · '
         '${isEvakuasi ? "ZONA MERAH TSUNAMI" : "ZONA WASPADA"}';
@@ -397,7 +395,7 @@ class HomeScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 width: 44,
@@ -563,7 +561,7 @@ class HomeScreen extends ConsumerWidget {
           if (remaining > 0) ...[
             const SizedBox(height: 10),
             Text(
-              '$remaining langkah berikutnya ada di rincian peringatan.',
+              'Langkah berikutnya ada di rincian peringatan.',
               style: const TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,

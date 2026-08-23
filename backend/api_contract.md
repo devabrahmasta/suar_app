@@ -18,7 +18,7 @@
 
 Aplikasi **SUAR** beroperasi dengan arsitektur **Hybrid Online-Offline (Offline-First)**:
 1. **Mode Online (Cloud Backend):** Selagi koneksi seluler/internet tersedia, perangkat berkomunikasi dengan **NestJS Cloud Backend + PostGIS** untuk registrasi FCM token, sinkronisasi titik lokasi geospasial, polling gempa real-time BMKG, pengecekan zona merah tsunami, serta sinkronisasi daya tampung posko evakuasi.
-2. **Mode Offline (Mesh Network + Local Cache):** Saat internet mati akibat bencana, frontend beralih ke **Bluetooth/WiFi Direct Mesh Network** dan data geospasial lokal (SQLite FMTC + GeoJSON asset) dengan *graceful degradation*.
+2. **Mode Offline (Local Cache):** Saat internet mati akibat bencana, frontend beralih ke data geospasial lokal (SQLite FMTC + GeoJSON asset) dengan *graceful degradation*.
 
 ```
 +------------------+         REST / Tile          +-----------------------+
@@ -30,7 +30,7 @@ Aplikasi **SUAR** beroperasi dengan arsitektur **Hybrid Online-Offline (Offline-
         v                                                    v
 +------------------+                              +-----------------------+
 | Local SQLite /   |                              | OpenQuake Python      |
-| Mesh Network     |                              | Hazard Microservice   |
+| Local Storage    |                              | Hazard Microservice   |
 +------------------+                              +-----------------------+
 ```
 
@@ -541,7 +541,7 @@ Agar pengembangan Flutter tidak terhambat saat backend sedang tahap penyelesaian
    Frontend wajib mengimplementasikan pola 3 lapis fallback:
    * **Lapis 1 (Utama):** NestJS Cloud Backend (`https://suar-backend-dev.hf.space/alerts/latest`).
    * **Lapis 2 (Fallback Online 1):** API BMKG Langsung (`https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json`).
-   * **Lapis 3 (Fallback Offline Total):** GeoJSON Aset Lokal (`assets/data/tsunami_jawa_bali_mobile.geojson`) + Bluetooth/WiFi Direct Mesh Chat.
+   * **Lapis 3 (Fallback Offline Total):** GeoJSON Aset Lokal (`assets/data/tsunami_jawa_bali_mobile.geojson`).
 
 ---
 *Dokumen ini bersifat resmi dan terkunci sebagai acuan integrasi Frontend SUAR App v1.0.0.*
