@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart';
+import '../data/danger_zone_geojson_loader.dart';
 import '../data/smart_evacuation_service.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import '../../ews_ai/presentation/ews_provider.dart';
@@ -19,6 +20,20 @@ class MapScreen extends ConsumerStatefulWidget {
 class _MapScreenState extends ConsumerState<MapScreen> {
   final MapController _mapController = MapController();
   bool _isMapReady = false;
+
+  bool _showDangerZone = true;
+  List<Polygon> _dangerZonePolygons = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDangerZone();
+  }
+
+  Future<void> _loadDangerZone() async {
+    final polygons = await loadDangerZonePolygons();
+    if (mounted) setState(() => _dangerZonePolygons = polygons);
+  }
 
   /// Mem-parsing string koordinat "lat,lng" milik gempa aktif menjadi
   /// [LatLng]. Mengembalikan null jika format tidak valid atau hasilnya
@@ -122,6 +137,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 stores: const {'evacuation_map': BrowseStoreStrategy.read},
               ),
             ),
+
+            // Layer Zona Bahaya Tsunami
+            if (_showDangerZone) PolygonLayer(polygons: _dangerZonePolygons),
 
             if (routeAsync.hasValue &&
                 routeAsync.value != null &&
@@ -361,6 +379,23 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   }
                 : null,
             child: const Icon(Icons.center_focus_strong),
+          ),
+        ),
+
+        Positioned(
+          bottom: 96, // 24 (recenter) + 56 (tinggi FAB) + 16 (jarak)
+          right: 16,
+          child: FloatingActionButton(
+            heroTag: 'danger_zone_toggle_map_fab',
+            backgroundColor: AppColors.white,
+            foregroundColor: _showDangerZone
+                ? AppColors.danger
+                : AppColors.textSecondary,
+            onPressed: () =>
+                setState(() => _showDangerZone = !_showDangerZone),
+            child: Icon(
+              _showDangerZone ? Icons.layers : Icons.layers_outlined,
+            ),
           ),
         ),
       ],

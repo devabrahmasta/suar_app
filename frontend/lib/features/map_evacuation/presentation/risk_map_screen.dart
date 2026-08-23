@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/core/widgets/icon_circle_badge.dart';
+import '../data/danger_zone_geojson_loader.dart';
 import 'map_provider.dart';
 
 class RiskMapScreen extends ConsumerStatefulWidget {
@@ -29,6 +30,20 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen>
   ];
 
   AnimationController? _moveController;
+
+  bool _showDangerZone = true;
+  List<Polygon> _dangerZonePolygons = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDangerZone();
+  }
+
+  Future<void> _loadDangerZone() async {
+    final polygons = await loadDangerZonePolygons();
+    if (mounted) setState(() => _dangerZonePolygons = polygons);
+  }
 
   @override
   void dispose() {
@@ -524,6 +539,10 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen>
                     userAgentPackageName: 'com.suar.app',
                   ),
 
+                  // Layer Zona Bahaya Tsunami
+                  if (_showDangerZone)
+                    PolygonLayer(polygons: _dangerZonePolygons),
+
                   // TITIK GEMPA LIVE
                   if (recentQuakesAsync.value != null)
                     MarkerLayer(
@@ -591,6 +610,30 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen>
                     _mapController.move(currentLocation, 14.0);
                   },
                   child: const Icon(Icons.my_location),
+                ),
+              ),
+
+              Positioned(
+                bottom:
+                    MediaQuery.sizeOf(context).height * _sheetMinSize +
+                    16 +
+                    72,
+                right: 16,
+                child: FloatingActionButton(
+                  heroTag: 'danger_zone_toggle_risk_map_fab',
+                  backgroundColor: AppColors.surface,
+                  foregroundColor: _showDangerZone
+                      ? AppColors.danger
+                      : AppColors.textSecondary,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onPressed: () =>
+                      setState(() => _showDangerZone = !_showDangerZone),
+                  child: Icon(
+                    _showDangerZone ? Icons.layers : Icons.layers_outlined,
+                  ),
                 ),
               ),
 
