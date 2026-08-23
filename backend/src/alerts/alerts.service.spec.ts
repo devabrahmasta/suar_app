@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { AlertsService } from './alerts.service';
 import { EarthquakeAlert } from './entities/earthquake-alert.entity';
 import { UserDevice } from '../users/entities/user-device.entity';
+import { TsunamiHazardPolygon } from './entities/tsunami-hazard.entity';
 import { FirebaseService } from '../firebase/firebase.service';
 
 describe('AlertsService', () => {
@@ -52,6 +53,13 @@ describe('AlertsService', () => {
         {
           provide: getRepositoryToken(UserDevice),
           useValue: mockDeviceRepository,
+        },
+        {
+          provide: getRepositoryToken(TsunamiHazardPolygon),
+          useValue: {
+            find: jest.fn(),
+            findOne: jest.fn(),
+          },
         },
         {
           provide: FirebaseService,
@@ -304,6 +312,52 @@ describe('AlertsService', () => {
 
       await expect(service.pollBmkg()).resolves.not.toThrow();
       expect(alertRepository.findOne).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('isJawaBaliRegion', () => {
+    it('should return true for coordinates inside Jawa & Bali', () => {
+      expect(service.isJawaBaliRegion(-7.79, 110.36)).toBe(true); // Yogyakarta
+      expect(service.isJawaBaliRegion(-8.40, 115.18)).toBe(true); // Bali
+      expect(service.isJawaBaliRegion(-6.20, 106.81)).toBe(true); // Jakarta
+    });
+
+    it('should return false for coordinates outside Jawa & Bali', () => {
+      expect(service.isJawaBaliRegion(3.59, 98.67)).toBe(false); // Medan, Sumatra
+      expect(service.isJawaBaliRegion(-5.14, 119.42)).toBe(false); // Makassar, Sulawesi
+    });
+  });
+
+  describe('calculateUserImpact', () => {
+    it('should calculate distance, estimated MMI, and shaking level for a valid alert', async () => {
+      const mockAlert: Partial<EarthquakeAlert> = {
+        id: 'test-uuid',
+        bmkgId: 'bmkg-123',
+        magnitude: 6.8,
+        depth: '15 km',
+        wilayah: 'Pesisir Selatan Jawa',
+        potensi: 'Berpotensi tsunami',
+        epicenter: { type: 'Point', coordinates: [110.36, -8.12] },
+        alertTime: new Date(),
+      };
+
+      mockAlertRepository.findOne.mockResolvedValue(mockAlert);
+
+      const result = await service.calculateUserImpact(-7.79, 110.36, 'test-uuid');
+
+      expect(result.distanceKm).toBeGreaterThan(0);
+      expect(result.estimatedMmi).toBeGreaterThan(1);
+      expect(result.isTsunamiPotential).toBe(true);
+      expect(result.isUserInJawaBaliScope).toBe(true);
+      expect(result.shakingLevel).toBeDefined();
+    });
+
+    it('should throw NotFoundException if alert is not found', async () => {
+      mockAlertRepository.findOne.mockResolvedValue(null);
+
+      await expect(
+        service.calculateUserImpact(-7.79, 110.36, 'invalid-id'),
+      ).rejects.toThrow('Earthquake alert with ID \'invalid-id\' not found.');
     });
   });
 });

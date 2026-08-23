@@ -1,6 +1,6 @@
 # 📱 SUAR Mobile App (Flutter Client)
 
-> **Offline-First Disaster Mitigation Mobile Application with AI Emergency Triage, OpenQuake Shakemap Contour Visualizer, Smart Offline Navigation, and P2P Mesh Network Chat.**
+> **Offline-First Disaster Mitigation Mobile Application with AI Emergency Triage, OpenQuake Shakemap Contour Visualizer, and Smart Offline Navigation.**
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.10%2B-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.0%2B-%230175C2.svg?style=for-the-badge&logo=Dart&logoColor=white)](https://dart.dev)
@@ -12,7 +12,7 @@
 
 ## 📖 Overview
 
-Aplikasi **SUAR Mobile** didesain khusus untuk situasi darurat bencana alam (gempa bumi & tsunami) ketika jaringan telekomunikasi seluler dan internet berisiko lumpuh total. Aplikasi ini bekerja dengan prinsip **Offline-First**, mengunduh peta dan rute evakuasi secara otomatis sebelum sinyal hilang, serta menyediakan jaringan komunikasi peer-to-peer (P2P Mesh Network) antar-hp korban tanpa memerlukan pulsa, SIM card, maupun kuota internet.
+Aplikasi **SUAR Mobile** didesain khusus untuk situasi darurat bencana alam (gempa bumi & tsunami) ketika jaringan telekomunikasi seluler dan internet berisiko lumpuh total. Aplikasi ini bekerja dengan prinsip **Offline-First**, mengunduh peta dan rute evakuasi secara otomatis sebelum sinyal hilang.
 
 ---
 
@@ -35,12 +35,7 @@ Aplikasi **SUAR Mobile** didesain khusus untuk situasi darurat bencana alam (gem
 - **Hybrid Routing & Elevation Snapping:** Mencari dataran tinggi aman terdekat (>5 meter) menggunakan algoritma 8-arah mata angin, memverifikasi rute pejalan kaki dengan OpenRouteService (ORS), dan menyimpan rute secara lokal.
 - **Navigasi GPS Luring:** Menampilkan peta luring, rute evakuasi, dan indikator posisi GPS satelit tanpa koneksi internet.
 
-### 📡 4. Jaringan Obrolan Mesh P2P (Offline Mesh Chat)
-- **Auto-Discovery:** Memindai perangkat SUAR terdekat menggunakan Bluetooth & Wi-Fi Direct via `nearby_connections`.
-- **Multi-Hop Relay Protocol:** Mengirimkan pesan darurat melalui jalur estafet antar-HP (hingga 5 hop) untuk menjangkau korban di luar jangkauan sinyal Bluetooth langsung.
-- **Channel Publik & Privat:** Saluran siaran darurat massal (*Emergency Broadcast*) dan pesan pribadi 1-on-1.
-
-### 🔔 5. Background Monitoring & Safety Net
+### 🔔 4. Background Monitoring & Safety Net
 - **Background Polling:** Memantau aktivitas seismik BMKG di latar belakang via `workmanager` dan Dart isolation.
 - **Foreground Service:** Menjaga aplikasi tetap aktif di memori Android saat situasi darurat.
 
@@ -60,7 +55,6 @@ frontend/lib/
 ├── features/                    # Modul Berbasis Fitur (Feature-First)
 │   ├── ews_ai/                  # Fitur deteksi EWS, AI Gemini Triage, & Interactive Simulator (OpenQuake Shakemap)
 │   ├── map_evacuation/          # Peta luring, FMTC tile cache, ORS routing, & Navigasi GPS
-│   ├── offline_mesh_chat/       # Komunikasi P2P Mesh Network (Bluetooth/Wi-Fi Direct)
 │   ├── onboarding/              # Flow izin akses (GPS, Bluetooth, Battery Optimization)
 │   ├── resources/               # Panduan tanggap bencana luring & kontak darurat
 │   └── user/                    # Profil pengguna & Developer Debug Panel
@@ -80,7 +74,6 @@ frontend/lib/
   - `flutter_map` (v7.x) — Rendering peta interaktif
   - `flutter_map_tile_caching` (FMTC) — Storage map tiles luring SQLite
   - `latlong2` & `geolocator` — Kalkulasi posisi geospasial & GPS satelit
-- **P2P Mesh Network:** `nearby_connections` — Bluetooth & Wi-Fi Direct P2P Engine
 - **AI & Networking:** `google_generative_ai` (Gemini 1.5 Flash) & `dio`
 - **Background Task:** `workmanager` & `flutter_local_notifications`
 

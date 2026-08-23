@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit, Optional } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit, Optional, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Interval } from '@nestjs/schedule';
@@ -304,8 +304,12 @@ export class AlertsService implements OnModuleInit {
     };
 
     // Filter thresholds: Magnitude >= 5.0 and Depth < 100 km (tsunami danger limit)
-    // For simulation, we always pass threshold check
-    const passesThreshold = isSimulation || (magnitude >= 5.0 && depth < 100);
+    // Filter by Jawa-Bali regional boundary & impact radius
+    const isJawaBali = this.isJawaBaliRegion(latitude, longitude);
+    const reachesJawaBali = isJawaBali || this.impactsJawaBali(latitude, longitude, magnitude);
+
+    const passesThreshold =
+      isSimulation || (magnitude >= 5.0 && depth < 100 && reachesJawaBali);
 
     const newAlert = this.alertRepository.create({
       bmkgId,
@@ -564,6 +568,134 @@ export class AlertsService implements OnModuleInit {
       where: {},
       order: { alertTime: 'DESC' },
     });
+  }
+
+  isJawaBaliRegion(latitude: number, longitude: number): boolean {
+    const minLat = -9.20;
+    const maxLat = -5.00;
+    const minLon = 105.00;
+    const maxLon = 116.00;
+    return (
+      latitude >= minLat &&
+      latitude <= maxLat &&
+      longitude >= minLon &&
+      longitude <= maxLon
+    );
+  }
+
+  impactsJawaBali(
+    latitude: number,
+    longitude: number,
+    magnitude: number,
+  ): boolean {
+    const estimatedRadiusKm = magnitude >= 6.5 ? 400 : magnitude >= 5.5 ? 200 : 100;
+    const minLat = -9.20;
+    const maxLat = -5.00;
+    const minLon = 105.00;
+    const maxLon = 116.00;
+
+    const closestLat = Math.max(minLat, Math.min(latitude, maxLat));
+    const closestLon = Math.max(minLon, Math.min(longitude, maxLon));
+
+    const distanceKm = this.calculateHaversineDistance(
+      latitude,
+      longitude,
+      closestLat,
+      closestLon,
+    );
+
+    return distanceKm <= estimatedRadiusKm;
+  }
+
+  async calculateUserImpact(
+    latitude: number,
+    longitude: number,
+    earthquakeId: string,
+  ) {
+    let alert = await this.alertRepository.findOne({
+      where: { id: earthquakeId },
+    });
+
+    if (!alert) {
+      alert = await this.alertRepository.findOne({
+        where: { bmkgId: earthquakeId },
+      });
+    }
+
+    if (!alert) {
+      throw new NotFoundException(
+        `Earthquake alert with ID '${earthquakeId}' not found.`,
+      );
+    }
+
+    const eqLon = alert.epicenter.coordinates[0];
+    const eqLat = alert.epicenter.coordinates[1];
+
+    const distanceKm = this.calculateHaversineDistance(
+      latitude,
+      longitude,
+      eqLat,
+      eqLon,
+    );
+
+    const magnitude = Number(alert.magnitude);
+    const depthKm = parseInt(alert.depth.replace(/[^0-9]/g, ''), 10) || 10;
+    const hypocentralDist = Math.sqrt(distanceKm * distanceKm + depthKm * depthKm);
+
+    const pgaGal =
+      (108.4 * Math.pow(10, 0.299 * magnitude)) /
+      Math.pow(hypocentralDist + 25, 1.2);
+    const mmi = Math.max(
+      1,
+      Math.min(12, Number((3.66 * Math.log10(pgaGal) - 1.66).toFixed(1))),
+    );
+
+    let shakingLevel = 'MINOR';
+    if (mmi >= 7) shakingLevel = 'VERY_SEVERE';
+    else if (mmi >= 5) shakingLevel = 'MODERATE';
+    else if (mmi >= 3) shakingLevel = 'LIGHT';
+
+    const isTsunamiPotential =
+      !alert.potensi.toLowerCase().includes('tidak berpotensi') &&
+      (alert.potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5);
+
+    const isUserInJawaBali = this.isJawaBaliRegion(latitude, longitude);
+
+    return {
+      earthquakeId: alert.id,
+      bmkgId: alert.bmkgId,
+      magnitude: alert.magnitude,
+      depth: alert.depth,
+      wilayah: alert.wilayah,
+      potensi: alert.potensi,
+      isTsunamiPotential,
+      isUserInJawaBaliScope: isUserInJawaBali,
+      epicenter: { latitude: eqLat, longitude: eqLon },
+      userLocation: { latitude, longitude },
+      distanceKm: Number(distanceKm.toFixed(2)),
+      estimatedMmi: mmi,
+      shakingLevel,
+      alertTime: alert.alertTime,
+    };
+  }
+
+  calculateHaversineDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ): number {
+    const R = 6371; // Earth radius in KM
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   }
 
   // ========================================================
