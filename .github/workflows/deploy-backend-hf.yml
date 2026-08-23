@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'backend/**' # Only trigger when changes are made inside backend/
+      - 'backend/**'
+      - '.github/workflows/deploy-backend-hf.yml'
+  workflow_dispatch:
 
 jobs:
   deploy:
