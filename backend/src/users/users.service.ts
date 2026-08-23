@@ -83,6 +83,7 @@ export class UsersService {
     deviceId: string,
     latitude: number,
     longitude: number,
+    isRedZone?: boolean,
   ): Promise<UserDevice> {
     const device = await this.userDeviceRepository.findOne({
       where: { deviceId },
@@ -101,6 +102,9 @@ export class UsersService {
       coordinates: [longitude, latitude],
     };
     device.vs30 = vs30;
+    if (isRedZone !== undefined) {
+      device.isRedZone = isRedZone;
+    }
     device.lastActive = new Date();
 
     const saved = await this.userDeviceRepository.save(device);
@@ -111,6 +115,7 @@ export class UsersService {
         latitude,
         longitude,
         vs30,
+        isRedZone: saved.isRedZone,
         lastActive: saved.lastActive,
       });
     }

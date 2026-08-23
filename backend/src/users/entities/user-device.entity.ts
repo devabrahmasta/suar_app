@@ -43,6 +43,9 @@ export class UserDevice {
   @Column({ type: 'float', default: 270.0 })
   vs30: number;
 
+  @Column({ name: 'is_red_zone', type: 'boolean', default: false, nullable: true })
+  isRedZone: boolean;
+
   @Column({ name: 'last_active', default: () => 'CURRENT_TIMESTAMP' })
   lastActive: Date;
 
