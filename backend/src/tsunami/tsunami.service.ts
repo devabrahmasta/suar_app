@@ -5,6 +5,7 @@ import { TsunamiHazardPolygon } from '../alerts/entities/tsunami-hazard.entity';
 import * as crypto from 'crypto';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as zlib from 'zlib';
 
 export interface GeoJsonServiceResult {
   buffer: Buffer;
@@ -48,12 +49,12 @@ export class TsunamiService implements OnModuleInit {
           );
         } else {
           this.logger.warn(
-            `⚠️ Table 'tsunami_hazard_polygons' exists in Supabase PostGIS but is empty. Please execute backend/data/tsunami/import_tsunami_hazard_dissolved.sql in Supabase SQL Editor.`,
+            `⚠️ Table 'tsunami_hazard_polygons' exists in Supabase PostGIS but is empty.`,
           );
         }
       } else {
         this.logger.warn(
-          `⚠️ Table 'tsunami_hazard_polygons' not found in Supabase PostGIS. Please execute backend/data/tsunami/import_tsunami_hazard_dissolved.sql in Supabase SQL Editor.`,
+          `⚠️ Table 'tsunami_hazard_polygons' not found in Supabase PostGIS.`,
         );
       }
     } catch (error) {
@@ -68,7 +69,11 @@ export class TsunamiService implements OnModuleInit {
     if (this.cachedGeoJson) return this.cachedGeoJson;
 
     const possiblePaths = [
+      path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
+      path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
+      path.join(process.cwd(), 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(process.cwd(), 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
+      path.join(__dirname, '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(__dirname, '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
     ];
 
@@ -82,25 +87,28 @@ export class TsunamiService implements OnModuleInit {
 
     if (!foundPath) {
       this.logger.warn(
-        `GeoJSON file 'tsunami_jawa_bali_dissolved.geojson' not found on disk. Tried: ${possiblePaths.join(', ')}`,
+        `GeoJSON file 'tsunami_jawa_bali_dissolved.geojson' (or .gz) not found on disk.`,
       );
       return null;
     }
 
     try {
-      const buffer = fs.readFileSync(foundPath);
-      const hash = crypto.createHash('sha256').update(buffer).digest('hex');
+      let fileBuffer = fs.readFileSync(foundPath);
+      if (foundPath.endsWith('.gz')) {
+        fileBuffer = zlib.gunzipSync(fileBuffer);
+      }
+      const hash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
       const etag = `"${hash.substring(0, 16)}"`;
 
       this.cachedGeoJson = {
-        buffer,
+        buffer: fileBuffer,
         etag,
-        filename: path.basename(foundPath),
-        sizeBytes: buffer.length,
+        filename: 'tsunami_jawa_bali_dissolved.geojson',
+        sizeBytes: fileBuffer.length,
       };
 
       this.logger.log(
-        `Loaded GeoJSON asset (${(buffer.length / (1024 * 1024)).toFixed(2)} MB), ETag: ${etag}`,
+        `Loaded GeoJSON asset (${(fileBuffer.length / (1024 * 1024)).toFixed(2)} MB), ETag: ${etag}`,
       );
       return this.cachedGeoJson;
     } catch (error) {
