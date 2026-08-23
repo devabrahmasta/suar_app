@@ -4,7 +4,7 @@
   # 🚨 SUAR Monorepo Ecosystem
   ### *Tetap Menyala Saat Segalanya Padam*
 
-  **Aplikasi Mitigasi Bencana *Offline-First* dengan Integrasi Pemodelan Bahaya Seismik OpenQuake GMPE, Amplifikasi Tanah Vs30, AI Triage, Rute Evakuasi Cerdas, Pemantauan Latar Belakang, dan Komunikasi P2P Mesh Network.**
+  **Aplikasi Mitigasi Bencana *Offline-First* dengan Integrasi Pemodelan Bahaya Seismik OpenQuake GMPE, Amplifikasi Tanah Vs30, AI Triage, Rute Evakuasi Cerdas, dan Pemantauan Latar Belakang.**
 
   [![Flutter](https://img.shields.io/badge/Flutter-3.10%2B-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
   [![Dart](https://img.shields.io/badge/Dart-3.0%2B-%230175C2.svg?style=for-the-badge&logo=Dart&logoColor=white)](https://dart.dev)
@@ -50,7 +50,6 @@
 SUAR hadir sebagai solusi tangguh berbasis **Offline-First** yang didukung pemodelan seismik fisik presisi tinggi:
 - **EWS Seismik Presisi Tinggi (OpenQuake Integration):** Menghitung percepatan tanah puncak (**PGA**) dan skala intensitas guncangan (**MMI**) berdasarkan standar *GEM (Global Earthquake Model) Foundation*, memperhitungkan klasifikasi tektonik Slab2 dan amplifikasi tanah $V_{s30}$.
 - **Navigasi Evakuasi Luring:** Menggabungkan data BMKG secara real-time, analisis spasial peta risiko InaRISK BNPB, dan pemrosesan AI untuk mengunduh peta serta rute evakuasi secara otomatis sebelum sinyal hilang.
-- **Mesh Network Chat:** Ketika internet mati sepenuhnya, fitur komunikasi berbasis jaringan peer-to-peer (P2P Mesh Network via Bluetooth & Wi-Fi Direct) tetap dapat digunakan untuk menghubungkan korban di daerah terdampak.
 
 Aplikasi ini dikembangkan untuk ajang **IDCamp Dicoding Challenge 2026** di bawah tema *"Small Apps for Big Preparedness"*. Seluruh kebutuhan pengembangan telah didokumentasikan pada berkas [SUAR_PRD.md](./SUAR_PRD.md).
 
@@ -84,11 +83,6 @@ Aplikasi ini dikembangkan untuk ajang **IDCamp Dicoding Challenge 2026** di bawa
 * **Foreground Service Safety Net:** Mendaftarkan layanan mitigasi di status bar Android untuk mencegah *app kill*.
 * **Automated Keep-Alive Ping:** Backend NestJS memicu ping otomatis ke endpoint `/health` milik microservice untuk menjaga Hugging Face Space tetap aktif.
 
-### 📡 5. Jaringan Obrolan Mesh P2P (Offline Mesh Chat)
-* **Auto-Discovery:** Memindai dan menghubungkan perangkat terdekat yang menginstal SUAR secara otomatis via Bluetooth & Wi-Fi Direct (`nearby_connections`).
-* **Multi-Hop Relay:** Pesan chat dikirimkan melalui jalur estafet antar-HP (hingga 5 hop) untuk menjangkau area di luar jangkauan sinyal Bluetooth langsung.
-* **Public & Private Channels:** Channel publik untuk siaran darurat massal dan chat privat 1-on-1.
-
 ---
 
 ## 📐 Arsitektur Monorepo & Alur Data
@@ -101,7 +95,6 @@ flowchart TD
         UI[EWS Interactive Simulator UI]
         MapVis[Shakemap Contour Visualizer MMI]
         Nav[Offline Navigation & FMTC Cache]
-        Mesh[P2P Mesh Network Chat]
     end
 
     subgraph BackendLayer[Cloud Server - NestJS]
@@ -144,7 +137,6 @@ flowchart TD
 |---|---|---|
 | **Mobile Frontend** | Flutter 3.10+, Dart 3.0+, Riverpod 3.x, GoRouter 17.x | UI/UX, State Management, Navigasi Deklaratif |
 | **Map & Navigation** | `flutter_map`, `flutter_map_tile_caching` (FMTC), `latlong2` | Rendering Peta Interaktif, Tile Caching Luring, Geospasial |
-| **Mesh Network** | `nearby_connections` | Bluetooth & Wi-Fi Direct P2P Mesh Communication |
 | **AI Integration** | `google_generative_ai` (Gemini 1.5 Flash) | Triage Rekomendasi Keselamatan Darurat |
 | **Cloud Backend** | NestJS 10.x, TypeORM, Swagger UI, Firebase Admin | Cloud Server EWS, FCM Dispatch, API Gateway |
 | **Spatial Database** | PostgreSQL + PostGIS Extension (Supabase / Docker) | Penyimpanan Koordinat, Spatial Queries (`ST_DWithin`, `ST_Value`, KNN `<->`) |
@@ -156,15 +148,7 @@ flowchart TD
 ## 📂 Struktur Direktori Monorepo
 
 - 📱 **[frontend/](./frontend)** — Aplikasi Mobile Client berbasis Flutter & Dart ([README Frontend](./frontend/README.md))
-  - `lib/core/` — Router, theme, notification, & background services
-  - `lib/features/ews_ai/` — Deteksi EWS, Gemini AI, & OpenQuake Shakemap Simulator
-  - `lib/features/map_evacuation/` — Peta luring FMTC cache & ORS routing
-  - `lib/features/offline_mesh_chat/` — Komunikasi P2P Mesh Network
-  - `lib/features/user/` — Profil & Panel Developer Debug Simulator
 - 🔔 **[backend/](./backend)** — Cloud Backend Server berbasis NestJS & TypeORM ([README Backend](./backend/README.md))
-  - `src/alerts/` — EWS Polling BMKG, Slab2 lookup, OpenQuake REST call, FCM Push
-  - `src/users/` — Pendaftaran perangkat, lokasi aktif, & vs30 raster lookup
-  - `Dockerfile` — Konfigurasi containerization untuk Hugging Face Spaces
 - ⚡ **[openquake-microservice/](./openquake-microservice)** — Python FastAPI Microservice ([README Microservice](./openquake-microservice/README.md))
   - `app.py` — Application entry point (`GET /health`, `POST /calculate-hazard`)
   - `requirements.txt` — Dependensi Python (OpenQuake engine, FastAPI, Rasterio)
@@ -280,7 +264,7 @@ Proyek SUAR dirancang, dibangun, dan diselesaikan oleh tim berikut:
 
 | Foto Kontributor | Nama Kontributor | Peran Utama | Deskripsi Tanggung Jawab |
 |:---:|---|---|---|
-| <img src="https://github.com/LintangNov.png" width="80" style="border-radius:50%"/> | **Waladi Lintang Novianto** | `Backend & Microservice Developer` | Bertanggung jawab atas pengembangan backend NestJS, integrasi Python OpenQuake Microservice (GMPE & Vs30), PostGIS spatial queries, polling BMKG, dan arsitektur P2P Mesh Network. |
+| <img src="https://github.com/LintangNov.png" width="80" style="border-radius:50%"/> | **Waladi Lintang Novianto** | `Backend & Microservice Developer` | Bertanggung jawab atas pengembangan backend NestJS, integrasi Python OpenQuake Microservice (GMPE & Vs30), PostGIS spatial queries, dan polling BMKG. |
 | <img src="https://github.com/devabrahmasta.png" width="80" style="border-radius:50%"/> | **Pande Made Deva Brahmasta** | `Frontend & Mobile Developer` | Bertanggung jawab atas perancangan state management (Riverpod), navigasi GoRouter, rendering peta offline FMTC, OpenQuake Shakemap Contour Visualizer, integrasi Google Gemini AI, dan EWS Simulator. |
 | <img src="https://github.com/gracerianty.png" width="80" style="border-radius:50%"/> | **Grace Rianty Butar Butar** | `UI/UX Designer` | Bertanggung jawab atas riset kebutuhan korban bencana, pembuatan desain antarmuka ramah situasi darurat (*Panic-Friendly UI*), penyusunan skema warna kontras tinggi, dan pemodelan UX. |
 
