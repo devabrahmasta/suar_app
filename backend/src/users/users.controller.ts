@@ -1,101 +1,39 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { RegisterDeviceDto } from './dto/register-device.dto';
+import { UpdateLocationDto } from './dto/update-location.dto';
 
 @ApiTags('users')
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('register-device')
+  @Post(['users/register-device', 'devices/register'])
   @ApiOperation({
     summary: 'Register or update user device token and home location',
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        deviceId: {
-          type: 'string',
-          example: 'device-uuid-1234',
-          description: 'Unique ID of the physical device',
-        },
-        fcmToken: {
-          type: 'string',
-          example: 'fcm-token-xyz',
-          description: 'Firebase Cloud Messaging token for push alerts',
-        },
-        homeType: {
-          type: 'string',
-          example: 'Rumah',
-          description: 'Type of dwelling (Rumah/Apartemen/etc.)',
-          nullable: true,
-        },
-        homeLatitude: {
-          type: 'number',
-          example: -7.7956,
-          description: 'Latitude coordinate of home location',
-          nullable: true,
-        },
-        homeLongitude: {
-          type: 'number',
-          example: 110.3695,
-          description: 'Longitude coordinate of home location',
-          nullable: true,
-        },
-      },
-      required: ['deviceId', 'fcmToken'],
-    },
-  })
   @ApiResponse({ status: 201, description: 'Device registered successfully.' })
-  async registerDevice(
-    @Body('deviceId') deviceId: string,
-    @Body('fcmToken') fcmToken: string,
-    @Body('homeType') homeType?: string,
-    @Body('homeLatitude') homeLatitude?: number,
-    @Body('homeLongitude') homeLongitude?: number,
-  ) {
+  async registerDevice(@Body() dto: RegisterDeviceDto) {
     return this.usersService.registerDevice(
-      deviceId,
-      fcmToken,
-      homeType,
-      homeLatitude,
-      homeLongitude,
+      dto.deviceId,
+      dto.fcmToken,
+      dto.homeType,
+      dto.homeLatitude,
+      dto.homeLongitude,
     );
   }
 
-  @Post('update-location')
+  @Post(['users/update-location', 'devices/location'])
   @ApiOperation({ summary: 'Update last active geolocation of user device' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        deviceId: {
-          type: 'string',
-          example: 'device-uuid-1234',
-          description: 'Unique ID of the registered device',
-        },
-        latitude: {
-          type: 'number',
-          example: -7.7956,
-          description: 'Current latitude coordinate',
-        },
-        longitude: {
-          type: 'number',
-          example: 110.3695,
-          description: 'Current longitude coordinate',
-        },
-      },
-      required: ['deviceId', 'latitude', 'longitude'],
-    },
-  })
   @ApiResponse({ status: 201, description: 'Location updated successfully.' })
   @ApiResponse({ status: 404, description: 'Device not found.' })
-  async updateLocation(
-    @Body('deviceId') deviceId: string,
-    @Body('latitude') latitude: number,
-    @Body('longitude') longitude: number,
-  ) {
-    return this.usersService.updateLocation(deviceId, latitude, longitude);
+  async updateLocation(@Body() dto: UpdateLocationDto) {
+    return this.usersService.updateLocation(
+      dto.deviceId,
+      dto.latitude,
+      dto.longitude,
+      dto.isRedZone,
+    );
   }
 }
