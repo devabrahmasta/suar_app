@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SheltersService } from './shelters.service';
 import { Shelter } from './entities/shelter.entity';
+import { CreateShelterDto } from './dto/create-shelter.dto';
 
 describe('SheltersService (SSOT & Real-time Event Verification)', () => {
   let service: SheltersService;
@@ -14,7 +15,9 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
   const mockQueryBuilder = {
     where: jest.fn().mockReturnThis(),
     andWhere: jest.fn().mockReturnThis(),
+    orderBy: jest.fn().mockReturnThis(),
     getMany: jest.fn().mockResolvedValue([]),
+    getOne: jest.fn().mockResolvedValue(null),
   };
 
   const mockShelterRepository = {
@@ -22,6 +25,7 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
     save: jest.fn(),
     find: jest.fn(),
     findOne: jest.fn(),
+    count: jest.fn().mockResolvedValue(19),
     createQueryBuilder: jest.fn(() => mockQueryBuilder),
   };
 
@@ -56,16 +60,22 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
   });
 
   describe('createShelter', () => {
-    it('should save shelter into canonical DB store and emit shelter.created event', async () => {
-      const dto = {
+    it('should save shelter with type TPS/TPA into canonical DB store and emit shelter.created event', async () => {
+      const dto: CreateShelterDto = {
         name: 'Gedung Olahraga Kota',
+        type: 'TPA',
         latitude: -6.2,
         longitude: 106.81,
         capacity: 500,
         notes: 'Area aman evakuasi tsunami',
       };
 
-      const mockSaved = { id: 'shelter-uuid-123', ...dto, currentEvacuees: 0, status: 'active' };
+      const mockSaved = {
+        id: 'shelter-uuid-123',
+        ...dto,
+        currentEvacuees: 0,
+        status: 'active',
+      };
       mockShelterRepository.create.mockReturnValue(mockSaved);
       mockShelterRepository.save.mockResolvedValue(mockSaved);
 
@@ -76,8 +86,39 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
       expect(eventEmitter.emit).toHaveBeenCalledWith('shelter.created', {
         shelterId: 'shelter-uuid-123',
         name: 'Gedung Olahraga Kota',
+        type: 'TPA',
       });
       expect(result.id).toBe('shelter-uuid-123');
+    });
+
+    it('should generate fallback name if name is omitted', async () => {
+      const dto: CreateShelterDto = {
+        type: 'TPS',
+        latitude: -7.97,
+        longitude: 110.28,
+      };
+
+      const mockSaved = {
+        id: 'shelter-uuid-456',
+        name: 'Titik Evakuasi TPS (-7.9700, 110.2800)',
+        type: 'TPS',
+        capacity: 0,
+        currentEvacuees: 0,
+        status: 'active',
+      };
+
+      mockShelterRepository.create.mockReturnValue(mockSaved);
+      mockShelterRepository.save.mockResolvedValue(mockSaved);
+
+      const result = await service.createShelter(dto);
+
+      expect(shelterRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'TPS',
+          name: 'Titik Evakuasi TPS (-7.9700, 110.2800)',
+        }),
+      );
+      expect(result.name).toBe('Titik Evakuasi TPS (-7.9700, 110.2800)');
     });
   });
 
@@ -86,6 +127,7 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
       const existing = {
         id: 'shelter-uuid-123',
         name: 'Gedung Olahraga Kota',
+        type: 'TPA',
         capacity: 500,
         currentEvacuees: 10,
       };
@@ -101,6 +143,7 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
       expect(eventEmitter.emit).toHaveBeenCalledWith('shelter.updated', {
         shelterId: 'shelter-uuid-123',
         name: 'Gedung Olahraga Kota',
+        type: 'TPA',
         currentEvacuees: 150,
         capacity: 500,
       });

@@ -1,0 +1,135 @@
+[
+  {
+    "id": "tpa-001",
+    "type": "TPA",
+    "latitude": -7.968502,
+    "longitude": 110.255611,
+    "status": "active"
+  },
+  {
+    "id": "tpa-002",
+    "type": "TPA",
+    "latitude": -7.969118,
+    "longitude": 110.285991,
+    "status": "active"
+  },
+  {
+    "id": "tpa-003",
+    "type": "TPA",
+    "latitude": -7.969892,
+    "longitude": 110.299252,
+    "status": "active"
+  },
+  {
+    "id": "tpa-004",
+    "type": "TPA",
+    "latitude": -7.970569,
+    "longitude": 110.311102,
+    "status": "active"
+  },
+  {
+    "id": "tpa-005",
+    "type": "TPA",
+    "latitude": -7.972834,
+    "longitude": 110.318341,
+    "status": "active"
+  },
+  {
+    "id": "tpa-006",
+    "type": "TPA",
+    "latitude": -7.976341,
+    "longitude": 110.282686,
+    "status": "active"
+  },
+  {
+    "id": "tps-001",
+    "type": "TPS",
+    "latitude": -7.977008,
+    "longitude": 110.236031,
+    "status": "active"
+  },
+  {
+    "id": "tps-002",
+    "type": "TPS",
+    "latitude": -7.983313,
+    "longitude": 110.297818,
+    "status": "active"
+  },
+  {
+    "id": "tps-003",
+    "type": "TPS",
+    "latitude": -7.984048,
+    "longitude": 110.28841,
+    "status": "active"
+  },
+  {
+    "id": "tps-004",
+    "type": "TPS",
+    "latitude": -7.984261,
+    "longitude": 110.249374,
+    "status": "active"
+  },
+  {
+    "id": "tps-005",
+    "type": "TPS",
+    "latitude": -7.99267,
+    "longitude": 110.280306,
+    "status": "active"
+  },
+  {
+    "id": "tps-006",
+    "type": "TPS",
+    "latitude": -7.994474,
+    "longitude": 110.291873,
+    "status": "active"
+  },
+  {
+    "id": "tps-007",
+    "type": "TPS",
+    "latitude": -7.997714,
+    "longitude": 110.266093,
+    "status": "active"
+  },
+  {
+    "id": "tps-008",
+    "type": "TPS",
+    "latitude": -8.001695,
+    "longitude": 110.287909,
+    "status": "active"
+  },
+  {
+    "id": "tps-009",
+    "type": "TPS",
+    "latitude": -8.003674,
+    "longitude": 110.292609,
+    "status": "active"
+  },
+  {
+    "id": "tps-010",
+    "type": "TPS",
+    "latitude": -8.014993,
+    "longitude": 110.324856,
+    "status": "active"
+  },
+  {
+    "id": "tps-011",
+    "type": "TPS",
+    "latitude": -8.019036,
+    "longitude": 110.328706,
+    "status": "active"
+  },
+  {
+    "id": "tps-012",
+    "type": "TPS",
+    "latitude": -8.019888,
+    "longitude": 110.33322,
+    "status": "active"
+  },
+  {
+    "id": "tps-013",
+    "type": "TPS",
+    "latitude": -8.022519,
+    "longitude": 110.334627,
+    "status": "active"
+  }
+]
