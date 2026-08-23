@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { SheltersModule } from './shelters/shelters.module';
 import { FirebaseModule } from './firebase/firebase.module';
+import { TsunamiModule } from './tsunami/tsunami.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { FirebaseModule } from './firebase/firebase.module';
     AlertsModule,
     SheltersModule,
     FirebaseModule,
+    TsunamiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
