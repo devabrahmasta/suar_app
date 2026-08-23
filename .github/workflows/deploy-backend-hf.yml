@@ -24,9 +24,13 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Split the 'backend' folder into a temporary branch where 'backend' contents become the root
-          git subtree split --prefix=backend --branch=hf-release
+          # Create a fresh clean git repository for backend directory to avoid pushing old commit history blobs > 10MB
+          cd backend
+          git init
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add .
+          git commit -m "Deploy latest backend snapshot to Hugging Face Spaces"
 
-          # Force push the hf-release branch to Hugging Face main branch
-          # Replace 'lintangnv' and 'suar-backend' with your actual HF username and Space name
-          git push -f https://lintangnv:$HF_TOKEN@huggingface.co/spaces/lintangnv/suar-backend hf-release:refs/heads/main
+          # Force push clean HEAD snapshot to Hugging Face Spaces main branch
+          git push -f https://lintangnv:$HF_TOKEN@huggingface.co/spaces/lintangnv/suar-backend HEAD:refs/heads/main
