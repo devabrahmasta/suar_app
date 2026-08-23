@@ -8,13 +8,26 @@ import {
 } from 'typeorm';
 import * as GeoJSON from 'geojson';
 
+export enum ShelterType {
+  TPS = 'TPS',
+  TPA = 'TPA',
+}
+
 @Entity('shelters')
 export class Shelter {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
+
+  @Column({
+    type: 'varchar',
+    length: 10,
+    default: 'TPS',
+  })
+  @Index('idx_shelters_type')
+  type: ShelterType;
 
   @Column({
     type: 'geometry',
@@ -24,7 +37,7 @@ export class Shelter {
   @Index({ spatial: true })
   location: GeoJSON.Point;
 
-  @Column({ default: 0 })
+  @Column({ nullable: true, default: 0 })
   capacity: number;
 
   @Column({ name: 'current_evacuees', default: 0 })
@@ -35,6 +48,9 @@ export class Shelter {
 
   @Column({ type: 'text', nullable: true })
   notes: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  source: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

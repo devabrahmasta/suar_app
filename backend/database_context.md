@@ -12,12 +12,14 @@
 | earthquake_alerts       | created_at       | timestamp without time zone | NO          | now()                                               |
 | earthquake_alerts       | updated_at       | timestamp without time zone | NO          | now()                                               |
 | shelters                | id               | uuid                        | NO          | uuid_generate_v4()                                  |
-| shelters                | name             | character varying           | NO          | null                                                |
+| shelters                | name             | character varying           | YES         | null                                                |
+| shelters                | type             | character varying(10)       | NO          | 'TPS'::character varying                            |
 | shelters                | location         | USER-DEFINED                | NO          | null                                                |
-| shelters                | capacity         | integer                     | NO          | 0                                                   |
+| shelters                | capacity         | integer                     | YES         | 0                                                   |
 | shelters                | current_evacuees | integer                     | NO          | 0                                                   |
 | shelters                | status           | character varying           | NO          | 'active'::character varying                         |
 | shelters                | notes            | text                        | YES         | null                                                |
+| shelters                | source           | character varying(100)      | YES         | 'digitized_bpbd_peta_2010'::character varying       |
 | shelters                | created_at       | timestamp without time zone | NO          | now()                                               |
 | shelters                | updated_at       | timestamp without time zone | NO          | now()                                               |
 | slab2_depth_raster      | rid              | integer                     | NO          | nextval('slab2_depth_raster_rid_seq'::regclass)     |
