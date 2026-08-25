@@ -1,3 +1,15 @@
+---
+title: SUAR OpenQuake Hazard Microservice
+emoji: 🌋
+colorFrom: red
+colorTo: yellow
+sdk: gradio
+sdk_version: "5.16.0"
+python_version: "3.10"
+app_file: app.py
+pinned: false
+---
+
 # ⚡ SUAR OpenQuake Hazard Microservice
 
 > **Stateless Python FastAPI Microservice for High-Precision Seismic Ground Motion Prediction Equations (GMPE) & Soil Amplification Calculation.**
