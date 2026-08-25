@@ -295,15 +295,18 @@ export class AlertsService implements OnModuleInit {
       }
     }
 
-    // Parse values
-    const magnitude = parseFloat(rawGempa.Magnitude);
-    const depth = parseInt(rawGempa.Kedalaman.replace(/[^0-9]/g, ''), 10);
-    const [latStr, lonStr] = rawGempa.Coordinates.split(',');
-    const latitude = parseFloat(latStr);
-    const longitude = parseFloat(lonStr);
-    const date = new Date(rawGempa.DateTime);
-    const wilayah = rawGempa.Wilayah;
-    const potensi = rawGempa.Potensi;
+    // Parse values with null-safety and fallbacks
+    const magnitude = parseFloat(String(rawGempa?.Magnitude || '5.0')) || 5.0;
+    const rawKedalaman = String(rawGempa?.Kedalaman || rawGempa?.['kedalaman'] || '10 km');
+    const depth = parseInt(rawKedalaman.replace(/[^0-9]/g, ''), 10) || 10;
+    const coordinatesStr = String(rawGempa?.Coordinates || rawGempa?.['Coordinates'] || '-7.5,110.5');
+    const [latStr, lonStr] = coordinatesStr.includes(',') ? coordinatesStr.split(',') : ['-7.5', '110.5'];
+    const latitude = parseFloat(latStr) || -7.5;
+    const longitude = parseFloat(lonStr) || 110.5;
+    const dateStr = rawGempa?.DateTime || (rawGempa?.Tanggal && rawGempa?.Jam ? `${rawGempa.Tanggal} ${rawGempa.Jam}` : new Date().toISOString());
+    const date = new Date(dateStr);
+    const wilayah = rawGempa?.Wilayah || rawGempa?.['Wilayah'] || 'Wilayah Indonesia';
+    const potensi = rawGempa?.Potensi || rawGempa?.['Potensi'] || 'Tidak berpotensi tsunami';
 
     const epicenter: GeoJSON.Point = {
       type: 'Point',
@@ -700,7 +703,7 @@ export class AlertsService implements OnModuleInit {
     );
 
     const magnitude = Number(alert.magnitude);
-    const depthKm = parseInt(alert.depth.replace(/[^0-9]/g, ''), 10) || 10;
+    const depthKm = parseInt(String(alert.depth || '10').replace(/[^0-9]/g, ''), 10) || 10;
     const hypocentralDist = Math.sqrt(distanceKm * distanceKm + depthKm * depthKm);
 
     const pgaGal =

@@ -24,8 +24,9 @@ COPY package*.json ./
 # Install only production dependencies to keep the image slim
 RUN npm ci --omit=dev
 
-# Copy compiled JavaScript from build stage
+# Copy compiled JavaScript and data assets from build stage
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/data ./data
 
 # Hugging Face Spaces maps traffic to port 7860 by default
 ENV PORT=7860

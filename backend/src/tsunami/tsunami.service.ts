@@ -69,12 +69,15 @@ export class TsunamiService implements OnModuleInit {
     if (this.cachedGeoJson) return this.cachedGeoJson;
 
     const possiblePaths = [
-      path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
-      path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
+      path.join('/app', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
+      path.join('/app', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
       path.join(process.cwd(), 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(process.cwd(), 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
+      path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
+      path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
       path.join(__dirname, '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(__dirname, '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
+      path.join(__dirname, '..', '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
     ];
 
     let foundPath: string | null = null;
