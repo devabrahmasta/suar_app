@@ -3,10 +3,8 @@ title: SUAR OpenQuake Hazard Microservice
 emoji: 🌋
 colorFrom: red
 colorTo: yellow
-sdk: gradio
-sdk_version: "5.16.0"
-python_version: "3.10"
-app_file: app.py
+sdk: docker
+app_port: 7860
 pinned: false
 ---
 
