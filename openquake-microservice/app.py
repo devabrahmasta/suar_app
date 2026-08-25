@@ -210,3 +210,5 @@ with gr.Blocks(title="SUAR EWS OpenQuake Microservice") as demo:
 app = gr.mount_gradio_app(app, demo, path="/")
 
 
+
+
