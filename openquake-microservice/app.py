@@ -195,16 +195,18 @@ def calculate_hazard(request: HazardRequest):
 
     return results
 
-try:
-    import gradio as gr
-    demo = gr.Interface(
-        fn=lambda: "SUAR EWS OpenQuake Hazard Microservice is Online!",
-        inputs=[],
-        outputs="text",
-        title="SUAR OpenQuake Hazard Microservice API",
-        description="FastAPI REST microservice for computing OpenQuake ground acceleration (PGA) and MMI intensity."
-    )
-    app = gr.mount_gradio_app(app, demo, path="/ui")
-except ImportError:
-    pass
+import gradio as gr
+
+# Define Gradio UI for Hugging Face Space launcher
+with gr.Blocks(title="SUAR EWS OpenQuake Microservice") as demo:
+    gr.Markdown("# 🌋 SUAR EWS OpenQuake Hazard Microservice")
+    gr.Markdown("Stateless Python FastAPI microservice for high-precision seismic ground motion calculation.")
+    gr.Markdown("### Available REST API Endpoints:")
+    gr.Markdown("- **Health Check:** `GET /health`")
+    gr.Markdown("- **Calculate Hazard:** `POST /calculate-hazard`")
+    gr.Markdown("- **Interactive Swagger Docs:** `GET /docs`")
+
+# Mount FastAPI onto Gradio root app
+app = gr.mount_gradio_app(app, demo, path="/")
+
 
