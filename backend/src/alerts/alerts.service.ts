@@ -49,6 +49,19 @@ export class AlertsService implements OnModuleInit {
   private readonly logger = new Logger(AlertsService.name);
   private isPolling = false;
 
+  // Official BMKG InaTEWS & Seismic Hazard EWS Static Thresholds
+  public static readonly MIN_MAGNITUDE_EWS = 5.0;
+  public static readonly MAX_DEPTH_EWS = 300.0;
+  public static readonly TSUNAMI_MIN_MAGNITUDE = 6.5;
+  public static readonly TSUNAMI_MAX_DEPTH = 100.0;
+
+  getTsunamiReachRadius(magnitude: number): number {
+    if (magnitude >= 8.0) return 1200; // km
+    if (magnitude >= 7.0) return 700;  // km
+    if (magnitude >= 6.5) return 400;  // km
+    return 250; // km
+  }
+
   constructor(
     @InjectRepository(EarthquakeAlert)
     private readonly alertRepository: Repository<EarthquakeAlert>,
@@ -303,7 +316,10 @@ export class AlertsService implements OnModuleInit {
     const reachesJawaBali = isJawaBali || this.impactsJawaBali(latitude, longitude, magnitude);
 
     const passesThreshold =
-      isSimulation || (magnitude >= 5.0 && depth < 100 && reachesJawaBali);
+      isSimulation ||
+      (magnitude >= AlertsService.MIN_MAGNITUDE_EWS &&
+        depth <= AlertsService.MAX_DEPTH_EWS &&
+        reachesJawaBali);
 
     const newAlert = this.alertRepository.create({
       bmkgId,
@@ -337,17 +353,51 @@ export class AlertsService implements OnModuleInit {
         `[EWS TRIGGERED${isSimulation ? ' - SIMULATION' : ''}] New Earthquake Alert: M ${magnitude} Mw, Depth ${depth} km. Epicenter: ${wilayah}.`,
       );
 
-      // 1. Coarse Bounding Box Filter (500 KM radius)
+      const isTsunamiPotential =
+        !potensi.toLowerCase().includes('tidak berpotensi') &&
+        (potensi.toLowerCase().includes('tsunami') ||
+          (magnitude >= AlertsService.TSUNAMI_MIN_MAGNITUDE && depth <= AlertsService.TSUNAMI_MAX_DEPTH));
+
+      const tsunamiReachRadius = this.getTsunamiReachRadius(magnitude);
+      const searchRadiusKm = Math.max(500, tsunamiReachRadius);
+
+      // 1. Coarse Bounding Box Filter (Search Radius based on max reach)
       const candidateDevices = await this.findDevicesInImpactZone(
         longitude,
         latitude,
-        500,
+        searchRadiusKm,
       );
 
       let microserviceProcessed = false;
 
       if (candidateDevices.length > 0) {
-        // Prepare devices array with vs30 and location coordinates
+        // Build device distance map from epicenter
+        const deviceDistanceMap = new Map<string, number>();
+        candidateDevices.forEach((d) => {
+          if (d.lastLocation && d.lastLocation.coordinates) {
+            const dist = this.calculateHaversineDistance(
+              latitude,
+              longitude,
+              d.lastLocation.coordinates[1],
+              d.lastLocation.coordinates[0],
+            );
+            deviceDistanceMap.set(d.deviceId, dist);
+          }
+        });
+
+        // 2. Separate Tsunami Red Zone Devices within Tsunami Reach Distance
+        const tsunamiRedZoneDevices = isTsunamiPotential
+          ? candidateDevices.filter((d) => {
+              const dist = deviceDistanceMap.get(d.deviceId);
+              return d.isRedZone && dist !== undefined && dist <= tsunamiReachRadius;
+            })
+          : [];
+
+        const tsunamiDeviceIdSet = new Set(
+          tsunamiRedZoneDevices.map((d) => d.deviceId),
+        );
+
+        // Prepare devices for OpenQuake shaking hazard
         const preparedDevices = candidateDevices
           .filter((d) => d.lastLocation && d.lastLocation.coordinates)
           .map((d) => ({
@@ -358,39 +408,40 @@ export class AlertsService implements OnModuleInit {
           }));
 
         if (preparedDevices.length > 0) {
-          // 2. Lookup Slab2 & Classify Tectonic Region
           const slab2 = await this.lookupSlab2(latitude, longitude);
           const { region, method } = this.classifyTectonicRegion(depth, slab2);
           this.logger.log(`Tectonic region: ${region} (metode: ${method})`);
 
-          // 3. Compute PGA & MMI via OpenQuake microservice
           const hazardResults = await this.calculateHazard(
             { magnitude, depth, latitude, longitude, region },
             preparedDevices,
           );
 
           if (hazardResults.length > 0) {
-            // Map deviceId -> mmi
             const mmiMap = new Map<string, number>();
             hazardResults.forEach((h) => mmiMap.set(h.deviceId, h.mmi));
 
-            // 4. Filter devices with MMI >= 5.0 (Intensity V)
-            const devicesToAlert = candidateDevices.filter((d) => {
+            // Shaking devices with MMI >= V (excluding tsunami red zone devices to prevent duplicate FCM)
+            const shakingDevices = candidateDevices.filter((d) => {
               const mmi = mmiMap.get(d.deviceId);
-              return mmi !== undefined && mmi >= 5.0;
+              return (
+                mmi !== undefined &&
+                mmi >= 5.0 &&
+                !tsunamiDeviceIdSet.has(d.deviceId)
+              );
             });
 
-            impactedCount = devicesToAlert.length;
-            radiusInKm = 500;
+            impactedCount = tsunamiRedZoneDevices.length + shakingDevices.length;
+            radiusInKm = searchRadiusKm;
             microserviceProcessed = true;
 
-            this.logger.warn(
-              `OpenQuake hazard calculated for ${candidateDevices.length} devices. Impacted (MMI >= V): ${impactedCount}`,
-            );
-
-            if (devicesToAlert.length > 0) {
+            // Send Tsunami Evacuation Push Alerts to Coastal Red Zone Users within Tsunami Propagation Distance
+            if (tsunamiRedZoneDevices.length > 0) {
+              this.logger.warn(
+                `Sending TSUNAMI_EVACUATION_ALERT to ${tsunamiRedZoneDevices.length} devices in coastal red zone within ${tsunamiReachRadius} km.`,
+              );
               await this.sendFcmAlerts(
-                devicesToAlert,
+                tsunamiRedZoneDevices,
                 magnitude,
                 depth,
                 wilayah,
@@ -399,19 +450,35 @@ export class AlertsService implements OnModuleInit {
                 isSimulation,
                 latitude,
                 longitude,
+                'TSUNAMI_EVACUATION_ALERT',
+              );
+            }
+
+            // Send Shaking Push Alerts to users experiencing MMI >= V
+            if (shakingDevices.length > 0) {
+              this.logger.warn(
+                `Sending EARTHQUAKE_ALERT to ${shakingDevices.length} devices with MMI >= V.`,
+              );
+              await this.sendFcmAlerts(
+                shakingDevices,
+                magnitude,
+                depth,
+                wilayah,
+                potensi,
+                date,
+                isSimulation,
+                latitude,
+                longitude,
+                'EARTHQUAKE_ALERT',
               );
             }
           }
         }
       }
 
-      // Secondary Fail-Safe: Fallback to Phase 2 Dynamic Radius if Microservice failed/down or returned empty
+      // Secondary Fail-Safe: Fallback to Dynamic Radius if Microservice down
       if (!microserviceProcessed) {
         radiusInKm = this.calculateDynamicRadius(magnitude, depth, potensi);
-        this.logger.log(
-          `Fallback dynamic impact radius: ${radiusInKm} km based on magnitude and tsunami potential.`,
-        );
-
         const impactedDevices = await this.findDevicesInImpactZone(
           longitude,
           latitude,
@@ -419,9 +486,6 @@ export class AlertsService implements OnModuleInit {
         );
 
         impactedCount = impactedDevices.length;
-        this.logger.warn(
-          `Fallback Phase 2: Found ${impactedCount} devices in impact zone.`,
-        );
 
         if (impactedDevices.length > 0) {
           await this.sendFcmAlerts(
@@ -434,6 +498,7 @@ export class AlertsService implements OnModuleInit {
             isSimulation,
             latitude,
             longitude,
+            isTsunamiPotential ? 'TSUNAMI_EVACUATION_ALERT' : 'EARTHQUAKE_ALERT',
           );
         }
       }
@@ -461,17 +526,19 @@ export class AlertsService implements OnModuleInit {
     isSimulation: boolean,
     latitude: number,
     longitude: number,
+    alertType: 'TSUNAMI_EVACUATION_ALERT' | 'EARTHQUAKE_ALERT' = 'EARTHQUAKE_ALERT',
   ): Promise<void> {
-    const isTsunami =
-      !potensi.toLowerCase().includes('tidak berpotensi') &&
-      (potensi.toLowerCase().includes('tsunami') || magnitude >= 6.5);
-    const statusTindakan = isTsunami ? 'EVAKUASI' : 'BERLINDUNG';
+    const isTsunamiEvacuation = alertType === 'TSUNAMI_EVACUATION_ALERT';
+    const statusTindakan = isTsunamiEvacuation ? 'EVAKUASI TSUNAMI' : 'BERLINDUNG';
 
     const prefix = isSimulation ? '[SIMULASI] ' : '';
-    const title = isTsunami
-      ? `🚨 ${prefix}PERINGATAN TSUNAMI (SUAR)`
+    const title = isTsunamiEvacuation
+      ? `🚨 ${prefix}PERINGATAN EVAKUASI TSUNAMI (SUAR)`
       : `⚠️ ${prefix}PERINGATAN GEMPA BUMI (SUAR)`;
-    const body = `${prefix}Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: ${statusTindakan}.`;
+
+    const body = isTsunamiEvacuation
+      ? `${prefix}Peringatan Tsunami! Gempa M ${magnitude} Mw di ${wilayah}. Anda berada di Zona Merah Tsunami. Segera evakuasi ke TPS/TPA!`
+      : `${prefix}Gempa M ${magnitude} Mw, Kedalaman ${depth} km. Wilayah: ${wilayah}. Status: BERLINDUNG.`;
 
     const tokens = devices
       .map((d) => d.fcmToken)
@@ -480,7 +547,7 @@ export class AlertsService implements OnModuleInit {
     if (tokens.length === 0) return;
 
     const payloadData = {
-      type: 'EARTHQUAKE_ALERT',
+      type: alertType,
       magnitude: magnitude.toString(),
       depth: `${depth} km`,
       wilayah: isSimulation ? `${wilayah} (Simulasi)` : wilayah,

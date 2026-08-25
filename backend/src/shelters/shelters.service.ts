@@ -119,9 +119,9 @@ export class SheltersService implements OnModuleInit {
     return saved;
   }
 
-  async getAllShelters(type?: ShelterType): Promise<Shelter[]> {
+  async getAllShelters(type?: ShelterType | 'ALL'): Promise<Shelter[]> {
     const query = this.shelterRepository.createQueryBuilder('shelter');
-    if (type) {
+    if (type && (type as string) !== 'ALL') {
       query.where('shelter.type = :type', { type });
     }
     return query.orderBy('shelter.createdAt', 'DESC').getMany();
@@ -131,7 +131,7 @@ export class SheltersService implements OnModuleInit {
     latitude: number,
     longitude: number,
     radiusInKm = 50,
-    type?: ShelterType,
+    type?: ShelterType | 'ALL',
   ): Promise<Shelter[]> {
     const radiusInMeters = radiusInKm * 1000;
     const query = this.shelterRepository
@@ -150,7 +150,7 @@ export class SheltersService implements OnModuleInit {
         },
       );
 
-    if (type) {
+    if (type && (type as string) !== 'ALL') {
       query.andWhere('shelter.type = :type', { type });
     }
 

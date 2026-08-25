@@ -177,9 +177,71 @@ describe('AlertsService', () => {
       expect(alertRepository.save).toHaveBeenCalled();
       expect(firebaseService.sendPushNotification).toHaveBeenCalledWith(
         ['token-1'], // Only device-1 (MMI >= 5) receives FCM notification
-        expect.stringContaining('PERINGATAN TSUNAMI'),
+        expect.stringContaining('PERINGATAN GEMPA BUMI'),
         expect.stringContaining('Gempa M 6.6'),
         expect.objectContaining({ type: 'EARTHQUAKE_ALERT' }),
+      );
+    });
+
+    it('should send TSUNAMI_EVACUATION_ALERT for devices in coastal red zone within tsunami reach radius', async () => {
+      const mockJson = {
+        Infogempa: {
+          gempa: {
+            Tanggal: '05 Jul 2026',
+            Jam: '10:00:00 WIB',
+            DateTime: '2026-07-05T03:05:00+00:00',
+            Coordinates: '-8.12,110.36',
+            Magnitude: '7.2',
+            Kedalaman: '15 km',
+            Wilayah: 'Pesisir Selatan Jawa',
+            Potensi: 'Berpotensi tsunami',
+          },
+        },
+      };
+
+      const mockTsunamiDevices = [
+        {
+          deviceId: 'redzone-device',
+          fcmToken: 'redzone-token',
+          isRedZone: true,
+          lastLocation: { coordinates: [110.36, -8.02] }, // Within 400km reach
+          vs30: 270.0,
+        },
+      ];
+
+      global.fetch = jest.fn().mockImplementation((url: string) => {
+        if (url.includes('health')) {
+          return Promise.resolve({ ok: true });
+        }
+        if (url.includes('calculate-hazard')) {
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve([
+                { deviceId: 'redzone-device', pga: 0.1, mmi: 4.0 }, // Low shaking, but in Red Zone!
+              ]),
+          });
+        }
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockJson),
+        });
+      });
+
+      mockAlertRepository.findOne.mockResolvedValue(null);
+      mockAlertRepository.create.mockImplementation((dto) => dto);
+      mockAlertRepository.save.mockImplementation((dto) =>
+        Promise.resolve({ id: 'tsunami-alert-id', ...dto }),
+      );
+      mockQueryBuilder.getMany.mockResolvedValue(mockTsunamiDevices);
+
+      await service.pollBmkg();
+
+      expect(firebaseService.sendPushNotification).toHaveBeenCalledWith(
+        ['redzone-token'],
+        expect.stringContaining('PERINGATAN EVAKUASI TSUNAMI'),
+        expect.stringContaining('Zona Merah Tsunami'),
+        expect.objectContaining({ type: 'TSUNAMI_EVACUATION_ALERT' }),
       );
     });
 
@@ -350,6 +412,22 @@ describe('AlertsService', () => {
       await expect(
         service.calculateUserImpact(-7.79, 110.36, 'invalid-id'),
       ).rejects.toThrow('Earthquake alert with ID \'invalid-id\' not found.');
+    });
+  });
+
+  describe('EWS Threshold Constants & Tsunami Reach Radius', () => {
+    it('should have official BMKG InaTEWS static thresholds', () => {
+      expect(AlertsService.MIN_MAGNITUDE_EWS).toBe(5.0);
+      expect(AlertsService.MAX_DEPTH_EWS).toBe(300.0);
+      expect(AlertsService.TSUNAMI_MIN_MAGNITUDE).toBe(6.5);
+      expect(AlertsService.TSUNAMI_MAX_DEPTH).toBe(100.0);
+    });
+
+    it('should calculate tsunami reach radius dynamically based on magnitude', () => {
+      expect(service.getTsunamiReachRadius(8.2)).toBe(1200);
+      expect(service.getTsunamiReachRadius(7.5)).toBe(700);
+      expect(service.getTsunamiReachRadius(6.8)).toBe(400);
+      expect(service.getTsunamiReachRadius(5.5)).toBe(250);
     });
   });
 });

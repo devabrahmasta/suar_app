@@ -150,6 +150,21 @@ describe('SheltersService (SSOT & Real-time Event Verification)', () => {
     });
   });
 
+  describe('getAllShelters', () => {
+    it('should query all shelters when type is ALL or undefined', async () => {
+      await service.getAllShelters('ALL');
+      expect(mockQueryBuilder.where).not.toHaveBeenCalled();
+
+      await service.getAllShelters(undefined);
+      expect(mockQueryBuilder.where).not.toHaveBeenCalled();
+    });
+
+    it('should filter by type when type is TPS or TPA', async () => {
+      await service.getAllShelters('TPS');
+      expect(mockQueryBuilder.where).toHaveBeenCalledWith('shelter.type = :type', { type: 'TPS' });
+    });
+  });
+
   describe('handleEarthquakeAlert Event Listener', () => {
     it('should receive earthquake.alertCreated event and trigger synchronization log', () => {
       const spy = jest.spyOn(service['logger'], 'log');

@@ -32,23 +32,23 @@ export class SheltersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all shelters with optional type filter' })
-  @ApiQuery({ name: 'type', enum: ['TPS', 'TPA'], required: false })
-  async getAllShelters(@Query('type') type?: ShelterType): Promise<Shelter[]> {
+  @ApiOperation({ summary: 'Get all shelters with optional type filter (TPS, TPA, or ALL)' })
+  @ApiQuery({ name: 'type', enum: ['TPS', 'TPA', 'ALL'], required: false })
+  async getAllShelters(@Query('type') type?: ShelterType | 'ALL'): Promise<Shelter[]> {
     return this.sheltersService.getAllShelters(type);
   }
 
   @Get('nearby')
-  @ApiOperation({ summary: 'Find nearby shelters within radius with optional TPS/TPA type filter' })
+  @ApiOperation({ summary: 'Find nearby shelters within radius with optional TPS, TPA, or ALL type filter' })
   @ApiQuery({ name: 'latitude', type: Number, example: -7.97 })
   @ApiQuery({ name: 'longitude', type: Number, example: 110.28 })
   @ApiQuery({ name: 'radiusInKm', type: Number, required: false, example: 15 })
-  @ApiQuery({ name: 'type', enum: ['TPS', 'TPA'], required: false })
+  @ApiQuery({ name: 'type', enum: ['TPS', 'TPA', 'ALL'], required: false })
   async findNearbyShelters(
     @Query('latitude', ParseFloatPipe) latitude: number,
     @Query('longitude', ParseFloatPipe) longitude: number,
     @Query('radiusInKm', new ParseIntPipe({ optional: true })) radiusInKm?: number,
-    @Query('type') type?: ShelterType,
+    @Query('type') type?: ShelterType | 'ALL',
   ): Promise<Shelter[]> {
     return this.sheltersService.findNearbyShelters(latitude, longitude, radiusInKm, type);
   }
