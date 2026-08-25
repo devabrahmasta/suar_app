@@ -7,3 +7,4 @@ fiona
 rasterio
 affine
 psycopg2-binary
+gradio

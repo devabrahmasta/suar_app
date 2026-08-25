@@ -11,7 +11,18 @@ from openquake.hazardlib.gsim.abrahamson_2015 import AbrahamsonEtAl2015SInter, A
 from openquake.hazardlib.contexts import RuptureContext
 from openquake.hazardlib.imt import PGA
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="SUAR EWS OpenQuake Hazard Microservice")
+
+# Enable CORS for cross-origin requests from NestJS backend / Swagger
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Retrieve API Key from environment or default to a secure development key
 API_KEY = os.getenv("OPENQUAKE_API_KEY", "suar_secret_key_123")
@@ -174,3 +185,17 @@ def calculate_hazard(request: HazardRequest):
         ))
 
     return results
+
+try:
+    import gradio as gr
+    demo = gr.Interface(
+        fn=lambda: "SUAR EWS OpenQuake Hazard Microservice is Online!",
+        inputs=[],
+        outputs="text",
+        title="SUAR OpenQuake Hazard Microservice API",
+        description="FastAPI REST microservice for computing OpenQuake ground acceleration (PGA) and MMI intensity."
+    )
+    app = gr.mount_gradio_app(app, demo, path="/ui")
+except ImportError:
+    pass
+
