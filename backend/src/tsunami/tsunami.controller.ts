@@ -34,14 +34,14 @@ export class TsunamiController {
     status: 304,
     description: 'Not Modified (If-None-Match ETag matched client cache).',
   })
-  getJawaBaliGeoJson(
+  async getJawaBaliGeoJson(
     @Req() req: ExpressRequest,
     @Res() res: ExpressResponse,
   ) {
-    const asset = this.tsunamiService.loadGeoJsonFile();
+    const asset = await this.tsunamiService.loadGeoJsonFromPostgis();
     if (!asset) {
       throw new NotFoundException(
-        'Tsunami Red Zone GeoJSON asset file is not available on server.',
+        'Tsunami Red Zone GeoJSON asset file is not available on server or PostGIS database.',
       );
     }
 

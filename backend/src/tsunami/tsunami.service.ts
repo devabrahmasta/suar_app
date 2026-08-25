@@ -65,19 +65,73 @@ export class TsunamiService implements OnModuleInit {
     }
   }
 
+  async loadGeoJsonFromPostgis(): Promise<GeoJsonServiceResult | null> {
+    if (this.cachedGeoJson) return this.cachedGeoJson;
+
+    // 1. Try local disk asset first
+    const diskAsset = this.loadGeoJsonFile();
+    if (diskAsset) return diskAsset;
+
+    // 2. Fallback: Generate GeoJSON FeatureCollection dynamically from Supabase PostGIS table
+    try {
+      this.logger.log(
+        'GeoJSON asset not on disk. Querying Supabase PostGIS tsunami_hazard_polygons table...',
+      );
+
+      const rows = await this.tsunamiRepository.query(`
+        SELECT jsonb_build_object(
+          'type', 'FeatureCollection',
+          'features', jsonb_agg(
+            jsonb_build_object(
+              'type', 'Feature',
+              'geometry', ST_AsGeoJSON(geom)::jsonb,
+              'properties', jsonb_build_object('id', id, 'hazard_level', hazard_level)
+            )
+          )
+        ) AS geojson
+        FROM tsunami_hazard_polygons;
+      `);
+
+      if (!rows || !rows[0] || !rows[0].geojson || !rows[0].geojson.features) {
+        this.logger.warn('No tsunami hazard polygons available in PostGIS database.');
+        return null;
+      }
+
+      const geojsonObj = rows[0].geojson;
+      const jsonString = JSON.stringify(geojsonObj);
+      const fileBuffer = Buffer.from(jsonString, 'utf-8');
+      const hash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
+      const etag = `"${hash.substring(0, 16)}"`;
+
+      this.cachedGeoJson = {
+        buffer: fileBuffer,
+        etag,
+        filename: 'tsunami_jawa_bali_dissolved.geojson',
+        sizeBytes: fileBuffer.length,
+      };
+
+      this.logger.log(
+        `Generated GeoJSON asset dynamically from PostGIS (${(fileBuffer.length / (1024 * 1024)).toFixed(2)} MB), ETag: ${etag}`,
+      );
+
+      return this.cachedGeoJson;
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to generate GeoJSON from PostGIS: ${msg}`);
+      return null;
+    }
+  }
+
   loadGeoJsonFile(): GeoJsonServiceResult | null {
     if (this.cachedGeoJson) return this.cachedGeoJson;
 
     const possiblePaths = [
-      path.join('/app', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
-      path.join('/app', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
       path.join(process.cwd(), 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(process.cwd(), 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
       path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(process.cwd(), 'backend', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
       path.join(__dirname, '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
       path.join(__dirname, '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson'),
-      path.join(__dirname, '..', '..', '..', 'data', 'tsunami', 'tsunami_jawa_bali_dissolved.geojson.gz'),
     ];
 
     let foundPath: string | null = null;
@@ -89,8 +143,8 @@ export class TsunamiService implements OnModuleInit {
     }
 
     if (!foundPath) {
-      this.logger.warn(
-        `GeoJSON file 'tsunami_jawa_bali_dissolved.geojson' (or .gz) not found on disk.`,
+      this.logger.log(
+        `GeoJSON file not found on disk. Falling back to Supabase PostGIS query.`,
       );
       return null;
     }
