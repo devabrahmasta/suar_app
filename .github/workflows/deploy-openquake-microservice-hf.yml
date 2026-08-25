@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feat/openquake-microservice-config
     paths:
       - 'openquake-microservice/**'
       - '.github/workflows/deploy-openquake-microservice-hf.yml'
