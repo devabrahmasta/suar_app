@@ -33,14 +33,17 @@ export class AlertsController {
     @Body()
     body: {
       magnitude: number;
-      depth: string;
+      depth: string | number;
       latitude: number;
       longitude: number;
       potensi: string;
       wilayah: string;
     },
   ) {
-    return this.alertsService.simulateAlert(body);
+    return this.alertsService.simulateAlert({
+      ...body,
+      depth: String(body.depth ?? '15'),
+    });
   }
 
   @Post('calculate-impact')

@@ -279,7 +279,7 @@ export class AlertsService implements OnModuleInit {
   ): Promise<any> {
     // Generate unique hash using DateTime and Coordinates if not simulation
     const bmkgId = isSimulation
-      ? `SIMULASI_${Date.now()}`
+      ? `SIMULASI_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`
       : this.generateUniqueBmkgId(rawGempa.DateTime, rawGempa.Coordinates);
 
     // Check for duplication if not simulation
