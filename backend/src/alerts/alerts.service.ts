@@ -247,17 +247,20 @@ export class AlertsService implements OnModuleInit {
       'http://localhost:8000';
     const apiKey =
       this.configService?.get<string>('OPENQUAKE_API_KEY') ||
-      process.env.OPENQUAKE_API_KEY ||
-      'suar_secret_key_123';
+      process.env.OPENQUAKE_API_KEY;
     const url = `${baseUrl}/calculate-hazard`;
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (apiKey) {
+      headers['X-API-Key'] = apiKey;
+    }
 
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': apiKey,
-        },
+        headers,
         body: JSON.stringify({ earthquake, devices }),
         signal: AbortSignal.timeout(15000), // 15 detik timeout
       });

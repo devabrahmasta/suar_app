@@ -11,17 +11,37 @@ from openquake.hazardlib.gsim.abrahamson_2015 import AbrahamsonEtAl2015SInter, A
 from openquake.hazardlib.contexts import RuptureContext
 from openquake.hazardlib.imt import PGA
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="SUAR EWS OpenQuake Hazard Microservice")
 
-# Retrieve API Key from environment or default to a secure development key
-API_KEY = os.getenv("OPENQUAKE_API_KEY", "suar_secret_key_123")
+# Enable CORS for cross-origin requests from NestJS backend / Swagger
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Load .env file if available (for local development)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Retrieve API Key strictly from environment variable
+API_KEY = os.getenv("OPENQUAKE_API_KEY")
 
 async def verify_api_key(x_api_key: Optional[str] = Header(None)):
-    if not x_api_key or x_api_key != API_KEY:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing API Key (X-API-Key header required)"
-        )
+    # Enforce API Key verification if configured in environment
+    if API_KEY:
+        if not x_api_key or x_api_key != API_KEY:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or missing API Key (X-API-Key header required)"
+            )
 
 class EqParams(BaseModel):
     magnitude: float
@@ -174,3 +194,17 @@ def calculate_hazard(request: HazardRequest):
         ))
 
     return results
+
+try:
+    import gradio as gr
+    demo = gr.Interface(
+        fn=lambda: "SUAR EWS OpenQuake Hazard Microservice is Online!",
+        inputs=[],
+        outputs="text",
+        title="SUAR OpenQuake Hazard Microservice API",
+        description="FastAPI REST microservice for computing OpenQuake ground acceleration (PGA) and MMI intensity."
+    )
+    app = gr.mount_gradio_app(app, demo, path="/ui")
+except ImportError:
+    pass
+
