@@ -4,14 +4,14 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { RegisterDeviceDto } from './dto/register-device.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 
-@ApiTags('users')
+@ApiTags('devices')
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post(['users/register-device', 'devices/register'])
+  @Post(['devices/register', 'users/register-device'])
   @ApiOperation({
-    summary: 'Register or update user device token and home location',
+    summary: 'Register or update user device FCM token and home location',
   })
   @ApiResponse({ status: 201, description: 'Device registered successfully.' })
   async registerDevice(@Body() dto: RegisterDeviceDto) {
@@ -24,8 +24,8 @@ export class UsersController {
     );
   }
 
-  @Post(['users/update-location', 'devices/location'])
-  @ApiOperation({ summary: 'Update last active geolocation of user device' })
+  @Post(['devices/location', 'users/update-location'])
+  @ApiOperation({ summary: 'Update real-time active geolocation of user device and red zone status' })
   @ApiResponse({ status: 201, description: 'Location updated successfully.' })
   @ApiResponse({ status: 404, description: 'Device not found.' })
   async updateLocation(@Body() dto: UpdateLocationDto) {
