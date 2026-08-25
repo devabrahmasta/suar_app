@@ -24,15 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Optional Hugging Face ZeroGPU handler to prevent shutdown if Space hardware is set to ZeroGPU
-try:
-    import spaces
-    @spaces.GPU(duration=1)
-    def _zero_gpu_keepalive():
-        return "ZeroGPU Ready"
-except Exception:
-    pass
-
 # Load .env file if available (for local development)
 try:
     from dotenv import load_dotenv
