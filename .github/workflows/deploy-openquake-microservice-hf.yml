@@ -36,4 +36,4 @@ jobs:
           git commit -m "Deploy latest openquake-microservice snapshot to Hugging Face Spaces"
 
           # Force push clean HEAD snapshot to Hugging Face Spaces main branch
-          git push -f https://lintangnv:$HF_TOKEN@huggingface.co/spaces/lintangnv/suar-openquake-microservice HEAD:refs/heads/main
+          git push -f https://lintangnv:$HF_TOKEN@huggingface.co/spaces/lintangnv/suar-openquake HEAD:refs/heads/main
