@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { AlertsService } from './alerts.service';
 import { EarthquakeAlert } from './entities/earthquake-alert.entity';
 import { UserDevice } from '../users/entities/user-device.entity';
-import { TsunamiHazardPolygon } from './entities/tsunami-hazard.entity';
 import { FirebaseService } from '../firebase/firebase.service';
 
 describe('AlertsService', () => {
@@ -53,13 +52,6 @@ describe('AlertsService', () => {
         {
           provide: getRepositoryToken(UserDevice),
           useValue: mockDeviceRepository,
-        },
-        {
-          provide: getRepositoryToken(TsunamiHazardPolygon),
-          useValue: {
-            find: jest.fn(),
-            findOne: jest.fn(),
-          },
         },
         {
           provide: FirebaseService,
