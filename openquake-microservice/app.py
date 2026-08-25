@@ -24,15 +24,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Retrieve API Key from environment or default to a secure development key
-API_KEY = os.getenv("OPENQUAKE_API_KEY", "suar_secret_key_123")
+# Load .env file if available (for local development)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Retrieve API Key strictly from environment variable
+API_KEY = os.getenv("OPENQUAKE_API_KEY")
 
 async def verify_api_key(x_api_key: Optional[str] = Header(None)):
-    if not x_api_key or x_api_key != API_KEY:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing API Key (X-API-Key header required)"
-        )
+    # Enforce API Key verification if configured in environment
+    if API_KEY:
+        if not x_api_key or x_api_key != API_KEY:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid or missing API Key (X-API-Key header required)"
+            )
 
 class EqParams(BaseModel):
     magnitude: float
