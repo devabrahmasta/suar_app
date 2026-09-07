@@ -51,7 +51,7 @@ SUAR hadir sebagai solusi tangguh berbasis **Offline-First** yang didukung pemod
 - **EWS Seismik Presisi Tinggi (OpenQuake Integration):** Menghitung percepatan tanah puncak (**PGA**) dan skala intensitas guncangan (**MMI**) berdasarkan standar *GEM (Global Earthquake Model) Foundation*, memperhitungkan klasifikasi tektonik Slab2 dan amplifikasi tanah $V_{s30}$.
 - **Navigasi Evakuasi Luring:** Menggabungkan data BMKG secara real-time, analisis spasial peta risiko InaRISK BNPB, dan pemrosesan AI untuk mengunduh peta serta rute evakuasi secara otomatis sebelum sinyal hilang.
 
-Aplikasi ini dikembangkan untuk ajang **IDCamp Dicoding Challenge 2026** di bawah tema *"Small Apps for Big Preparedness"*. Seluruh kebutuhan pengembangan telah didokumentasikan pada berkas [SUAR_PRD.md](./SUAR_PRD.md).
+Aplikasi ini dikembangkan untuk ajang **Gemastik Kemendiktisaintek RI 2026**.
 
 ---
 
