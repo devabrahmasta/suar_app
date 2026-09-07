@@ -55,6 +55,14 @@ Aplikasi ini dikembangkan untuk ajang **IDCamp Dicoding Challenge 2026** di bawa
 
 ---
 
+## Latar Belakang & Pendekatan Solusi
+
+Peristiwa gempa bumi dan tsunami besar di Indonesia—seperti Aceh 2004, Yogyakarta 2006, hingga Palu 2018 membuktikan bahwa ancaman bencana tidak hanya berasal dari guncangan fisik, melainkan kelumpuhan mendadak pada infrastruktur listrik dan jaringan telekomunikasi seluler. Ketiadaan sinyal memicu disorientasi massal dan kepanikan, sementara mayoritas aplikasi kebencanaan konvensional kehilangan kegunaannya karena sangat bergantung pada koneksi internet serta menyajikan data seismik mentah yang terlalu rumit dipahami oleh masyarakat awam dalam situasi darurat.
+
+Untuk mengatasi titik kritis tersebut, sistem dibangun dengan pendekatan **offline-first** yang memadukan pemodelan seismik dan navigasi adaptif. Logika penentuan risiko diotomatisasi dengan memperhitungkan klasifikasi tektonik lempeng Slab2 serta amplifikasi tanah lokal ($V_{s30}$) melalui *OpenQuake Hazard Engine*. Data ini disederhanakan melalui triase cerdas berbasis AI untuk menentukan instruksi evakuasi instan, didukung mekanisme *Just-In-Time (JIT) caching* yang otomatis mengunduh peta lokal dan rute darurat sebelum koneksi internet benar-benar terputus.
+
+Dari formulasi ini hadir **SUAR**, sebuah aplikasi navigasi evakuasi dan sistem peringatan dini mandiri yang dirancang ramah kepanikan (*panic-friendly*), memastikan setiap individu tetap memiliki panduan spasial menuju titik aman secara cepat dan terarah di tengah kondisi nol sinyal.
+
 ## ✨ Fitur Utama Sistem
 
 ### ⚡ 1. Pemodelan Bahaya Seismik OpenQuake & Amplifikasi Tanah $V_{s30}$ (Phase 3 EWS)
