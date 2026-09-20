@@ -38,6 +38,7 @@ class EwsAlertPage extends ConsumerWidget {
 
     final result = alertData.triageResult;
     final gempa = alertData.gempa;
+    final impact = alertData.impact;
     final isEvakuasi = result.statusTindakan == 'EVAKUASI';
 
     // Penentuan Judul & Subjudul Peringatan secara dinamis
@@ -276,6 +277,18 @@ class EwsAlertPage extends ConsumerWidget {
                               ),
                             ],
                           ),
+                          if (impact != null) ...[
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                _buildStatBox(
+                                  label: 'ESTIMASI GUNCANGAN DI LOKASI ANDA',
+                                  value:
+                                      'MMI ${impact.estimatedMmi.toStringAsFixed(1)} · ${impact.shakingLabel}',
+                                ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),
