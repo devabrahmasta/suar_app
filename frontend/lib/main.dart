@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:suar_app/core/services/notification_service.dart';
 import 'package:suar_app/core/services/background_service.dart';
+import 'package:suar_app/core/services/push_message_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -42,6 +43,7 @@ void main() async {
   }
 
   await NotificationService.init();
+  if (isFirebaseInitialized) await PushMessageService.init();
   await BackgroundService.init();
 
   HttpOverrides.global = MyHttpOverrides();
@@ -72,12 +74,13 @@ class MainApp extends ConsumerWidget {
     // Listener notifikasi didaftarkan di root (bukan di HomeScreen) supaya
     // tap notifikasi (cold-start maupun warm-resume) selalu tertangani dari
     // kondisi/halaman apapun yang sedang aktif.
-    ref.listen<AsyncValue<String?>>(notificationPayloadProvider, (
+    ref.listen<AsyncValue<NotificationTap>>(notificationTapProvider, (
       previous,
       next,
     ) {
-      if (next.hasValue && next.value != null) {
-        _handleNotificationPayload(ref, router, next.value!);
+      final tap = next.value;
+      if (tap != null) {
+        _handleNotificationPayload(ref, router, tap.payload);
       }
     });
 

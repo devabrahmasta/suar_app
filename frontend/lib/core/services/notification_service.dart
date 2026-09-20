@@ -2,6 +2,13 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
+  static const String _emergencyChannelId = 'suar_darurat_v5';
+  static const String _emergencyChannelName = 'Peringatan Darurat';
+  static const String _emergencyChannelDescription =
+      'Notifikasi untuk peringatan gempa & tsunami EWS';
+  static const RawResourceAndroidNotificationSound _emergencySound =
+      RawResourceAndroidNotificationSound('chicken_screaming');
+
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -37,6 +44,21 @@ class NotificationService {
         selectNotificationStream.add(response.payload);
       },
     );
+
+    await _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(
+          const AndroidNotificationChannel(
+            _emergencyChannelId,
+            _emergencyChannelName,
+            description: _emergencyChannelDescription,
+            importance: Importance.max,
+            sound: _emergencySound,
+            audioAttributesUsage: AudioAttributesUsage.alarm,
+          ),
+        );
   }
 
   static Future<void> showNotification({
@@ -47,13 +69,13 @@ class NotificationService {
   }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-          'suar_darurat_v5',
-          'Peringatan Darurat',
-          channelDescription: 'Notifikasi untuk peringatan gempa & tsunami EWS',
+          _emergencyChannelId,
+          _emergencyChannelName,
+          channelDescription: _emergencyChannelDescription,
           importance: Importance.max,
           priority: Priority.high,
           ticker: 'ticker',
-          sound: RawResourceAndroidNotificationSound('chicken_screaming'),
+          sound: _emergencySound,
           playSound: true,
           audioAttributesUsage: AudioAttributesUsage.alarm,
         );
