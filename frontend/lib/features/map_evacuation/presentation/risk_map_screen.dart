@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/core/widgets/icon_circle_badge.dart';
 import 'map_provider.dart';
+import '../../../core/utils/tsunami_potential.dart';
 
 class RiskMapScreen extends ConsumerStatefulWidget {
   const RiskMapScreen({super.key});
@@ -156,7 +157,7 @@ class _RiskMapScreenState extends ConsumerState<RiskMapScreen>
             final jam = gempa['Jam'] ?? '-';
             final kedalaman = gempa['Kedalaman'] ?? '-';
             final potensi = gempa['Potensi'] ?? '-';
-            final isTsunami = potensi.toLowerCase().contains('tsunami');
+            final isTsunami = isTsunamiPotential(potensi);
 
             return Container(
               padding: const EdgeInsets.all(24),

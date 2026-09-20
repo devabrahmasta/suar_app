@@ -12,6 +12,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../user/presentation/user_notifier.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../core/services/suar_backend_service.dart';
+import '../../../core/utils/tsunami_potential.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 
@@ -181,7 +182,7 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       }
 
       final mag = double.tryParse(gempa.magnitude) ?? 0.0;
-      final isTsunami = gempa.potensi.toLowerCase().contains('tsunami');
+      final isTsunami = isTsunamiPotential(gempa.potensi);
 
       // Evaluasi umur gempa agar data BMKG masa lalu (> 2 jam) tidak memicu peringatan aktif
       bool isStale = false;

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:suar_app/features/ews_ai/data/bmkg_service.dart';
 import 'package:suar_app/core/services/notification_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:suar_app/core/utils/tsunami_potential.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -40,7 +41,7 @@ void callbackDispatcher() {
 
         bool isDanger = false;
         final mag = double.tryParse(latestGempa.magnitude) ?? 0.0;
-        final isTsunami = latestGempa.potensi.toLowerCase().contains('tsunami');
+        final isTsunami = isTsunamiPotential(latestGempa.potensi);
 
         if (isTsunami || mag >= 7.0) {
           isDanger = true;
