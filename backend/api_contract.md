@@ -1,547 +1,343 @@
-# 📜 Kontrak API & Spesifikasi Teknis (API Contract Document)
-## Project SUAR — Sistem Ubiquitous Adaptif Respons
-**Versi Kontrak:** 1.0.0  
-**Tanggal Rilis:** Maret 2026  
-**Penyusun:** Backend Lead  
-**Target Pengguna:** Mobile Frontend Team (Flutter)  
-**Status Modul Backend:** Partial / In-Progress (Siap untuk Parallel Development & Mocking)
+# 📜 Kontrak API SUAR Backend
 
----
+**Versi:** 1.1.0
+**Disinkronkan dengan kode:** 20 September 2026, `main` pada commit `10e93e2` (menggantikan v1.0.0, Maret 2026)
+**Penyusun:** Backend Lead
+**Pembaca:** Tim Mobile Frontend (Flutter)
 
 > [!IMPORTANT]
-> **Dokumen Panduan Kerja Tim Frontend**  
-> Dokumen ini disusun agar Tim Frontend dapat membangun Data Model, Repository, State Management (Riverpod), serta UI Screen secara **100% paralel** tanpa bergantung pada penyelesaian backend cloud. Semua format *request*, *response*, *data types*, dan *error payloads* di bawah ini telah dikunci (*frozen contract*).
+> Versi 1.0.0 menjanjikan *envelope* respons standar, header `X-Device-ID`/`X-App-Version`, dan beberapa skema respons yang **tidak pernah diimplementasikan**, serta memuat endpoint tsunami yang kini sudah dihapus. Dokumen ini hanya memuat perilaku yang ada di kode. Rujukan utama: `src/**/*.controller.ts`, `src/**/*.service.ts`, dan Swagger UI di `/api/docs`.
 
 ---
 
-## 1. Overview & Arsitektur Integrasi
+## 1. Ringkasan
 
-Aplikasi **SUAR** beroperasi dengan arsitektur **Hybrid Online-Offline (Offline-First)**:
-1. **Mode Online (Cloud Backend):** Selagi koneksi seluler/internet tersedia, perangkat berkomunikasi dengan **NestJS Cloud Backend + PostGIS** untuk registrasi FCM token, sinkronisasi titik lokasi geospasial, polling gempa real-time BMKG, pengecekan zona merah tsunami, serta sinkronisasi daya tampung posko evakuasi.
-2. **Mode Offline (Local Cache):** Saat internet mati akibat bencana, frontend beralih ke data geospasial lokal (SQLite FMTC + GeoJSON asset) dengan *graceful degradation*.
-
-```
-+------------------+         REST / Tile          +-----------------------+
-| Mobile Frontend  | ---------------------------> | NestJS Backend        |
-| (Flutter/Dart)   | <--------------------------- | (PostgreSQL + PostGIS)|
-+------------------+     FCM Push Notification    +-----------------------+
-        |                                                    |
-        | (Fallback saat Offline)                            | Internal API Key
-        v                                                    v
-+------------------+                              +-----------------------+
-| Local SQLite /   |                              | OpenQuake Python      |
-| Local Storage    |                              | Hazard Microservice   |
-+------------------+                              +-----------------------+
-```
-
-### 1.1 Base Environment URLs
-
-| Environment | Base URL | Keterangan |
+| Modul | Method & Path | Fungsi |
 | :--- | :--- | :--- |
-| **Local Development** | `http://localhost:3000` | Testing backend lokal (Docker/NestJS) |
-| **Staging / Cloud** | `https://suar-backend-dev.hf.space` | Cloud Deployment (Hugging Face Spaces) |
-| **OpenQuake Microservice** | `https://suar-openquake.hf.space` | Service-to-service PGA & MMI engine |
+| Devices | `POST /devices/register` (alias `/users/register-device`) | Daftar/perbarui token FCM dan lokasi rumah |
+| Devices | `POST /devices/location` (alias `/users/update-location`) | Perbarui lokasi aktif, Vs30, dan status zona merah |
+| Alerts | `GET /alerts/latest` | Gempa terbaru yang tersimpan |
+| Alerts | `POST /alerts/calculate-impact` | Estimasi jarak dan MMI di lokasi pengguna |
+| Alerts | `POST /alerts/trigger-poll` | Pemicu polling BMKG manual (dev) |
+| Alerts | `POST /alerts/simulate` | Simulasi gempa (dev/QA) |
+| Shelters | `GET /shelters` | Semua titik evakuasi |
+| Shelters | `GET /shelters/nearby` | Titik evakuasi aktif terdekat |
+| Shelters | `POST /shelters` | Daftarkan titik evakuasi |
+| Shelters | `PATCH /shelters/:id/evacuees` | Perbarui jumlah pengungsi |
+| Shelters | `POST /shelters/seed` | Isi data awal titik evakuasi Bantul |
 
-### 1.2 Global Request Headers
+Endpoint pengecekan zona merah (`/alerts/tsunami-check`) dan ubin overlay (`/alerts/tsunami-tile/...`) **sudah dihapus**. Status zona merah kini dihitung di perangkat dan dilaporkan lewat field `isRedZone` pada `/devices/location`.
 
-Setiap HTTP Request dari aplikasi Flutter wajib menyertakan header berikut:
+**Base URL**
 
-```http
-Content-Type: application/json
-Accept: application/json
-X-Device-ID: uuid-v4-unique-device-id
-X-App-Version: 1.0.0
-```
+| Lingkungan | URL |
+| :--- | :--- |
+| Produksi (Hugging Face Space) | `https://lintangnv-suar-backend.hf.space` |
+| Lokal | `http://localhost:3000` |
+| Swagger UI | `{base}/api/docs` |
+
+Microservice OpenQuake dipanggil hanya oleh backend (`OPENQUAKE_MICROSERVICE_URL`, header `X-API-Key`); klien tidak mengaksesnya.
 
 ---
 
-## 2. Standard Envelope & Error Response Format
+## 2. Konvensi
 
-Untuk konsistensi parsing JSON di sisi Flutter, backend menggunakan **Standard Global Envelope Format**.
-
-### 2.1 Success Response Envelope (HTTP 200 / 201)
-
+### 2.1 Format respons
+- **Tidak ada envelope.** Respons sukses adalah objek/array/nilai asli endpoint, tanpa `success`, `data`, atau `meta` (kecuali endpoint yang secara eksplisit mengembalikan `success`, lihat `trigger-poll` dan `simulate`).
+- **Kesalahan** memakai format bawaan NestJS:
 ```json
-{
-  "success": true,
-  "statusCode": 200,
-  "message": "Deskripsi singkat hasil operasi",
-  "data": { ... },
-  "meta": {
-    "timestamp": "2026-03-31T14:30:00.000Z"
-  }
-}
+{ "message": "Perangkat dengan ID abc tidak ditemukan", "error": "Not Found", "statusCode": 404 }
 ```
-*(Catatan: Beberapa endpoint langsung mengembalikan object data utama atau array untuk performa tile geospasial).*
+- Parameter query yang tidak valid pada endpoint berpipa (`shelters/nearby`) menghasilkan `400` dengan pesan validasi Nest.
+- **Body `POST` tidak divalidasi secara global** (belum ada `ValidationPipe`); klien wajib mengirim tipe yang benar.
 
-### 2.2 Error Response Envelope (HTTP 4xx / 5xx)
+### 2.2 Header dan autentikasi
+- Kirim `Content-Type: application/json`.
+- Backend **tidak membaca** header khusus (`X-Device-ID`, `X-App-Version`) dan **belum ada autentikasi**. Semua endpoint bersifat publik.
 
-```json
-{
-  "success": false,
-  "statusCode": 400,
-  "message": "Validasi input gagal",
-  "errorDetails": [
-    "latitude must be a latitude coordinate",
-    "fcmToken should not be empty"
-  ],
-  "timestamp": "2026-03-31T14:30:00.000Z"
-}
-```
+### 2.3 Koordinat
+- Datum WGS 84 (EPSG:4326).
+- Parameter query dan body memakai `latitude` dan `longitude` terpisah.
+- GeoJSON pada respons mengikuti RFC 7946: `coordinates` berurutan **`[longitude, latitude]`**.
+- Klien hanya memanggil `location` bila perangkat bergeser ≥ 1.000 m **atau** ≥ 30 menit sejak pengiriman terakhir.
 
----
-
-## 3. Konvensi Geospasial & Aturan Koordinat
-
-1. **Sistem Koordinat (Datum):** Selalu menggunakan **WGS 84 (EPSG:4326)**.
-2. **Format Parameter Query REST API:** `latitude` (double) dan `longitude` (double) dipisah sebagai query parameter individual.
-3. **Format GeoJSON (Database & Cache):** Sesuai standar RFC 7946, array koordinat berurutan `[longitude, latitude]`.
-4. **Optimasi Interval Update Geospasial Perangkat:**
-   * Flutter **hanya** mengirim request `update-location` ke backend jika perangkat telah **berpindah ≥ 1.000 meter (1 km)** ATAU **waktu berlalu ≥ 30 menit** sejak update lokasi terakhir.
+### 2.4 Tipe angka
+- `magnitude` pada `earthquake_alerts` bertipe `decimal`; driver PostgreSQL dapat mengirimnya sebagai **string** (mis. `"6.8"`). Klien harus menerima string maupun angka.
 
 ---
 
-## 4. Spesifikasi REST API Endpoint per Modul
+## 3. Devices
 
----
+### 3.1 `POST /devices/register` (alias `POST /users/register-device`)
+Membuat atau memperbarui perangkat. Bila koordinat rumah dikirim, backend mencari Vs30 dari raster tanah (default `270` m/s bila di luar cakupan).
 
-### 📱 Modul 1: User & Device Registration (`/users`)
-
-Modul ini menangani pendaftaran token FCM perangkat fisik dan sinkronisasi koordinat GPS lokasi aktif pengguna untuk penargetan notifikasi bencana geospasial (*geofencing*).
-
-#### 1.1 `POST /users/register-device`
-Membuat atau memperbarui profil perangkat pengguna dan token FCM push notification saat onboarding aplikasi.
-
-* **Request Body:**
+**Body**
 ```json
 {
   "deviceId": "c8a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
-  "fcmToken": "fcm_token_string_from_firebase_messaging_sdk",
+  "fcmToken": "token-fcm",
   "homeType": "Rumah",
   "homeLatitude": -7.7956,
   "homeLongitude": 110.3695
 }
 ```
-* **Field Specifications:**
-  * `deviceId` (string, **Required**): Unique Identifer HP (UUID v4 / Android ID).
-  * `fcmToken` (string, **Required**): Firebase Push Notification Token.
-  * `homeType` (string, *Optional*): Jenis hunian (`"Rumah"`, `"Apartemen"`, `"Ruko"`).
-  * `homeLatitude` (number, *Optional*): Lintang tempat tinggal (-90 s.d 90).
-  * `homeLongitude` (number, *Optional*): Bujur tempat tinggal (-180 s.d 180).
+`deviceId` dan `fcmToken` wajib; sisanya opsional.
 
-* **Response 201 (Created / Success):**
+**Respons 201** — objek `UserDevice` yang tersimpan (contoh sebagian):
 ```json
 {
   "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
   "deviceId": "c8a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
-  "fcmToken": "fcm_token_string_from_firebase_messaging_sdk",
+  "fcmToken": "token-fcm",
   "homeType": "Rumah",
-  "lastLocation": {
-    "type": "Point",
-    "coordinates": [110.3695, -7.7956]
-  },
-  "updatedAt": "2026-03-31T14:30:00.000Z"
+  "homeLocation": { "type": "Point", "coordinates": [110.3695, -7.7956] },
+  "vs30": 270,
+  "lastActive": "2026-09-20T07:30:00.000Z"
 }
 ```
+Field lain pada entitas (`lastLocation`, `isRedZone`, `createdAt`, `updatedAt`) dapat ikut dikembalikan. Kirim ulang endpoint ini setiap token FCM berganti.
 
----
-
-#### 1.2 `POST /users/update-location`
-Memperbarui lokasi GPS aktif terakhir perangkat pengguna (*background service location sync*).
-
-* **Request Body:**
+### 3.2 `POST /devices/location` (alias `POST /users/update-location`)
+**Body**
 ```json
 {
   "deviceId": "c8a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
   "latitude": -7.0251,
-  "longitude": 110.4208
+  "longitude": 110.4208,
+  "isRedZone": true
 }
 ```
+`isRedZone` **opsional** (boolean) dan dihitung oleh klien.
 
-* **Response 201 (Success):**
-```json
-{
-  "success": true,
-  "message": "User location updated successfully",
-  "deviceId": "c8a1b2c3-4d5e-6f7a-8b9c-0d1e2f3a4b5c",
-  "location": {
-    "latitude": -7.0251,
-    "longitude": 110.4208
-  }
-}
-```
+> [!WARNING]
+> Field `isRedZone` menentukan apakah perangkat menerima push `TSUNAMI_EVACUATION_ALERT` (lihat bagian 6). Hanya perangkat dengan `isRedZone = true` yang menerimanya. Bila klien tidak mengirim field ini, nilainya tetap seperti sebelumnya (awal: `false`) dan perangkat tidak akan mendapat push evakuasi tsunami, hanya push guncangan.
 
-* **Response 404 (Not Found):**
-```json
-{
-  "success": false,
-  "statusCode": 404,
-  "message": "Device with ID c8a1b2c3-... not registered. Please call /users/register-device first."
-}
-```
+**Respons 201** — objek `UserDevice` yang diperbarui (`lastLocation`, `vs30`, `isRedZone`, `lastActive`).
+**Respons 404** — perangkat belum terdaftar; panggil `register` terlebih dulu.
 
 ---
 
-### 🚨 Modul 2: Early Warning System (EWS) Gempa (`/alerts`)
+## 4. Alerts (`/alerts`)
 
-Modul EWS memantau data real-time BMKG, melakukan de-duplikasi gempa, mengkalkulasi radius bahaya geospasial, dan menyajikan data gempa terbersih ke aplikasi Flutter.
+### 4.1 `GET /alerts/latest`
+Gempa terbaru berdasarkan `alertTime`, termasuk yang tidak memenuhi ambang siaran (`isBroadcasted: false`). Bila belum ada data, backend mengembalikan `null` (body kosong).
 
-#### 2.1 `GET /alerts/latest`
-Mengambil data gempa bumi terbaru yang telah diverifikasi dan diproses oleh server EWS.
-
-* **Query Parameters:** Tidak ada.
-* **Response 200 (Success):**
+**Respons 200**
 ```json
 {
-  "id": "eq-20260331-001",
-  "bmkgId": "20260331141520",
-  "datetime": "2026-03-31T14:15:20.000Z",
-  "magnitude": 6.8,
-  "depthKm": 15.0,
-  "latitude": -8.45,
-  "longitude": 114.22,
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "bmkgId": "4a7f21b9c8d3e...",
+  "magnitude": "6.8",
+  "depth": "15 km",
   "wilayah": "95 km BaratDaya BANYUWANGI-JATIM",
-  "potensi": "Berpotensi Tsunami",
-  "dirasakan": "IV-V Banyuwangi, III-IV Denpasar, III Kuta",
-  "impactRadiusKm": 250.0,
-  "isTsunamiPotential": true,
-  "createdAt": "2026-03-31T14:15:25.120Z"
+  "potensi": "Tidak berpotensi tsunami",
+  "epicenter": { "type": "Point", "coordinates": [114.22, -8.45] },
+  "isBroadcasted": true,
+  "alertTime": "2026-09-20T06:15:20.000Z",
+  "createdAt": "2026-09-20T06:15:25.120Z",
+  "updatedAt": "2026-09-20T06:15:25.120Z"
 }
 ```
+- `bmkgId` adalah SHA-256 dari `DateTime_Coordinates` BMKG (untuk simulasi berformat `SIMULASI_<epoch>`).
+- `potensi` dapat berupa **"Tidak berpotensi tsunami"**. Jangan mendeteksi tsunami dengan `contains('tsunami')`; periksa juga frasa `tidak berpotensi`.
 
----
+### 4.2 `POST /alerts/calculate-impact`
+Estimasi guncangan di lokasi pengguna dengan rumus atenuasi sederhana. Ini **bukan** hasil OpenQuake; MMI OpenQuake hanya dipakai backend untuk menyaring penerima push.
 
-#### 2.2 `POST /alerts/trigger-poll` *(Endpoint Pengujian / Dev Only)*
-Memicu polling manual backend ke API BMKG (`gempaterkini.json`).
+**Body**
+```json
+{ "earthquakeId": "550e8400-e29b-41d4-a716-446655440000", "latitude": -7.99, "longitude": 110.29 }
+```
+`earthquakeId` menerima `id` (UUID) atau `bmkgId`.
 
-* **Request Body:** `{}`
-* **Response 201 (Success):**
+**Respons 200** (nilai pada contoh bersifat ilustrasi)
 ```json
 {
-  "success": true,
-  "message": "BMKG Poll triggered manually"
+  "earthquakeId": "550e8400-e29b-41d4-a716-446655440000",
+  "bmkgId": "4a7f21b9c8d3e...",
+  "magnitude": "6.8",
+  "depth": "15 km",
+  "wilayah": "95 km BaratDaya BANYUWANGI-JATIM",
+  "potensi": "Tidak berpotensi tsunami",
+  "isTsunamiPotential": false,
+  "isUserInJawaBaliScope": true,
+  "epicenter": { "latitude": -8.45, "longitude": 114.22 },
+  "userLocation": { "latitude": -7.99, "longitude": 110.29 },
+  "distanceKm": 412.55,
+  "estimatedMmi": 4.1,
+  "shakingLevel": "LIGHT",
+  "alertTime": "2026-09-20T06:15:20.000Z"
 }
 ```
+`shakingLevel`: `MINOR` (MMI < 3), `LIGHT` (3 ≤ MMI < 5), `MODERATE` (5 ≤ MMI < 7), `VERY_SEVERE` (MMI ≥ 7). **Respons 404** bila alert tidak ditemukan.
 
----
+### 4.3 `POST /alerts/trigger-poll` *(dev)*
+Memicu satu siklus polling BMKG. **Respons 201:** `{ "success": true, "message": "BMKG Poll triggered manually" }`.
 
-#### 2.3 `POST /alerts/simulate` *(Endpoint Pengujian QA / Frontend Simulator)*
-Menyimulasikan skenario gempa kustom untuk menguji alarm suara darurat dan geofencing radius bahaya pada handphone penguji.
+### 4.4 `POST /alerts/simulate` *(dev/QA)*
+Memproses gempa simulasi seolah dari BMKG (melewati ambang dan dedup) dan mengirim FCM ke perangkat terdampak.
 
-* **Request Body:**
+**Body**
 ```json
 {
   "magnitude": 7.2,
   "depth": "10 km",
   "latitude": -7.02,
   "longitude": 110.32,
-  "potensi": "Berpotensi TSUNAMI di Pesisir Jawa Tengah",
+  "potensi": "Berpotensi tsunami",
   "wilayah": "25 km TimurLaut KOTA SEMARANG"
 }
 ```
-* **Response 201 (Success):**
+`depth` dapat berupa string atau angka (bawaan `"15"` bila kosong).
+
+**Respons 201**
 ```json
-{
-  "success": true,
-  "message": "Simulated alert broadcasted to 142 affected devices",
-  "alertId": "sim-88129381",
-  "impactRadiusKm": 250
-}
+{ "success": true, "alertId": "550e8400-e29b-41d4-a716-446655440000", "impactedCount": 142, "radiusInKm": 700 }
 ```
+`radiusInKm` adalah radius pencarian awal (minimal 500 km, mengikuti jangkauan tsunami), atau radius dinamis (50–250 km) pada jalur cadangan.
+
+> [!CAUTION]
+> Endpoint ini belum diautentikasi dan mengirim push nyata ke perangkat yang berada dalam radius.
 
 ---
 
-### 🌊 Modul 3: Zona Merah Tsunami & Layer Peta Vektor (`/alerts/tsunami-*`)
+## 5. Shelters (`/shelters`)
 
-Modul ini menyajikan pengecekan presisi tinggi Point-in-Polygon zona bahaya tsunami berbasis PostGIS spatial query untuk wilayah **Jawa & Bali**, serta menyediakan ubin (tile) visual peta.
-
-#### 3.1 `GET /alerts/tsunami-check`
-Mengecek secara real-time apakah koordinat GPS pengguna berada di dalam Polygon Zona Merah Bahaya Tsunami (Jawa & Bali).
-
-* **Query Parameters:**
-  * `latitude` (number, **Required**): Contoh `-7.02`
-  * `longitude` (number, **Required**): Contoh `110.32`
-
-* **Response 200 (Zona Merah / Bahaya):**
-```json
-{
-  "isRedZone": true,
-  "hazardLevel": "HIGH",
-  "zoneDetails": {
-    "region": "Pesisir Utara Jawa Tengah / Semarang",
-    "riskType": "Tsunami Hazard Zone - High Vulnerability",
-    "recommendedAction": "SEGERA LAKUKAN EVAKUASI KE DATARAN TINGGI (MINIMAL ELEVASI 20 METER)"
-  },
-  "location": {
-    "latitude": -7.02,
-    "longitude": 110.32
-  }
-}
-```
-
-* **Response 200 (Zona Aman / Daratan):**
-```json
-{
-  "isRedZone": false,
-  "hazardLevel": "SAFE",
-  "zoneDetails": null,
-  "location": {
-    "latitude": -7.7956,
-    "longitude": 110.3695
-  }
-}
-```
-
----
-
-#### 3.2 `GET /alerts/tsunami-tile/{z}/{x}/{y}.svg`
-Menyuplai ubin vektor SVG transparan zona bahaya tsunami untuk dirender langsung oleh `flutter_map` saat online.
-
-* **Path Parameters:** `z` (zoom level, e.g. 14), `x` (tile X index), `y` (tile Y index).
-* **Response Header:** `Content-Type: image/svg+xml`, `Cache-Control: public, max-age=86400`
-* **Response Body:** Data Biner SVG.
-
----
-
-#### 3.3 `GET /alerts/tsunami-tile/{z}/{x}/{y}.pbf`
-Menyuplai Mapbox Vector Tile (MVT) standar protobuf untuk pengisian tile caching luring (FMTC).
-
-* **Path Parameters:** `z`, `x`, `y`.
-* **Response Header:** `Content-Type: application/x-protobuf`
-* **Response Body:** Binary Protocol Buffer.
-
----
-
-### 🏰 Modul 4: Posko & Titik Kumpul Evakuasi / Shelters (`/shelters`)
-
-Modul ini mengelola data Single Source of Truth (SSOT) posko evakuasi bencana, lokasi geospasial, daya tampung (kapasitas), dan update real-time jumlah pengungsi.
-
-#### 4.1 `GET /shelters`
-Mengambil seluruh daftar posko evakuasi terdaftar.
-
-* **Response 200 (Success):**
-```json
-[
-  {
-    "id": "shelter-001",
-    "name": "Stadion Maguwoharjo (Titik Kumpul Utama)",
-    "location": {
-      "type": "Point",
-      "coordinates": [110.4178, -7.7584]
-    },
-    "latitude": -7.7584,
-    "longitude": 110.4178,
-    "capacity": 5000,
-    "currentEvacuees": 1240,
-    "status": "active",
-    "notes": "Fasilitas: Listrik Genset, Dapur Umum, Posko Kesehatan",
-    "createdAt": "2026-03-01T08:00:00.000Z"
-  }
-]
-```
-
----
-
-#### 4.2 `GET /shelters/nearby`
-Mencari posko evakuasi terdekat di sekitar lokasi GPS pengguna menggunakan PostGIS `ST_DWithin`.
-
-* **Query Parameters:**
-  * `latitude` (number, **Required**): Contoh `-7.79`
-  * `longitude` (number, **Required**): Contoh `110.36`
-  * `radiusInKm` (number, *Optional*, Default: `50`): Radius pencarian dalam kilometer.
-
-* **Response 200 (Success):**
-```json
-[
-  {
-    "id": "shelter-002",
-    "name": "SMA Negeri 1 Godean",
-    "location": {
-      "type": "Point",
-      "coordinates": [110.2945, -7.7681]
-    },
-    "latitude": -7.7681,
-    "longitude": 110.2945,
-    "capacity": 800,
-    "currentEvacuees": 150,
-    "distanceKm": 4.2,
-    "status": "active",
-    "notes": "Tersedia area helipad darurat dan pasokan air bersih."
-  }
-]
-```
-
----
-
-#### 4.3 `POST /shelters`
-Mendaftarkan posko evakuasi baru oleh petugas atau admin lapangan.
-
-* **Request Body:**
-```json
-{
-  "name": "Gedung Serbaguna Kelurahan Depok",
-  "latitude": -7.7621,
-  "longitude": 110.3912,
-  "capacity": 600,
-  "notes": "Posko sekunder bencana gempa/banjir"
-}
-```
-
-* **Response 201 (Created):** Mengembalikan objek `Shelter` lengkap.
-
----
-
-#### 4.4 `PATCH /shelters/{id}/evacuees`
-Memperbarui jumlah statistik pengungsi secara real-time.
-
-* **Request Body:**
-```json
-{
-  "count": 320
-}
-```
-
-* **Response 200 (Success):**
-```json
-{
-  "id": "shelter-001",
-  "name": "Stadion Maguwoharjo",
-  "capacity": 5000,
-  "currentEvacuees": 320,
-  "updatedAt": "2026-03-31T15:00:00.000Z"
-}
-```
-
----
-
-## 5. Kontrak Payload Push Notification FCM (Firebase Cloud Messaging)
-
-Ketika BMKG merilis data gempa signifikan (Mag ≥ 5.0 atau Potensi Tsunami), Cloud Backend mengirim pesan FCM **High Priority** langsung ke HP pengguna yang berada dalam radius bahaya:
-
-### 5.1 FCM Data Payload Schema (Silent & High Priority Trigger)
+`type` adalah **TPS** (Tempat Pengungsian Sementara) atau **TPA** (Tempat Pengungsian Akhir). Respons berupa objek `Shelter` apa adanya (tanpa `latitude`/`longitude`/`distanceKm`):
 
 ```json
 {
-  "message": {
-    "token": "target_device_fcm_token",
-    "priority": "HIGH",
-    "data": {
-      "click_action": "FLUTTER_NOTIFICATION_CLICK",
-      "type": "EARTHQUAKE_EWS_ALERT",
-      "alertId": "eq-20260331-001",
-      "magnitude": "6.8",
-      "depth": "15.0",
-      "latitude": "-8.45",
-      "longitude": "114.22",
-      "wilayah": "95 km BaratDaya BANYUWANGI-JATIM",
-      "potensi": "Berpotensi Tsunami",
-      "impactRadiusKm": "250.0",
-      "isTsunami": "true",
-      "timestamp": "1774966520000"
-    }
-  }
+  "id": "3f1c1a52-8a53-4a7d-9d4c-8c0f6a6f2b10",
+  "name": "Titik Evakuasi TPA (TPA-01)",
+  "type": "TPA",
+  "location": { "type": "Point", "coordinates": [110.255611, -7.968502] },
+  "capacity": 500,
+  "currentEvacuees": 0,
+  "status": "active",
+  "notes": "Data evakuasi resmi BPBD Bantul (TPA)",
+  "source": "digitized_bpbd_peta_2010",
+  "createdAt": "2026-09-20T07:00:00.000Z",
+  "updatedAt": "2026-09-20T07:00:00.000Z"
 }
 ```
 
 > [!NOTE]
-> **Tindakan Perangkat Flutter saat Menerima FCM Payload:**
-> 1. Memutar suara sirene alarm darurat (*Foreground Service Audio Player*).
-> 2. Memicu analisis AI Triage (Google Gemini Flash) untuk menyusun instruksi evakuasi spesifik berdasarkan lokasi & kerentanan rumah.
-> 3. Memicu proses unduh otomatis ubin peta offline (JIT Map Download 3 KM).
+> Pada data awal Bantul, `capacity` diisi angka **placeholder** (TPA = 500, TPS = 150) dan `currentEvacuees` = 0. Jangan menampilkannya sebagai data resmi sebelum diverifikasi.
+
+### 5.1 `GET /shelters`
+Semua titik evakuasi, terbaru lebih dulu. Query opsional: `type` (`TPS` | `TPA` | `ALL`; `ALL` sama dengan tanpa filter).
+
+### 5.2 `GET /shelters/nearby`
+Titik evakuasi berstatus `active` dalam radius.
+
+| Query | Tipe | Keterangan |
+| :--- | :--- | :--- |
+| `latitude` | number | Wajib |
+| `longitude` | number | Wajib |
+| `radiusInKm` | **integer** | Opsional, default 50. Nilai desimal ditolak (`400`) |
+| `type` | `TPS` \| `TPA` \| `ALL` | Opsional |
+
+Respons: array `Shelter`.
+
+### 5.3 `POST /shelters`
+**Body**
+```json
+{
+  "name": "Posko Evakuasi Parangtritis",
+  "latitude": -7.968502,
+  "longitude": 110.255611,
+  "type": "TPA",
+  "capacity": 500,
+  "status": "active",
+  "notes": "Akses mudah dari jalan utama",
+  "source": "digitized_bpbd_peta_2010"
+}
+```
+`latitude`, `longitude`, `type` wajib; sisanya opsional (`name` otomatis dibuat bila kosong). **Respons 201:** objek `Shelter`.
+
+### 5.4 `PATCH /shelters/:id/evacuees`
+**Body:** `{ "count": 320 }` (integer; nilai negatif dijepit ke 0). **Respons 200:** objek `Shelter` yang diperbarui. **404** bila `id` tidak ada.
+
+### 5.5 `POST /shelters/seed`
+Mengisi data titik evakuasi Bantul (idempoten; melewati titik yang berjarak ≤ 50 m dari data yang ada). **Respons 201:** `{ "seeded": 19, "total": 19 }`.
 
 ---
 
-## 6. Dart Data Model Ready-to-Use Code Snippets (Flutter)
+## 6. Push Notification FCM
 
-Tim Frontend dapat langsung men-copypaste DTO / Model Dart berikut ke codebase Flutter (`lib/features/.../data/models/`):
+### 6.1 Kapan alert diproses
+Backend mengambil data BMKG tiap 30 detik. Gempa disiarkan bila **M ≥ 5.0**, **kedalaman ≤ 300 km**, dan berada di atau berdampak ke Jawa-Bali. Simulasi melewati ambang ini.
 
-### 6.1 `EarthquakeAlertModel` (`earthquake_alert_model.dart`)
+### 6.2 Dua jenis push
 
-```dart
-import 'package:freezed_annotation/freezed_annotation.dart';
+| `data.type` | Penerima | `statusTindakan` |
+| :--- | :--- | :--- |
+| `TSUNAMI_EVACUATION_ALERT` | Perangkat dengan `isRedZone = true` dalam jangkauan tsunami dari episentrum | `EVAKUASI TSUNAMI` |
+| `EARTHQUAKE_ALERT` | Perangkat dengan MMI ≥ V (hasil OpenQuake) yang tidak menerima push tsunami | `BERLINDUNG` |
 
-part 'earthquake_alert_model.g.dart';
+- **Potensi tsunami** bila `potensi` tidak memuat "tidak berpotensi" **dan** (memuat "tsunami" atau (M ≥ 6.5 **dan** kedalaman ≤ 100 km)).
+- **Jangkauan tsunami** (jarak dari episentrum): M ≥ 8 → 1.200 km, M ≥ 7 → 700 km, M ≥ 6.5 → 400 km, selain itu 250 km. Pencarian kandidat memakai radius terbesar antara 500 km dan jangkauan itu.
+- **Jalur cadangan** (microservice OpenQuake tidak tersedia): backend memakai radius dinamis (50–250 km, dikurangi faktor kedalaman) dan mengirim satu jenis push ke semua perangkat dalam radius, tanpa memeriksa `isRedZone`: `TSUNAMI_EVACUATION_ALERT` bila ada potensi tsunami, selain itu `EARTHQUAKE_ALERT`.
+- Token berawalan `mock_token_` disaring.
 
-@JsonSerializable()
-class EarthquakeAlertModel {
-  final String id;
-  final String bmkgId;
-  final DateTime datetime;
-  final double magnitude;
-  final double depthKm;
-  final double latitude;
-  final double longitude;
-  final String wilayah;
-  final String potensi;
-  final String? dirasakan;
-  final double impactRadiusKm;
-  final bool isTsunamiPotential;
+### 6.3 Format pesan
 
-  EarthquakeAlertModel({
-    required this.id,
-    required this.bmkgId,
-    required this.datetime,
-    required this.magnitude,
-    required this.depthKm,
-    required this.latitude,
-    required this.longitude,
-    required this.wilayah,
-    required this.potensi,
-    this.dirasakan,
-    required this.impactRadiusKm,
-    required this.isTsunamiPotential,
-  });
-
-  factory EarthquakeAlertModel.fromJson(Map<String, dynamic> json) =>
-      _$EarthquakeAlertModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$EarthquakeAlertModelToJson(this);
-}
-```
-
-### 6.2 `TsunamiCheckResult` (`tsunami_check_result.dart`)
-
-```dart
-class TsunamiCheckResult {
-  final bool isRedZone;
-  final String hazardLevel;
-  final String? recommendedAction;
-  final double latitude;
-  final double longitude;
-
-  TsunamiCheckResult({
-    required this.isRedZone,
-    required this.hazardLevel,
-    this.recommendedAction,
-    required this.latitude,
-    required this.longitude,
-  });
-
-  factory TsunamiCheckResult.fromJson(Map<String, dynamic> json) {
-    return TsunamiCheckResult(
-      isRedZone: json['isRedZone'] ?? false,
-      hazardLevel: json['hazardLevel'] ?? 'SAFE',
-      recommendedAction: json['zoneDetails']?['recommendedAction'],
-      latitude: (json['location']?['latitude'] as num?)?.toDouble() ?? 0.0,
-      longitude: (json['location']?['longitude'] as num?)?.toDouble() ?? 0.0,
-    );
+```json
+{
+  "notification": {
+    "title": "🚨 PERINGATAN EVAKUASI TSUNAMI (SUAR)",
+    "body": "Peringatan Tsunami! Gempa M 7.2 Mw di 25 km TimurLaut KOTA SEMARANG. Anda berada di Zona Merah Tsunami. Segera evakuasi ke TPS/TPA!"
+  },
+  "data": {
+    "type": "TSUNAMI_EVACUATION_ALERT",
+    "magnitude": "7.2",
+    "depth": "10 km",
+    "wilayah": "25 km TimurLaut KOTA SEMARANG",
+    "potensi": "Berpotensi tsunami",
+    "statusTindakan": "EVAKUASI TSUNAMI",
+    "coordinates": "-7.02,110.32",
+    "dateTime": "2026-09-20T06:15:20.000Z",
+    "isSimulation": "false"
+  },
+  "android": {
+    "priority": "high",
+    "notification": { "channelId": "suar_darurat_v5" }
   }
 }
 ```
 
----
+- Judul `EARTHQUAKE_ALERT`: "⚠️ PERINGATAN GEMPA BUMI (SUAR)"; isi: "Gempa M {M} Mw, Kedalaman {d} km. Wilayah: {wilayah}. Status: BERLINDUNG." Judul dan isi berawalan `[SIMULASI]` untuk simulasi.
+- `coordinates` berformat `"lat,lng"` (berbeda dari urutan GeoJSON).
+- Payload **tidak memuat** MMI/PGA. Ambil detail lewat `GET /alerts/latest` dan `POST /alerts/calculate-impact`.
+- `channelId` harus sudah dibuat di perangkat (aplikasi membuatnya saat inisialisasi notifikasi); bila belum, Android memakai kanal bawaan FCM tanpa suara alarm.
 
-## 7. Strategi Mocking & Development Paralel Frontend
-
-Agar pengembangan Flutter tidak terhambat saat backend sedang tahap penyelesaian atau deployment:
-
-1. **Mocktail / Dio Adapter Injection:**
-   Tim Frontend disarankan menggunakan `DioAdapter` (dari package `http_mock_adapter`) untuk mengembalikan payload JSON contoh dari dokumen ini pada mode `kDebugMode`.
-2. **Hybrid Fallback Hierarchy (Keandalan Sistem):**
-   Frontend wajib mengimplementasikan pola 3 lapis fallback:
-   * **Lapis 1 (Utama):** NestJS Cloud Backend (`https://suar-backend-dev.hf.space/alerts/latest`).
-   * **Lapis 2 (Fallback Online 1):** API BMKG Langsung (`https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json`).
-   * **Lapis 3 (Fallback Offline Total):** GeoJSON Aset Lokal (`assets/data/tsunami_jawa_bali_mobile.geojson`).
+### 6.4 Perilaku klien
+- App terbuka: menampilkan notifikasi lokal beralarm dengan payload `REAL_EWS`.
+- App di latar belakang atau tertutup: sistem menampilkan notifikasi; saat di-tap, klien memakai payload `REAL_EWS`.
+- Payload `REAL_EWS` memicu pengambilan `/alerts/latest`, filter signifikansi di klien, dan analisis triage.
+- Klien mengenali kedua nilai `data.type` di atas.
 
 ---
-*Dokumen ini bersifat resmi dan terkunci sebagai acuan integrasi Frontend SUAR App v1.0.0.*
+
+## 7. Model di Frontend
+
+Frontend memakai model sendiri, bukan cuplikan `freezed`/`json_serializable` pada v1.0.0:
+
+| Data | Model | Berkas |
+| :--- | :--- | :--- |
+| `GET /alerts/latest` | `GempaModel.fromBackendJson` | `frontend/lib/features/ews_ai/domain/gempa_model.dart` |
+| `POST /alerts/calculate-impact` | `ImpactEstimate` | `frontend/lib/features/ews_ai/domain/impact_estimate_model.dart` |
+| `GET /shelters/nearby` | `Shelter` | `frontend/lib/features/map_evacuation/domain/shelter_model.dart` |
+
+---
+
+## 8. Hierarki Cadangan di Klien
+
+Data gempa:
+1. **Utama:** `GET {backend}/alerts/latest`.
+2. **Cadangan online:** BMKG `autogempa.json`.
+3. **Cadangan luring:** data statis "Mode Luring" bawaan aplikasi (magnitudo 4.1, tidak berpotensi tsunami).
+
+Status zona merah tsunami: dihitung di klien dari API InaRISK BNPB. Bila gagal, klien saat ini menganggap titik **bukan** zona merah.
+
+Titik evakuasi: hasil `GET /shelters/nearby` terakhir disimpan lokal dan dipakai saat backend tidak terjangkau.
