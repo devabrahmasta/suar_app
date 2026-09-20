@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suar_app/features/ews_ai/presentation/ews_provider.dart';
+import 'package:suar_app/features/map_evacuation/domain/shelter_model.dart';
 import 'package:suar_app/main.dart';
 
 class SuarBackendService {
@@ -197,6 +200,54 @@ class SuarBackendService {
         'radiusInKm': 250,
         'impactedCount': 1,
       };
+    }
+  }
+
+  static const Duration _sheltersTimeout = Duration(seconds: 5);
+  static const int _shelterSearchRadiusKm = 15;
+  static const String _sheltersCacheKey = 'cached_shelters';
+
+  Future<List<Shelter>> fetchNearbyShelters({
+    required double latitude,
+    required double longitude,
+  }) async {
+    try {
+      final response = await _dio
+          .get(
+            '$_baseUrl/shelters/nearby',
+            queryParameters: {
+              'latitude': latitude,
+              'longitude': longitude,
+              'radiusInKm': _shelterSearchRadiusKm,
+            },
+          )
+          .timeout(_sheltersTimeout);
+      final shelters = _parseShelters(response.data);
+      await _prefs.setString(_sheltersCacheKey, jsonEncode(response.data));
+      return shelters;
+    } catch (e) {
+      debugPrint(
+        'SuarBackendService Error fetchNearbyShelters: $e. Memakai cache lokal.',
+      );
+      return _cachedShelters();
+    }
+  }
+
+  List<Shelter> _parseShelters(dynamic data) {
+    return (data as List)
+        .map((item) => Shelter.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  List<Shelter> _cachedShelters() {
+    final cached = _prefs.getString(_sheltersCacheKey);
+    if (cached == null) return [];
+
+    try {
+      return _parseShelters(jsonDecode(cached));
+    } catch (e) {
+      debugPrint('SuarBackendService Error membaca cache shelter: $e');
+      return [];
     }
   }
 }

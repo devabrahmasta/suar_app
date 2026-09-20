@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:suar_app/core/theme/app_colors.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart';
 import '../data/smart_evacuation_service.dart';
+import '../domain/shelter_model.dart';
 import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import '../../ews_ai/presentation/ews_provider.dart';
 import 'risk_map_screen.dart' show RippleMarker;
@@ -43,6 +44,80 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     if (magnitude >= 5.0) return AppColors.danger;
     if (magnitude >= 3.0) return AppColors.warning;
     return AppColors.info;
+  }
+
+  /// Dibulatkan ke 0,01° (~1 km) agar pergeseran GPS kecil tidak memicu
+  /// permintaan shelter ulang.
+  LatLng _shelterQueryPoint(LatLng location) {
+    return LatLng(
+      (location.latitude * 100).round() / 100,
+      (location.longitude * 100).round() / 100,
+    );
+  }
+
+  Marker _buildShelterMarker(Shelter shelter) {
+    final color = shelter.type == 'TPA' ? AppColors.success : AppColors.info;
+    return Marker(
+      point: shelter.position,
+      width: 40,
+      height: 40,
+      child: GestureDetector(
+        onTap: () => _showShelterSheet(shelter),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: color, width: 2),
+          ),
+          child: Icon(Icons.night_shelter, color: color, size: 22),
+        ),
+      ),
+    );
+  }
+
+  void _showShelterSheet(Shelter shelter) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetContext) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              shelter.name,
+              style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Titik evakuasi ${shelter.type}',
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(sheetContext).pop();
+                  ref
+                      .read(evacuationRouteProvider.notifier)
+                      .findRouteToShelter(shelter.position);
+                },
+                icon: const Icon(Icons.directions_walk),
+                label: const Text('RUTE KE SINI'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -100,6 +175,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     LatLng? activeGempaPoint,
     Color activeGempaColor,
   ) {
+    final shelters =
+        ref
+            .watch(nearbySheltersProvider(_shelterQueryPoint(currentLocation)))
+            .value ??
+        const <Shelter>[];
+
     return Stack(
       children: [
         FlutterMap(
@@ -136,6 +217,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   ),
                 ],
               ),
+
+            if (shelters.isNotEmpty)
+              MarkerLayer(markers: shelters.map(_buildShelterMarker).toList()),
 
             // user position layer
             MarkerLayer(
@@ -260,7 +344,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Ikuti garis rute pada peta menuju dataran tinggi. Segera tinggalkan area pesisir sekarang juga!',
+                        'Ikuti garis rute pada peta menuju titik aman. Segera tinggalkan area pesisir sekarang juga!',
                         style: TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 13,

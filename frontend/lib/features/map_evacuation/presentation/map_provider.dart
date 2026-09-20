@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:suar_app/core/services/suar_backend_service.dart';
 import 'package:suar_app/features/map_evacuation/data/map_cache_service.dart';
 
 import '../../ews_ai/presentation/ews_provider.dart';
 import '../data/routing_service.dart';
+import '../domain/shelter_model.dart';
 import '../data/elevation_service.dart';
 import '../data/smart_evacuation_service.dart';
 import '../data/river_service.dart';
@@ -88,7 +90,23 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
     return null;
   }
 
-  Future<void> findRouteManual() async {
+  Future<void> findRouteManual() {
+    return _findRoute(
+      (start) => ref.read(smartEvacuationProvider).findOptimalRoute(start),
+    );
+  }
+
+  Future<void> findRouteToShelter(LatLng destination) {
+    return _findRoute(
+      (start) => ref
+          .read(routingServiceProvider)
+          .getEvacuationRoute(start, destination),
+    );
+  }
+
+  Future<void> _findRoute(
+    Future<List<LatLng>> Function(LatLng start) resolveRoute,
+  ) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
@@ -96,8 +114,7 @@ class RouteNotifier extends AsyncNotifier<List<LatLng>?> {
       final position = await locService.getCurrentPosition();
       final startLocation = LatLng(position.latitude, position.longitude);
 
-      final smartEvacuation = ref.read(smartEvacuationProvider);
-      final freshRoute = await smartEvacuation.findOptimalRoute(startLocation);
+      final freshRoute = await resolveRoute(startLocation);
 
       final cacheService = MapCacheService();
       await cacheService.saveOfflineRoute(freshRoute);
@@ -123,6 +140,18 @@ final evacuationRouteProvider =
     AsyncNotifierProvider<RouteNotifier, List<LatLng>?>(() {
       return RouteNotifier();
     });
+
+final nearbySheltersProvider = FutureProvider.family<List<Shelter>, LatLng>((
+  ref,
+  location,
+) {
+  return ref
+      .watch(suarBackendServiceProvider)
+      .fetchNearbyShelters(
+        latitude: location.latitude,
+        longitude: location.longitude,
+      );
+});
 
 final networkStatusProvider = StreamProvider<List<ConnectivityResult>>((ref) {
   return Connectivity().onConnectivityChanged;
