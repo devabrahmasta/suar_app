@@ -4,10 +4,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:suar_app/features/ews_ai/domain/impact_estimate_model.dart';
 import 'package:suar_app/features/ews_ai/presentation/ews_provider.dart';
 import 'package:suar_app/main.dart';
 
 class SuarBackendService {
+  static const Duration _calculateImpactTimeout = Duration(seconds: 5);
+
   final Dio _dio;
   final SharedPreferences _prefs;
   final String _baseUrl;
@@ -153,6 +156,29 @@ class SuarBackendService {
       debugPrint(
         'SuarBackendService: Pengiriman dilewati untuk efisiensi daya & jaringan.',
       );
+    }
+  }
+
+  Future<ImpactEstimate?> calculateImpact({
+    required String earthquakeId,
+    required double latitude,
+    required double longitude,
+  }) async {
+    try {
+      final response = await _dio
+          .post(
+            '$_baseUrl/alerts/calculate-impact',
+            data: {
+              'earthquakeId': earthquakeId,
+              'latitude': latitude,
+              'longitude': longitude,
+            },
+          )
+          .timeout(_calculateImpactTimeout);
+      return ImpactEstimate.fromJson(Map<String, dynamic>.from(response.data));
+    } catch (e) {
+      debugPrint('SuarBackendService Error calculateImpact: $e');
+      return null;
     }
   }
 

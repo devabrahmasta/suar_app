@@ -9,6 +9,7 @@ class GempaModel {
   final String potensi;
   final String dirasakan;
   final String shakemapUrl;
+  final String? alertId;
 
   GempaModel({
     required this.tanggal,
@@ -21,6 +22,7 @@ class GempaModel {
     required this.potensi,
     required this.dirasakan,
     required this.shakemapUrl,
+    this.alertId,
   });
 
   factory GempaModel.fromJson(Map<String, dynamic> json) {
@@ -78,6 +80,7 @@ class GempaModel {
       potensi: json['potensi'] ?? '',
       dirasakan: 'Tidak ada data',
       shakemapUrl: '',
+      alertId: json['id'] as String?,
     );
   }
 }

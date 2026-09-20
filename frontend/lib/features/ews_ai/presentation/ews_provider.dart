@@ -8,6 +8,7 @@ import '../data/inarisk_service.dart';
 import '../data/gemini_triage_service.dart';
 import '../domain/triage_result_model.dart';
 import '../domain/gempa_model.dart';
+import '../domain/impact_estimate_model.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../user/presentation/user_notifier.dart';
 import '../../../core/services/notification_service.dart';
@@ -40,11 +41,13 @@ class EwsAlertData {
   final TriageResult triageResult;
   final GempaModel gempa;
   final double distanceKm;
+  final ImpactEstimate? impact;
 
   EwsAlertData({
     required this.triageResult,
     required this.gempa,
     required this.distanceKm,
+    this.impact,
   });
 }
 
@@ -224,6 +227,17 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
       debugPrint(
         'EwsNotifier: Ancaman SIGNIFIKAN. Memulai analisis Triage menggunakan Google Gemini AI...',
       );
+      final alertId = gempa.alertId;
+      final impactFuture = hasLocation && alertId != null
+          ? ref
+                .read(suarBackendServiceProvider)
+                .calculateImpact(
+                  earthquakeId: alertId,
+                  latitude: currentLat,
+                  longitude: currentLng,
+                )
+          : Future<ImpactEstimate?>.value(null);
+
       final geminiService = ref.read(geminiTriageServiceProvider);
       final finalResult = await geminiService.analyzeThreat(
         gempa: gempa,
@@ -241,6 +255,7 @@ class EwsNotifier extends AsyncNotifier<EwsAlertData?> {
         triageResult: finalResult,
         gempa: gempa,
         distanceKm: distanceKm,
+        impact: await impactFuture,
       );
     });
 
