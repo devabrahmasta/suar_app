@@ -32,8 +32,16 @@ final geminiTriageServiceProvider = Provider<GeminiTriageService>((ref) {
   return GeminiTriageService(apiKey: apiKey);
 });
 
-final notificationPayloadProvider = StreamProvider<String?>((ref) {
-  return NotificationService.selectNotificationStream.stream;
+class NotificationTap {
+  final String payload;
+
+  NotificationTap(this.payload);
+}
+
+final notificationTapProvider = StreamProvider<NotificationTap>((ref) {
+  return NotificationService.selectNotificationStream.stream
+      .where((payload) => payload != null)
+      .map((payload) => NotificationTap(payload!));
 });
 
 class EwsAlertData {

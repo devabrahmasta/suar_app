@@ -1,6 +1,8 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 
+const EMERGENCY_CHANNEL_ID = 'suar_darurat_v5';
+
 @Injectable()
 export class FirebaseService implements OnModuleInit {
   private readonly logger = new Logger(FirebaseService.name);
@@ -63,6 +65,12 @@ export class FirebaseService implements OnModuleInit {
           body,
         },
         data,
+        android: {
+          priority: 'high',
+          notification: {
+            channelId: EMERGENCY_CHANNEL_ID,
+          },
+        },
       });
 
       this.logger.log(

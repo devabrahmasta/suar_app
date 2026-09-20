@@ -36,8 +36,37 @@ class UserNotifier extends Notifier<UserModel?> {
     return fallbackToken;
   }
 
+  void _listenTokenRefresh() {
+    if (!isFirebaseInitialized) return;
+
+    final subscription = FirebaseMessaging.instance.onTokenRefresh.listen(
+      _registerRefreshedToken,
+    );
+    ref.onDispose(subscription.cancel);
+  }
+
+  Future<void> _registerRefreshedToken(String token) async {
+    final user = state;
+    if (user == null) return;
+
+    try {
+      await ref
+          .read(suarBackendServiceProvider)
+          .registerDevice(
+            deviceId: user.deviceId,
+            fcmToken: token,
+            homeType: user.homeType,
+            homeLatitude: user.homeLatitude,
+            homeLongitude: user.homeLongitude,
+          );
+    } catch (e) {
+      debugPrint('UserNotifier: Gagal memperbarui token FCM ke backend: $e');
+    }
+  }
+
   @override
   UserModel? build() {
+    _listenTokenRefresh();
     final prefs = ref.watch(sharedPreferencesProvider);
     final String? userJson = prefs.getString('user_cache');
 
