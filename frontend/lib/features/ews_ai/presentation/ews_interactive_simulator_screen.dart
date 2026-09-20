@@ -9,6 +9,7 @@ import 'package:suar_app/features/ews_ai/presentation/ews_provider.dart';
 import 'package:suar_app/features/ews_ai/domain/gempa_model.dart';
 import 'package:suar_app/features/map_evacuation/presentation/map_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/tsunami_potential.dart';
 
 class EwsInteractiveSimulatorScreen extends ConsumerStatefulWidget {
   const EwsInteractiveSimulatorScreen({super.key});
@@ -75,8 +76,7 @@ class _EwsInteractiveSimulatorScreenState
   }
 
   double _calculateLocalRadiusInMeters() {
-    final isTsunami =
-        _potensi.toLowerCase().contains('tsunami') || _magnitude >= 6.5;
+    final isTsunami = isTsunamiPotential(_potensi) || _magnitude >= 6.5;
 
     double baseRadius = 50000.0;
     if (isTsunami) {
@@ -146,7 +146,7 @@ class _EwsInteractiveSimulatorScreenState
           shakemapUrl: '',
         );
 
-        final isTsunami = _potensi.toLowerCase().contains('tsunami');
+        final isTsunami = isTsunamiPotential(_potensi);
 
         ref
             .read(ewsProvider.notifier)

@@ -5,6 +5,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import '../domain/gempa_model.dart';
 import '../domain/triage_result_model.dart';
 import '../../user/domain/user_model.dart';
+import '../../../core/utils/tsunami_potential.dart';
 
 class GeminiTriageService {
   final String apiKey;
@@ -98,7 +99,7 @@ Keluarkan hasil analisis murni DALAM FORMAT JSON SAJA seperti ini (TANPA blok ko
       return TriageResult.fromJson(jsonMap);
     } catch (e) {
       debugPrint('GeminiTriageService Fallback ke Protokol Lokal ($e)');
-      final bool isTsunami = gempa.potensi.toLowerCase().contains('tsunami');
+      final bool isTsunami = isTsunamiPotential(gempa.potensi);
       final bool daruratKritis = isTsunami && isDiZonaMerah;
 
       final bool hasSpecialNeeds = user.specialNeeds != 'Tidak Ada';
